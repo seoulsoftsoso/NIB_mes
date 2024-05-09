@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>LOG IN PAGE</title>
+    {% include 'header.html' %}
+</head>
+<body style="background-color: #17375e">
+<div class="container-fluid">
+    <div
+            class="row no-gutters justify-content-center align-items-center my-5"
+    >
+        <div class="card col-12 col-lg-4 align-self-center">
+            <div class="card-body p-5">
+                <h2 class="text-center mb-5"><strong>로그인</strong></h2>
+                <form id="login" method="POST" onsubmit="return frm_check();">
+                    {% csrf_token %}
+                    <!-- <input type="hidden" name="next" value="">
+                    {{form.as_p}} >> 기본으로 내장된 로그인 폼을 아래와 같이 커스터마이징 한다-->
+                    <div class="form-group">
+                        <input
+                                class="form-control login-text"
+                                name="username"
+                                type="text"
+                                placeholder="아이디"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-asterisk icon"></i>
+                        <input
+                                class="form-control login-text"
+                                name="password"
+                                type="password"
+                                placeholder="비밀번호"
+                        />
+                    </div>
+                    <div class="form-group text-center">
+                        <div class="form-check form-check-inline">
+                            <input
+                                    type="checkbox"
+                                    class="form-check-input"
+                                    id="defaultInline1"
+                            />
+                            <label class="form-check-label" for="defaultInline1"
+                            >아이디 기억</label
+                            >
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center mb-2">
+                        <button
+                                class="btn button-custom col-12 col-md-6 p-2"
+                                type="submit"
+                        >
+                            로그인
+                        </button>
+                    </div>
+                    <!-- {#                    <div class="d-flex justify-content-center mb-2">#}
+{#                        <a class="btn w-50" role="button" href="/accounts/register">아이디 요청</a>#}
+{#                    </div>#} -->
+
+                    <input type="hidden" name="next" value=""/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // If you have an access token in the cookie (but this save-at-cookie feature must be modified in the future)
+    // pass login page and redirect view to the codemaster.
+    // Note that you must make a logic that redirect an un-authorized user to login page.
+    if (get_token() !== "") {
+        //window.location.href = "/admins/index/"; // TODO:
+        window.location.href = "/"; // TODO:
+    }
+
+    $(function() {
+           fnInit();
+     });
+
+     function frm_check(){
+         saveid();
+     }
+
+    function fnInit(){
+        var cookieid = getCookie("saveid");
+        if(cookieid !=""){
+            $("input:checkbox[id='defaultInline1']").prop("checked", true);
+            $("#login [name='username']").val(cookieid);
+        }
+
+    }
+
+    function setCookie(name, value, expiredays) {
+        var todayDate = new Date();
+        todayDate.setTime(todayDate.getTime() + 0);
+        if(todayDate > expiredays){
+            document.cookie = name + "=" + escape(value) + "; path=/; expires=" + expiredays + ";";
+        }else if(todayDate < expiredays){
+            todayDate.setDate(todayDate.getDate() + expiredays);
+            document.cookie = name + "=" + escape(value) + "; path=/; expires=" + todayDate.toGMTString() + ";";
+        }
+
+
+    }
+
+    function getCookie(Name) {
+        var search = Name + "=";
+
+        if (document.cookie.length > 0) { // 쿠키가 설정되어 있다면
+            offset = document.cookie.indexOf(search);
+            if (offset != -1) { // 쿠키가 존재하면
+                offset += search.length;
+                // set index of beginning of value
+                end = document.cookie.indexOf(";", offset);
+                // 쿠키 값의 마지막 위치 인덱스 번호 설정
+                if (end == -1)
+                    end = document.cookie.length;
+
+                return unescape(document.cookie.substring(offset, end));
+            }
+        }
+        return "";
+    }
+
+    function saveid() {
+        var expdate = new Date();
+        if ($("#defaultInline1").is(":checked")){
+            expdate.setTime(expdate.getTime() + 1000 * 3600 * 24 * 30);
+            setCookie("saveid", $("#login [name='username']").val(), expdate);
+            }else{
+           expdate.setTime(expdate.getTime() - 1000 * 3600 * 24 * 30);
+            setCookie("saveid", $("#login [name='username']").val(), expdate);
+
+        }
+    }
+
+    // An example to login using /users/login/ API endpoint.
+    // It will ends up with putting api token to cookies.
+    // Note that processing CSRF token is not scope of this example.
+    $("#login").submit(function (event) {
+        // get vals
+        let username = $('#login [name="username"]').val();
+        let password = $('#login [name="password"]').val();
+
+        // KPI 로그인
+        let paramData = {"companyCode": "1210598790"};  //소공인 회사코드(사업자번호 10자리)
+        let session_id = "";
+       {% comment %} jQuery.ajax({
+            type: "post",
+            contentType: "application/json; charset=utf-8", url: "http://smart-kpi.kr:7000/kpi/login",
+            data: JSON.stringify(paramData), dataType: "json",
+            success: function (data) {
+                console.log(data);
+
+                console.log(data.status);
+                console.log(data.companyCode);
+                console.log(data.companyName);
+                console.log(data.sessionId);
+
+                session_id = data.sessionId;
+
+                // KPI Level-1
+                let paramData1 =
+                    {
+                        "sessionId": session_id,
+
+                        "kpiDate": "2021-10-25",
+                        "activeUserCnt": 10,
+                        "systemMenuCnt": 50,
+                        "activeModuleCnt": 33,
+                        "tableCnt": 75,
+                        "recordCnt": 123
+                    };
+                jQuery.ajax({
+                    type: "post",
+                    contentType: "application/json; charset=utf-8", url: "http://smart-kpi.kr:7000/kpi/level1/create",
+                    data: JSON.stringify(paramData1), dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+
+                    },
+                    complete: function (data) {
+                        console.log('complete');
+                    },
+                    error: function (xhr, status, error) {
+                        console.log('error');
+                        console.log(error);
+                    }
+                });
+
+            },
+            complete: function (data) {
+                console.log('complete');
+            },
+            error: function (xhr, status, error) {
+                console.log('error');
+                console.log(error);
+            }
+        });{% endcomment %}
+
+
+
+        // call login api
+        api_login(
+            username,
+            password,
+            () => {
+                window.location.href = "/"; // TODO:
+            },
+            handle_error,
+            (xhr, status) => {
+            }
+        );
+
+        event.preventDefault();
+    });
+</script>
+</body>
+</html>

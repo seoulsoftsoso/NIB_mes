@@ -1,0 +1,242 @@
+<!DOCTYPE HTML>
+<html>
+<header>
+    {% include "header.html" %}
+<style>
+        tr.selected {
+            background-color: #ccc;
+        }
+        td {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 100px;
+        }
+    </style>
+</header>
+<body>
+
+{% load static %}
+
+<div class="col-12">
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="row align-items-center">
+    <div class="col-lg-12 col-ml-12 mt-3">
+        <div class="card">
+            <form class="mt-3 ml-3" id="enterprise_register_content">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">기업코드</span>
+                    </div>
+                    <input type="text" class="form-control col-sm-2" id="new_enterprise_register_search_code" name="register_code">
+
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">기업명</span>
+                    </div>
+                    <input type="text" class="form-control col-sm-2" id="search_name_regist_ent_name" name="register_name">
+
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">관리명</span>
+                    </div>
+                    <input type="text" class="form-control col-sm-2" id="search_name_manage" name="register_manage">
+                    <div class="gradient-buttons ml-5 col-sm-4">
+                        <button type="button" class="btn btn-secondary col-sm-3" onclick="add()">등록</button>
+                        <button type="button" class="btn btn-secondary col-sm-3" onclick="enterprise_register_edit()">수정</button>
+                        <button type="button" class="btn btn-secondary col-sm-3" onclick="enterprise_register_delete()">삭제</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+            <!-- table-->
+            <div class="row no-gutters">
+                <div class="col-lg-12 col-ml-12 mt-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <table id="new_enterprise_register_data-table">
+                                <thead>
+                                    <tr class="table-active">
+                                      <th class="th-sm">순번
+                                      </th>
+                                      <th class="th-sm">기업코드
+                                      </th>
+                                      <th class="th-sm">기업명
+                                      </th>
+                                      <th class="th-sm">관리명
+                                      </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in data %}
+                                <tr id={{ item.id }}>
+                                    <td></td>
+                                    <td data-item='register_code' style="word-wrap: break-word;">{{ item.code }}</td>
+                                    <td data-item='register_name' style="word-wrap: break-word;">{{ item.name }}</td>
+                                    <td data-item='register_manage' style="word-wrap: break-word;">{{ item.manage }}</td>
+                                </tr>
+                            {% endfor %}
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    let enterprise_register_columns = [
+        "register_code",
+        "register_name",
+        "register_manage",
+    ];
+
+    let enterprise_register_idx = null;
+
+    let main_table = null;
+    // starting point
+    $(function () {
+        //refresh();
+        let selected_row = null;
+        main_talbe = $('#new_enterprise_register_data-table').DataTable(
+            {
+                "columnDefs": [
+                    {
+                        targets: 0,
+                        render: function(data, type, row, meta) {
+                            return meta.row + 1;
+                        }
+                    }
+                ],
+                "rowCallback": function(row, data) {
+                    $(row).on('click', function() {
+                        if (selected_row !== null) {
+                            $(selected_row).removeClass('selected');
+                          }
+                          $(this).addClass('selected');
+                            selected_row = this;
+                          enterprise_register_idx = $(this).attr("id");
+                          enterprise_register_name = $(this).find("[data-item='register_name']").text();
+                          enterprise_register_columns.forEach((item) => {
+                                $("#enterprise_register_content [name='" + item + "']").val(
+                                    $(this)
+                                        .find("[data-item='" + item + "']")
+                                        .text()
+                                )
+                            });
+                    });
+                }
+
+            }
+        );
+    });
+
+    function refresh_data() {
+        $("#new_enterprise_register_search_code").val("");
+        $("#search_name_regist_ent_name").val("");
+        $("#search_name_manage").val("");
+    }
+
+
+
+    // add action
+    function add() {
+        if ($('#new_enterprise_register_search_code').val() == "") {
+            alert("기업코드를 입력해 주세요.");
+            return;
+        }
+
+        if ($('#search_name_regist_ent_name').val() == "") {
+            alert("기업명을 입력해 주세요.");
+            return;
+        }
+
+        let data = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+
+            code: $('#new_enterprise_register_search_code').val(),
+            name: $('#search_name_regist_ent_name').val(),
+            manage: $('#search_name_manage').val(),
+            permissions: 0// 관리자가 수정하므로, 초기 permission은 어떤 값이든 상관 없음.
+        }
+
+        api_gp('/basic_information/enterprises_create/', 'POST', data, (done) => {
+            //nation1.page = 1;
+            enterprise_register_idx = done.id;
+            enterprise_register_name = done.name;
+
+            alert('성공적으로 등록하였습니다.');
+            location.reload();
+        });
+
+        return false;
+    }
+
+    function enterprise_register_edit() {
+        if (enterprise_register_idx == null) {
+            alert("데이터를 먼저 선택하십시오.");
+            return;
+
+        } else {
+            let code = $('#new_enterprise_register_search_code').val();
+            let name = $('#search_name_regist_ent_name').val();
+            let manage = $('#search_name_manage').val();
+
+            if (code == "") {
+                alert("기업코드를 입력하세요.");
+                return;
+
+            } else if (name == "") {
+                alert("기업몀을 입력하세요.");
+                return;
+            }
+
+            let data = {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                pk: enterprise_register_idx,
+
+                code: code,
+                name: name,
+                manage: manage,
+            };
+
+            api_gp('/basic_information/enterprises_update/', 'POST', data, (done) => {
+                alert('수정 완료.');
+                location.reload();
+            });
+        }
+    }
+
+    function enterprise_register_delete() {
+        if (enterprise_register_idx == null) {
+            alert("데이터를 먼저 선택하십시오.");
+        } else {
+
+
+            let del = confirm(
+                "기업명 : " + enterprise_register_name + " 을 삭제하시겠습니까?"
+            );
+
+            let allData = {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                pk: enterprise_register_idx,
+            }
+
+            if (del) {
+                api_gp('/basic_information/enterprises_delete/', 'post', allData, (done_callback) => {
+                    alert("삭제하였습니다.");
+                    //nation1.page = 1;
+                    location.reload();
+                });
+            }
+        }
+    }
+
+</script>
+</body>
+</html>
