@@ -2,68 +2,167 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <title>LOG IN PAGE</title>
+    <title>LOG IN  | Seoulsoft WMS Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Seoulsoft WMS Admin & Dashboard Template" name="description" />
+    <meta content="Themesbrand" name="author" />
+    {% load static %}
+    <!-- owl.carousel css -->
+    <link rel="stylesheet" href="{% static 'skote/assets/libs/owl.carousel/assets/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'skote/assets/libs/owl.carousel/assets/owl.theme.default.min.css' %}">
+
     {% include 'header.html' %}
 </head>
-<body style="background-color: #17375e">
-<div class="container-fluid">
-    <div
-            class="row no-gutters justify-content-center align-items-center my-5"
-    >
-        <div class="card col-12 col-lg-4 align-self-center">
-            <div class="card-body p-5">
-                <h2 class="text-center mb-5"><strong>로그인</strong></h2>
-                <form id="login" method="POST" onsubmit="return frm_check();">
-                    {% csrf_token %}
-                    <!-- <input type="hidden" name="next" value="">
-                    {{form.as_p}} >> 기본으로 내장된 로그인 폼을 아래와 같이 커스터마이징 한다-->
-                    <div class="form-group">
-                        <input
-                                class="form-control login-text"
-                                name="username"
-                                type="text"
-                                placeholder="아이디"
-                        />
-                    </div>
-                    <div class="form-group">
-                        <i class="fas fa-asterisk icon"></i>
-                        <input
-                                class="form-control login-text"
-                                name="password"
-                                type="password"
-                                placeholder="비밀번호"
-                        />
-                    </div>
-                    <div class="form-group text-center">
-                        <div class="form-check form-check-inline">
-                            <input
-                                    type="checkbox"
-                                    class="form-check-input"
-                                    id="defaultInline1"
-                            />
-                            <label class="form-check-label" for="defaultInline1"
-                            >아이디 기억</label
-                            >
+<body class="auth-body-bg">
+<div>
+            <div class="container-fluid p-0">
+                <div class="row g-0">
+
+                    <div class="col-xl-9">
+                        <div class="auth-full-bg pt-lg-5 p-4">
+                            <div class="w-100">
+                                <div class="bg-overlay"></div>
+                                <div class="d-flex h-100 flex-column">
+
+                                    <div class="p-4 mt-auto">
+                                        <div class="row justify-content-center">
+                                            <div class="col-lg-7">
+                                                <div class="text-center">
+
+                                                    <h4 class="mb-3"><i class="bx bxs-quote-alt-left text-primary h1 align-middle me-3"></i><span class="text-primary">DVE MES</span>+ Satisfied clients</h4>
+
+                                                    <div dir="ltr">
+                                                        <div class="owl-carousel owl-theme auth-review-carousel" id="auth-review-carousel">
+                                                            <div class="item">
+                                                                <div class="py-3">
+                                                                    <p class="font-size-16 mb-4">" Fantastic theme with a ton of options. If you just want the HTML to integrate with your project, then this is the package. You can find the files in the 'dist' folder...no need to install git and all the other stuff the documentation talks about. "</p>
+
+                                                                    <div>
+                                                                        <h4 class="font-size-16 text-primary">Abs1981</h4>
+                                                                        <p class="font-size-14 mb-0">- Skote User</p>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="item">
+                                                                <div class="py-3">
+                                                                    <p class="font-size-16 mb-4">" If Every Vendor on Envato are as supportive as Themesbrand, Development with be a nice experience. You guys are Wonderful. Keep us the good work. "</p>
+
+                                                                    <div>
+                                                                        <h4 class="font-size-16 text-primary">nezerious</h4>
+                                                                        <p class="font-size-14 mb-0">- Skote User</p>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center mb-2">
-                        <button
-                                class="btn button-custom col-12 col-md-6 p-2"
-                                type="submit"
-                        >
-                            로그인
-                        </button>
-                    </div>
-                    <!-- {#                    <div class="d-flex justify-content-center mb-2">#}
-{#                        <a class="btn w-50" role="button" href="/accounts/register">아이디 요청</a>#}
-{#                    </div>#} -->
+                    <!-- end col -->
 
-                    <input type="hidden" name="next" value=""/>
-                </form>
+                    <div class="col-xl-3">
+                        <div class="auth-full-page-content p-md-5 p-4">
+                            <div class="w-100">
+
+                                <div class="d-flex flex-column h-100">
+                                    <div class="mb-4 mb-md-5">
+                                        <a href="" class="d-block card-logo">
+                                            <img src="{% static 'img/seoul_logo.png' %}" alt="" height="75" class="card-logo-dark">
+                                            {% comment %}<img src="assets/images/logo-light.png" alt="" height="18" class="card-logo-light">{% endcomment %}
+                                        </a>
+                                    </div>
+                                    <div class="my-auto">
+
+                                        <div>
+                                            <h5 class="text-primary">Welcome Back !</h5>
+                                            <p class="text-muted">Sign in to continue to Dve WMS.</p>
+                                        </div>
+
+                                        <div class="mt-4">
+                                            <form id="login" method="POST" onsubmit="return frm_check();">
+
+                                                <div class="mb-3">
+                                                    <label for="username" class="form-label">Username</label>
+                                                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <div class="float-end">
+                                                        {% comment %}<a href="auth-recoverpw-2.html" class="text-muted">Forgot password?</a>{% endcomment %}
+                                                    </div>
+                                                    <label class="form-label">Password</label>
+                                                    <div class="input-group auth-pass-inputgroup">
+                                                        <input type="password" class="form-control" name="password" placeholder="Enter password" aria-label="Password" aria-describedby="password-addon">
+                                                        <button class="btn btn-light " type="button" id="password-addon"><i class="mdi mdi-eye-outline"></i></button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="defaultInline1">
+                                                    <label class="form-check-label" for="remember-check">
+                                                        Remember me
+                                                    </label>
+                                                </div>
+
+                                                <div class="mt-3 d-grid">
+                                                    <button class="btn btn-primary waves-effect waves-light" type="submit">Log In</button>
+                                                </div>
+                                            </form>
+
+                                            <div class="mt-4 text-center">
+                                                    <h5 class="font-size-14 mb-3">Sign in with</h5>
+
+                                                    <ul class="list-inline">
+                                                        <li class="list-inline-item">
+                                                            <a href="http://www.seoul-soft.com/" class="social-list-item bg-primary text-white border-primary">
+                                                                <i class="mdi mdi-blogger" ></i>
+                                                            </a>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <a href="http://www.seoul-soft.com/" class="social-list-item bg-info text-white border-info" target="_blank">
+                                                                <i class="mdi mdi-home"></i>
+                                                            </a>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-4 mt-md-5 text-center">
+                                        <p class="mb-0">© <script>document.write(new Date().getFullYear())</script> made with <i class="mdi mdi-heart text-danger"></i> by Seoulsoft</p>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end col -->
+                </div>
+                <!-- end row -->
             </div>
+            <!-- end container-fluid -->
         </div>
-    </div>
-</div>
+
+{% include 'footer.html' %}
+
+        <!-- owl.carousel js -->
+    <script src="{% static 'skote/assets/libs/owl.carousel/owl.carousel.min.js' %}" type="text/javascript"></script>
+
+
+        <!-- auth-2-carousel init -->
+    <script src="{% static 'skote/assets/js/pages/auth-2-carousel.init.js' %}" type="text/javascript"></script>
+
 
 <script>
     // If you have an access token in the cookie (but this save-at-cookie feature must be modified in the future)
