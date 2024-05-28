@@ -216,7 +216,7 @@
 
 <script src="{% static 'js/api_codemaster.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/api_paginations.js' %}" type="text/javascript"></script>
-<script src="{% static 'srtdash/assets/js/scripts.js' %}" type="text/javascript"></script>
+{% comment %}<script src="{% static 'srtdash/assets/js/scripts.js' %}" type="text/javascript"></script>{% endcomment %}
 <script>
     let main_table = null;
     let main_allData = null;
@@ -235,7 +235,7 @@
     let page1_size = 10000;
 
     $(function () {
-        main_table = $('#codemaster_codemaster_data-table').DataTable({
+        {% comment %}main_table = $('#codemaster_codemaster_data-table').DataTable({
             "columnDefs": [
                   {
                     "targets": [12], // 숨길 컬럼의 인덱스(0부터 시작)
@@ -257,7 +257,7 @@
         $("#codemaster_edit-sm-0").prop('disabled', true).attr("class","btn btn-primary mr-3 disabled").off('click')
         $("#codemaster_delete-sm-0").prop('disabled', true).attr("class","btn btn-primary mr-3 disabled").off('click')
 
-        refresh();
+        refresh();{% endcomment %}
 
     });
 

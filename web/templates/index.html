@@ -21,25 +21,33 @@
                 <div class="container-fluid">
                     <!-- start page title -->
                     <div class="row no-gutters">
-                        <div class="col-lg-11">
-                            <div class="card">
-                                <div class="card-body">
-                                    <ul
-                                            class="nav nav-tabs"
-                                            id="tab_header-list"
-                                            role="tablist"
-                                    ></ul>
-                                </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                            <div class="col-xl-11">
+                            <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist" id="tab_header-list">
+
+                                </ul>
                             </div>
-                        </div>
-                        <div class="col-lg-1">
-                            <button
-                                    type="button"
-                                    class="btn btn-flat btn-outline-secondary mt-3"
-                                    onclick="tab_delete_all();"
-                            >
-                                tab 전체삭제
-                            </button>
+                            <div class="col-xl-1">
+                                   <button
+                            type="button"
+                            class="btn btn-flat btn-outline-secondary mt-3"
+                            onclick="tab_delete_all();"
+                    >
+                        tab 전체삭제
+                    </button>
+                                </div>
+                                </div>
+
+                                <!-- Tab panes -->
+                                <div class="tab-content p-3" id="tab_content-list">
+
+
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -111,6 +119,7 @@
 
         let title_name = $("." + _title + ":first").text();
             $('#page_title').text(title_name);
+            console.log("title_name   :   " + _title);
 
         for (let i = 0; i < tabs.length; i++) {
             // to get already-loaded one.
@@ -133,31 +142,23 @@
             }
         }
         if (target === null) {
-            // else tab_add() with new content
+
             detach_all();
-            //$(tab_add(url ,title)).load(url);
+
 
             $(tab_add(url, _title)).append(
-                // '<div id="spinner" style="position:relative;top:30%;left:45%;">'+
-                //         '<img src="../../../static/img/spinner.gif" />'+
-                // '</div>' +
+
                 '<iframe src="' +
                 url +
                 '" class="w-100 h-100" style="border:none;" ></iframe>'
             );
-            // $('#tab_content-' + title2num(title)).bind("attach", function () { });
+
         } else {
             // if title 검사 => 있으면 그쪽으로 focus
             $("#" + target.id).click();
         }
     }
 
-    // function spinner(){
-    //   console.log('iframe loaded');
-    //   setTimeout(() => {
-    //     $("#spinner").remove();
-    //   }, 3000);
-    // }
 
     function detach_all() {
         let tabs = $("#tab_header-list .nav-item .nav-link");
@@ -205,24 +206,25 @@
 
         if (title.substring(0, 2) == 'sm') {
 
-            title_name = $("." + title + ":first").text();
+            //title_name = $("." + title + ":first").text();
+            title_name = title;
 
         } else {
             title_name = title;
         }
 
         let tab_header =
-            '<li class="nav-item" id="tab_' +
+            '<li class="nav-item" role="presentation" id="tab_' +
             tab_now_add +
             '">\n' +
             '    <a class="nav-link" id="tab_header-' +
             tab_now_add +
-            '" data-toggle="tab" href="#tab_content-' +
+            '" data-bs-toggle="tab" href="#tab_content-' +
             tab_now_add +
             '"\n' +
             '         role="tab" aria-controls="tab_' +
             tab_now_add +
-            '" aria-selected="false">' +
+            '" aria-selected="true">' +
             {% comment %}"         onclick=\"load_detached('" +
             url +
             "', '" +
@@ -233,7 +235,7 @@
             "    </a>\n" +
             "</li>";
         let tab_content =
-            '<div class="tab-pane fade w-100 h-100" id="tab_content-' +
+            '<div class="tab-pane pade active show" id="tab_content-' +
             tab_now_add +
             '" role="tabpanel" aria-labelledby="tab_content-' +
             tab_now_add +

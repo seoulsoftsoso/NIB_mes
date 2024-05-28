@@ -11,8 +11,7 @@ from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
 
-from api.models import CodeMaster, GroupCodeMaster, EnterpriseMaster, UserMaster
-
+from api.models import CodeMaster, GroupCodeMaster, EnterpriseMaster, UserMaster, MenuMaster
 
 
 def generate_code(prefix1, model, model_field_prefix, user):
@@ -31,7 +30,6 @@ def generate_code(prefix1, model, model_field_prefix, user):
 
 
 def generate_lot_code(code_id, model, model_field_prefix, user):
-
     if not code_id:
         raise ValidationError('자재구분 코드를 입력해주세요.')
 
@@ -323,7 +321,6 @@ class UserMasterSerializer(serializers.ModelSerializer):
         self.fields['job_position'] = CodeMasterSerializer()
         self.fields['department_position'] = CodeMasterSerializer()
 
-
         return super(UserMasterSerializer, self).to_representation(instance)
 
 
@@ -462,7 +459,6 @@ class UserMasterSelectSerializer(serializers.ModelSerializer):
         self.fields['job_position'] = CodeMasterSerializer()
         self.fields['department_position'] = CodeMasterSerializer()
 
-
         return super(UserMasterSelectSerializer, self).to_representation(instance)
 
 
@@ -473,3 +469,13 @@ def custom_from_to_date(data):
     log_to = '9999-12-31' if log_to == '' else log_to
     return log_from, log_to
 
+
+class MenuSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='alias')
+
+    class Meta:
+        model = MenuMaster
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        return super(MenuSerializer, self).to_representation(instance)

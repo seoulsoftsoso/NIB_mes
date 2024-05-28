@@ -1,3 +1,4 @@
+from django.contrib.auth import login
 from django.db.models import F
 from django.db.models.functions import Coalesce
 from django.http import HttpResponseRedirect
@@ -25,5 +26,8 @@ class CustomObtainAuthToken(ObtainAuthToken):
         #         Token.objects.filter(user=user, created__lt=get_expire_time()).delete()
 
         token, created = Token.objects.get_or_create(user=user)
+
+        #로그인 정보 세션 저장
+        login(request, user)
 
         return Response({'token': token.key, 'user': UserMasterSerializer(user).data}, status=status.HTTP_200_OK)

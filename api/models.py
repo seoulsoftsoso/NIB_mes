@@ -148,3 +148,63 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.name
+
+
+class MenuMaster(models.Model):
+    code = models.CharField(max_length=50, null=False, verbose_name='메뉴코드')
+    name = models.CharField(max_length=50, null=False, verbose_name='메뉴이름')
+    path = models.CharField(max_length=256, null=False, verbose_name='경로')
+    type = models.CharField(max_length=1, null=False, verbose_name='유형')
+    comment = models.CharField(max_length=256, null=True, verbose_name='코멘트')
+    i_class = models.CharField(max_length=64, null=True, verbose_name='class icon')
+    created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=True, verbose_name='최초작성자',
+                                   related_name='menumaster_created_by')
+    updated_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=True, verbose_name='최종작성자',
+                                   related_name='menumaster_updated_by')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
+    del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
+
+
+class Menu_Auth(models.Model):
+    menu = models.ForeignKey('MenuMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='메뉴아이디',
+                             related_name='menuauth')
+    alias = models.CharField(max_length=64, null=True, verbose_name='별칭')
+    #enterprise = models.ForeignKey('EnterpriseMaster', on_delete=models.DO_NOTHING, verbose_name='업체')
+    user = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=True, verbose_name='사용자')
+    # parent_id = models.IntegerField(null=True, verbose_name='상위클래스')
+    parent = models.ForeignKey('Menu_Auth', on_delete=models.DO_NOTHING, null=True, verbose_name='상위클래스')
+    order = models.IntegerField(null=False, verbose_name='순서')
+    use_flag = models.CharField(max_length=1, default='Y', verbose_name='사용여부')
+    created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=True, verbose_name='최초작성자',
+                                   related_name='menuauth_created_by')
+    updated_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=True, verbose_name='최종작성자',
+                                   related_name='menuauth_updated_by')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
+    updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name='최종작성일')
+    del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
+
+
+class ColumnMaster(models.Model):
+    menu = models.ForeignKey('MenuMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='메뉴아이디', related_name='column')
+    label = models.CharField(max_length=64, null=True, verbose_name='컬럼명')
+    label_en = models.CharField(max_length=64, null=True, verbose_name='컬럼명(영)')
+    pre_label = models.CharField(max_length=128, null=True, verbose_name='선행자')
+    tag = models.CharField(max_length=128, null=True, verbose_name='tag')
+    type = models.CharField(max_length=64, null=True, verbose_name='text')
+    class_name = models.CharField(max_length=128, null=True, verbose_name='class')
+    event = models.CharField(max_length=128, null=True, verbose_name='onclick')
+    position = models.IntegerField(null=False, verbose_name='순서')
+    user = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='사용자')
+    use_flag = models.BooleanField(default=True, verbose_name='사용여부')
+    visual_flag = models.BooleanField(default=True, verbose_name='표시여부')
+    excel_flag = models.BooleanField(default=True, verbose_name='엑셀다운로드사용여부')
+    edit_flag = models.BooleanField(default=True, verbose_name='수정필드')
+    created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=True, verbose_name='최초작성자',
+                                   related_name='column_created_by')
+    updated_by = models.ForeignKey('UserMaster', on_delete=models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='column_updated_by')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
+    attr = models.CharField(max_length=64, null=True, verbose_name='속성')
+    tier = models.CharField(max_length=1, null=False, default='M', verbose_name='테이블계층')  # 메인과 sub테이블 구분 M,S

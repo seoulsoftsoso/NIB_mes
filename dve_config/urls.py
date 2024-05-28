@@ -13,7 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import path, re_path
+from django.urls import path, include, re_path
 from django.views.static import serve
 from rest_framework.routers import DefaultRouter
 from rest_framework import permissions
@@ -27,6 +27,7 @@ from api.base.enterprise_views import EnterpriseMasterViewSet
 
 
 from api.base.groupcodemaster_views import GroupCodeMasterViewSet, GenerateCodeMaster
+from api.base.menu_config import MenuHandler
 
 from api.base.user_views import UserMasterViewSet, UserMasterSelectViewSet
 
@@ -74,14 +75,24 @@ router.register(r'codes_select', CodeMasterSelectView)
 router.register(r'users', UserMasterViewSet)
 router.register(r'users_select', UserMasterSelectViewSet)
 
+router.register(r'getMenulist', MenuHandler)  #업체,사용자별 메뉴 조회
+
 custom_obtain_auth_token = CustomObtainAuthToken.as_view()
 
 urlpatterns = [
+
                 path('', index),
                 path('accounts/login/', login_page),
                 path('login/', login_page),
                 path('users/login/', custom_obtain_auth_token),
                 re_path(r'^data/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, }),
+
+                path('basic_information/codemaster/', codemaster),
+                path('basic_information/enterprise/', new_enterprise),
+                path('basic_information/menumaster/', Menumaster),
+                #path('getMenulist/', MenuHandler)
+
+                path('', include(router.urls)),
 
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
