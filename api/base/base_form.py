@@ -720,7 +720,8 @@ class enterprise_fm(forms.Form):
                                                 widget=autocomplete.ListSelect2(
                                                     url='enterprise_name_ac',
                                                     attrs={
-                                                        'class': 'form-control form-control-sm',
+                                                         #'class': 'form-control',
+                                                        #'class': 'form-select',
                                                         'style': 'width:100%; height:100%',
                                                         'data-placeholder': '선택 및 검색',
                                                     }),

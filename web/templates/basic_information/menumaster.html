@@ -3,9 +3,475 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    {% load static %}
     {% include "header.html" %}
-</head>
-<body>
 
+    <!-- dragula css -->
+    {% comment %}<link href="{% static 'skote/assets/libs/dragula/dragula.min.css' %}" rel="stylesheet" type="text/css" />{% endcomment %}
+    <!-- easyui -->
+    <link href="{% static 'easy/themes/default/easyui.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'easy/themes/icon.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'easy/demo.css' %}" rel="stylesheet" type="text/css" />
+    <script src="{% static 'easy/themes/js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'easy/themes/js/jquery.easyui.min.js' %}"></script>
+    {% comment %}<script src="{% static 'easy/themes/js/jquery.min.js' %}"></script>{% endcomment %}
+
+    {% comment %}<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>{% endcomment %}
+    {% comment %}<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>{% endcomment %}
+    {% comment %}<script src="https://www.jeasyui.com/easyui/jquery.easyui.min.js"></script>{% endcomment %}
+<script>
+  {% comment %}$.ajaxSetup({
+    headers: { "X-CSRFToken": '{{csrf_token}}' }
+  });{% endcomment %}
+</script>
+</head>
+{{ ep.media }}
+{% csrf_token %}
+<div class="col-lg-12">
+    <div class="row-no-gutters p-3">
+        <div class="col-lg-12">
+
+
+                    <div class="mb-3 row">
+                        <div class="col-lg-4">
+                            <label for="" class="col-md-2 col-form-label">업체코드</label>
+                            <div class="col-md-10">
+                                {{ ep.enterprise_name_ac }}
+                                {% comment %}<select class="form-select">
+                                    <option>선택및검색</option>
+                                    <option>Large select</option>
+                                    <option>Small select</option>
+                                </select>{% endcomment %}
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label for="" class="col-md-2 col-form-label">사용자</label>
+                            <div class="col-md-10">
+                                <select class="form-select" id="id_client_name">
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
+        </div>
+
+
+        <div class="row p-3">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">상위메뉴</h4>
+
+
+                    <div id="lmenu-task" class="pb-1 font-size-24" style="display: flex; flex-wrap: wrap;">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <form class="app-search d-none d-lg-block">
+                        <div class="position-relative">
+                            <input type="text" class="form-control" placeholder="Search...">
+                            <span class="bx bx-search-alt"></span>
+                        </div>
+                    </form>
+                    <h4 class="card-title mb-4">추천메뉴</h4>
+                    <div class="card bg-primary-subtle">
+                        <div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="text-primary p-3 font-size-20" style="display: flex; flex-wrap: wrap;">
+                                        <div style="margin-right: 5px">
+                                            <span class="badge badge-soft-secondary" data-target="L" value="1000">재고입고</span>
+                                        </div>
+                                        <div style="margin-right: 5px">
+                                            <span class="badge badge-soft-secondary">재고출고</span>
+                                        </div>
+                                        <div style="margin-right: 5px">
+                                            <span class="badge badge-soft-secondary">재고조정</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h4 class="card-title mb-4">하위메뉴</h4>
+                    <div>
+                        <div id="upcoming-task" class="pb-1 task-list font-size-24" style="display: flex; flex-wrap: wrap;">
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2>메뉴를 구성해주세요!!</h2>
+
+                    <div class="text-center" style="padding:5px">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div>
+                                                        <div class="font-size-24 text-primary mb-2">
+                                                            <i class="bx bx-save"></i>
+                                                        </div>
+
+                                                        <div class="mt-3">
+                                                            <a href="javascript: void(0);" class="btn btn-primary btn-sm w-md" onclick="menusave()">Save</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 border rounded" id="trash">
+                                                    <div class="mt-4 mt-sm-0">
+                                                        <div class="font-size-24 text-primary mb-2">
+                                                            <i class="bx bx-trash"></i>
+                                                        </div>
+                                                        <p class="mb-2">삭제할 메뉴는 여기로!!</p>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+        {% comment %}<div class="easyui-panel" id="trash">aaaaaaa</div>{% endcomment %}
+
+    <div class="easyui-panel" style="padding:5px">
+        <ul id="easytree"></ul>
+    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+</div>
+{% comment %}{% static 'easy/tree_data1.json' %}{% endcomment %}
+
+        <!-- dragula plugins -->
+
+        {% comment %}<script src="{% static 'skote/assets/libs/dragula/dragula.min.js' %}"></script>
+
+        <!-- jquery-validation -->
+        <script src="{% static 'skote/assets/libs/jquery-validation/jquery.validate.min.js' %}"></script>
+
+        <script src="{% static 'skote/assets/js/pages/task-kanban.init.js' %}"></script>
+
+        <script src="{% static 'skote/assets/js/pages/task-form.init.js' %}"></script>
+
+        <script src="{% static 'skote/assets/js/app.js' %}"></script>{% endcomment %}
 </body>
+<script>
+    $(document).ready(function() {
+
+        //makeTreeUI();
+        //userDrag();
+        selectEvent();
+
+        });
+
+    function userDrag(){
+        $('.task-box').draggable({
+                helper: 'clone',
+                revert: 'invalid'
+            });
+
+        $('.drag-list').draggable({
+                helper: 'clone',
+                revert: 'invalid'
+            });
+
+        // 트리 영역을 드롭 가능하게 설정
+            {% comment %}$('#easytree').tree({
+                onBeforeDrop: function(event, target, source, point) {
+                    // 드롭 대상이 div 외부인지 확인
+                          if (!$(event.data.target).closest('#div').length) {
+                            // div 외부 드롭 방지
+                              alert(event);
+                            event.preventDefault();
+                          }
+                    return true;
+                }
+            });{% endcomment %}
+
+            // 트리 영역을 드롭 가능하게 설정
+            $('#easytree').droppable({
+                accept: '.drag-list',
+                onDrop: function(event, source) {
+                    let tree = $('#easytree');
+                    let node = tree.tree('getSelected');
+
+                    // 드롭된 요소의 텍스트와 id를 가져옴
+                    let draggedItemText = $(source).text();
+                    let draggedItemValue = $(source).attr('value');
+                    let draggedItemType = $(source).attr('data-target')
+                    let iconcls = 'icon-menus'
+
+                    if(draggedItemType==='L'){
+                        iconcls = 'icon-menul'
+                    }
+
+                    console.log($(source));
+
+                    {% comment %}if (!$(event.data.target).closest('#div').length) {
+                            // div 외부 드롭 방지
+                              alert(event);
+                            event.preventDefault();
+                          }{% endcomment %}
+
+                    // 트리에 노드 추가
+                    tree.tree('append', {
+                        parent: (node ? node.target : null),
+                        data: [{
+                            id: draggedItemValue, text: draggedItemText, iconCls: iconcls
+                        }]
+                    });
+                    // drop 된 후 숨김
+                    $(source).hide();
+                }
+            });
+
+
+            $('#trash').droppable({
+
+                onDrop: function(event, source) {
+                    {% comment %}let tree = $('#easytree');
+                    let node = tree.tree('getSelected');
+
+                    if (node){
+                        tree.tree('remove', {
+                          target: node.id // Replace 'node.target' with the ID of the node to remove
+                        });
+                    }{% endcomment %}
+                    // drop 된 후 숨김
+                    $(source).remove();
+                }
+            });
+    }
+
+    function makeTreeUI(data){
+        console.table(data);
+        // 동적으로 JSON 데이터 생성
+        let treeData = []
+        data.forEach(function (item) {
+            if (item.type == 'L') {
+                // 상위 노드 추가
+                treeData.push({
+                    id: item.id,
+                    text: item.name,
+                    iconCls: 'icon-menul',
+                    children: []
+                });
+            } else if (item.type == 'S') {
+                // 하위 노드 추가
+                let parent = treeData.find(parent => parent.id === item.menuauth__parent);
+                if (parent) {
+                    parent.children.push({
+                        id: item.id,
+                        text: item.name,
+                        iconCls: 'icon-menus'
+                    });
+                }
+            }
+        });
+        console.log(treeData);
+        {% comment %}treeData = [
+            {
+                "id": 1,
+                "text": "기준정보",
+                "iconCls":"icon-menul",
+                "children": [
+                    {
+                        "id": 11,
+                        "text": "권한관리",
+                        "iconCls":"icon-menus"
+                    },
+                    {
+                        "id": 12,
+                        "text": "거래처관리",
+                        "iconCls":"icon-menus"
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "text": "재고관리",
+                "iconCls":"icon-menul",
+                "children": [
+                    {
+                        "id": 21,
+                        "text": "재고입고",
+                        "iconCls":"icon-menus"
+                    },
+                    {
+                        "id": 22,
+                        "text": "재고현황",
+                        "iconCls":"icon-menus"
+                    }
+                ]
+            }
+        ];{% endcomment %}
+
+        // EasyUI Tree에 동적으로 생성한 JSON 데이터 로드
+        $('#easytree').tree({
+            data: treeData,
+            animate: true,
+            dnd: true,
+            onDblClick: function(node){
+                    $(this).tree('beginEdit',node.target);
+                }
+        });
+        // drag영역 활성화
+        userDrag();
+    }
+
+    function selectEvent(){
+
+        $('#id_enterprise_name_ac').on('select2:select', function(e) {
+        // 이벤트 발생 시 실행될 코드
+
+        let selectedValue = e.params.data.id;
+        api_gp(`/autocomplete/menumaster/client_name_ac`, "GET", {'enterPrise_id': selectedValue}, (done) => {
+                   let data = done.results
+            let option = ''
+
+
+            $("#id_client_name").html('');
+
+            for (let i = 0; i < data.length; i++) {
+                let item = data[i];
+                option = new Option(item.text, item.id, true, true);
+                $("#id_client_name").append(option).select2().trigger('change');
+
+            }
+
+            option = new Option('선택', '', true, true);
+            $("#id_client_name").append(option)
+
+
+            $('#id_client_name').change(function() {
+                  let user_id = $(this).val();
+
+                if(user_id.length >= 1){
+                    getUseLmenulist(user_id);
+                }
+
+                });
+
+                })
+      });
+    }
+
+    function getUseLmenulist(user_id){
+        let client = $('#id_enterprise_name_ac').val();
+        api_gp(`/basic_information/getlmenulist/`, "GET", {'client': client, 'user_id': user_id}, (done) => {
+
+            let data = done
+                    drawListbyUser(data);
+            //console.table(data);
+
+                })
+    }
+
+    function drawListbyUser(data){
+
+        let rMList = '';
+        let rSList = '';
+        let useable = data.useablemenu;
+        let used = data.usedmenu;
+        //console.table(useable);
+
+        useable.forEach(function (sub){
+
+            if (sub.type == 'L'){
+                rMList += "<div style='margin-right: 5px'><span class='badge rounded-pill badge-soft-info drag-list' data-target='L' value="
+                rMList += sub.id
+                rMList += ">" + sub.name + '</span></div>'
+
+                $('#lmenu-task').html(rMList);
+            }else{
+                rSList += "<div style='margin-right: 5px'><span class='badge rounded-pill badge-soft-info drag-list' data-target='S' value=";
+                rSList += sub.id;
+                rSList += ">" + sub.name + '</span></div>';
+
+                $('#upcoming-task').html(rSList)
+            }
+
+        });
+
+        // 기존 메뉴 구성
+        makeTreeUI(used);
+
+        $('.drag-list').draggable({
+                helper: 'clone',
+                revert: 'invalid'
+            });
+
+
+    }
+
+    function menusave(){
+        let roots = $('#easytree').tree('getRoots');
+        let user_id = $("#id_client_name option:selected").val();
+        let menuidlist = [];
+        let menunamelist = [];
+        let parentlist = [];
+
+        console.table(roots)
+
+            // 각 루트 노드에 대해 자식 노드 가져오기
+        roots.forEach(function(root) {
+            console.log("target   : " + root.target);
+            if (typeof root.target === 'undefined'){
+                console.log("not target!!!!!");
+                return
+            }else{
+                 let children = $('#easytree').tree('getChildren', root.target);
+                {% comment %}allData.push({
+                    id: root.id,
+                    text: root.text,
+                    children: children
+                });{% endcomment %}
+            menuidlist.push(root.id);
+            menunamelist.push(root.text);
+            parentlist.push(0);
+            children.forEach(function (item){
+                menuidlist.push(item.id);
+                menunamelist.push(item.text);
+                parentlist.push(root.id);
+            })
+            }
+
+            });
+
+
+        let allData = {
+                menulist: menuidlist,
+                menunamelist: menunamelist,
+                parentlist: parentlist,
+                user_id: user_id,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            }
+
+            console.log(allData);
+
+        api_gp(`/basic_information/setmenubyuser/`, "post", allData, (done) => {
+                    done = done.success
+            if(done){
+                alert('등록완료');
+            }
+
+                });
+
+    }
+
+
+</script>
 </html>

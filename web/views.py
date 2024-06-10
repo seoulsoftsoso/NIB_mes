@@ -28,8 +28,10 @@ def codemaster(request):
 
 def new_enterprise(request):
     context = {}
+
     # column = getColumnList(request.COOKIES['enterprise_id'], request.COOKIES['user_id'], 109, 'M')
     # context['column'] = column
+
     return render(request, 'basic_information/new_enterprise_register.html', context)
 
 
@@ -47,8 +49,8 @@ def Menumaster(request):
     #                                                         'updated_at'
     #                                                         , 'del_flag').order_by('menuauth__order')
     #
-    # enter = enterprise_fm(request.GET, request.COOKIES['enterprise_name'])
+    enter = enterprise_fm(request.GET, request.COOKIES['enterprise_name'])
     # context['allMenu'] = allMenu
     # context['useMenu'] = useMenu
-    # context['ep'] = enter
+    context['ep'] = enter
     return render(request, 'basic_information/menumaster.html', context)

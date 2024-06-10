@@ -20,32 +20,34 @@
             <div class="page-content">
                 <div class="container-fluid">
                     <!-- start page title -->
-                    <div class="row no-gutters">
+                    <div class="row-no-gutters">
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
-                            <div class="col-xl-11">
-                            <!-- Nav tabs -->
-                                <ul class="nav nav-tabs" role="tablist" id="tab_header-list">
+                                    <div class="col-xl-11">
+                                    <!-- Nav tabs -->
+                                        <ul class="nav nav-tabs" role="tablist" id="tab_header-list">
 
-                                </ul>
-                            </div>
-                            <div class="col-xl-1">
-                                   <button
-                            type="button"
-                            class="btn btn-flat btn-outline-secondary mt-3"
-                            onclick="tab_delete_all();"
-                    >
-                        tab 전체삭제
-                    </button>
-                                </div>
+                                        </ul>
+                                    </div>
+                                    <div class="col-xl-1">
+                                           <button
+                                                    type="button"
+                                                    class="btn btn-flat btn-outline-secondary mt-3"
+                                                    onclick="tab_delete_all();"
+                                            >
+                                                tab 전체삭제
+                                            </button>
+                                    </div>
                                 </div>
 
                                 <!-- Tab panes -->
-                                <div class="tab-content p-3" id="tab_content-list">
+                                <div class="tab-content" id="tab_content-list">
 
 
-                                </div>
+
+                    </div>
+
 
                             </div>
                         </div>
@@ -72,54 +74,27 @@
 </body>
 <script>
 
-    // hjlim : Session, Changed Event, Broadcast 가 제대로 동작 안하는 문제가 있어서 Interval 사용
-    var oldValue = $("#mes_toggle").val();
-    setInterval(function () {
-        var currentValue = $("#mes_toggle").val();
-        if (currentValue !== oldValue) {
-            {#$("#txt2").trigger("change");#}
-
-            let msg = currentValue.split(',');
-            console.log("msg_cmd : ", msg[1]);
-
-            if (msg[1] === 'fold') {
-                $("#sub-menu").removeClass("col-2");
-                $("#content").removeClass("col-lg-10");
-            } else if (msg[1] === 'spread') {
-                $("#sub-menu").addClass("col-2");
-                $("#content").addClass("col-lg-10");
-            }
-
-            oldValue = currentValue;
-            console.log("changed");
-        }
-    }, 100); // 0.1초
-
-
-    const TAB_CNT_MAX = 23;  // hjlim new-module : 수정 시 전체 검색, 상단이나 사이드의 메뉴 상단 버튼 최대 갯수
-    const AUTH_CNT_MAX = 73 + 1;  // idx 마지막 수 + 1 을 해줘야 함
-
     if (get_token() === "") {
         window.location.href = "/accounts/login/";
     }
 
-    // table click highlight
-    $(".content-table tbody tr").on("click", function () {
-        $(this).parent().find("tr").removeClass("clicked");
-        $(this).addClass("clicked");
-    });
+    {% comment %}$(document).ready(function() {
+            $("#head_profile").addClass("active")
+            console.log($("#head_profile").text());
+        });{% endcomment %}
+
 
     //
     let dom_store = {};
 
-    function url_click(url, _title) {
+    function url_click(url, _title, _name) {
         let target = null;
 
         let tabs = $("#tab_header-list .nav-item .nav-link");
 
         let title_name = $("." + _title + ":first").text();
-            $('#page_title').text(title_name);
-            console.log("title_name   :   " + _title);
+            $('#page_title').text(_name);
+
 
         for (let i = 0; i < tabs.length; i++) {
             // to get already-loaded one.
@@ -145,17 +120,24 @@
 
             detach_all();
 
-
-            $(tab_add(url, _title)).append(
+            $(tab_add(url, _title, _name)).append(
 
                 '<iframe src="' +
                 url +
-                '" class="w-100 h-100" style="border:none;" ></iframe>'
+                '"style="border:none; width: 100%; height: 100%;" ></iframe>'
             );
 
         } else {
             // if title 검사 => 있으면 그쪽으로 focus
-            $("#" + target.id).click();
+            $('.nav-link.active').removeClass('active');
+            $('.tab-pane.active').removeClass('active show');
+
+            $("#" + target.id).addClass('active')
+            $("#tab_content-"+_title.replace("sm-", "")).addClass('active show')
+            //$("#" + target.id).click();
+            //console.log("#" + target.id);
+
+
         }
     }
 
@@ -199,7 +181,7 @@
     }
 
 
-    function tab_add(url, title) {
+    function tab_add(url, title, name) {
         let tab_now_add = title2num(title);
 
         let title_name = '';
@@ -207,10 +189,10 @@
         if (title.substring(0, 2) == 'sm') {
 
             //title_name = $("." + title + ":first").text();
-            title_name = title;
+            title_name = name;
 
         } else {
-            title_name = title;
+            title_name = name;
         }
 
         let tab_header =
@@ -222,35 +204,38 @@
             '" data-bs-toggle="tab" href="#tab_content-' +
             tab_now_add +
             '"\n' +
-            '         role="tab" aria-controls="tab_' +
-            tab_now_add +
-            '" aria-selected="true">' +
+            '         role="tab" aria-selected="true">\n' +
             {% comment %}"         onclick=\"load_detached('" +
             url +
             "', '" +
             title +
             "');\">" +{% endcomment %}
+
             title_name +
             '<span class="tab_closer">&emsp;&times;</span>\n' +
             "    </a>\n" +
             "</li>";
         let tab_content =
-            '<div class="tab-pane pade active show" id="tab_content-' +
+            '<div class="tab-pane active show" id="tab_content-' +
             tab_now_add +
-            '" role="tabpanel" aria-labelledby="tab_content-' +
-            tab_now_add +
+            '" role="tabpanel" style="height: 150vh; overflow: hidden;"' +
+
             '">\n' +
-            '    <div id="container-' +
-            tab_now_add +
-            '" class="w-100 h-100"></div>' +
+
             "</div>";
         $("#tab_header-list").append(tab_header);
         $("#tab_content-list").append(tab_content);
         $("#tab_header-" + tab_now_add + " span.tab_closer").click(() => {
             tab_delete(tab_now_add);
         });
-        $("#tab_header-" + tab_now_add).click();
-        return "#container-" + tab_now_add;
+        //생성된 탭 활성화
+        $('.nav-link.active').removeClass('active');
+        $('.tab-pane.active').removeClass('active show');
+
+        $("#tab_header-" + tab_now_add).addClass('active')
+        $("#tab_content-"+tab_now_add).addClass('active show')
+        //$("#tab_header-" + tab_now_add).click();
+        return "#tab_content-" + tab_now_add;
     }
 
     function tab_delete(tab_num) {

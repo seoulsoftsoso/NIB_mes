@@ -19,7 +19,9 @@ from rest_framework.routers import DefaultRouter
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from django.conf.urls import url
 
+from api.auto_complete import enterprise_name_ac, client_name_ac
 from api.base.codemaster_views import CodeMasterViewSet, CodeMasterSelectView
 
 
@@ -27,7 +29,7 @@ from api.base.enterprise_views import EnterpriseMasterViewSet
 
 
 from api.base.groupcodemaster_views import GroupCodeMasterViewSet, GenerateCodeMaster
-from api.base.menu_config import MenuHandler
+from api.base.menu_config import MenuHandler, getLmenuList, setMenuByUser
 
 from api.base.user_views import UserMasterViewSet, UserMasterSelectViewSet
 
@@ -90,9 +92,14 @@ urlpatterns = [
                 path('basic_information/codemaster/', codemaster),
                 path('basic_information/enterprise/', new_enterprise),
                 path('basic_information/menumaster/', Menumaster),
+                path('basic_information/getlmenulist/', getLmenuList),
+                path('basic_information/setmenubyuser/', setMenuByUser.as_view(), name='setmenubyuser'),
                 #path('getMenulist/', MenuHandler)
 
                 path('', include(router.urls)),
+                #autocomplete
+                url('autocomplete/menumaster/enterprise_name_ac$', enterprise_name_ac.as_view(), name='enterprise_name_ac'),
+                url('autocomplete/menumaster/client_name_ac$', client_name_ac.as_view(), name='client_name_ac'),
 
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

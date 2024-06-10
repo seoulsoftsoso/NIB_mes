@@ -173,7 +173,8 @@ class Menu_Auth(models.Model):
     #enterprise = models.ForeignKey('EnterpriseMaster', on_delete=models.DO_NOTHING, verbose_name='업체')
     user = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=True, verbose_name='사용자')
     # parent_id = models.IntegerField(null=True, verbose_name='상위클래스')
-    parent = models.ForeignKey('Menu_Auth', on_delete=models.DO_NOTHING, null=True, verbose_name='상위클래스')
+    #parent = models.ForeignKey('Menu_Auth', on_delete=models.SET_NULL, null=True, verbose_name='상위클래스')
+    parent = models.ForeignKey('MenuMaster', on_delete=models.SET_NULL, null=True, verbose_name='상위클래스')
     order = models.IntegerField(null=False, verbose_name='순서')
     use_flag = models.CharField(max_length=1, default='Y', verbose_name='사용여부')
     created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=True, verbose_name='최초작성자',
