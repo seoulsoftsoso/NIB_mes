@@ -134,7 +134,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'cube',
         'USER': 'root',
-        'PASSWORD': 'root00',
+        'PASSWORD': 'hong11',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }

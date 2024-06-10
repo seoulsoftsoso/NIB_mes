@@ -16,7 +16,6 @@ function api_get_customer(done_callback) {
 
 //
 function api_get_detail_customer(page, customer_code, customer_name, done_callback) {
-    if (customer_name !== "" || customer_code !== "") page = 1;
     $.ajax({
         url: "/customers/?page=" + page + "&division=" + customer_code + "&name=" + customer_name ,
         type: "GET",
@@ -32,6 +31,7 @@ function api_get_detail_customer(page, customer_code, customer_name, done_callba
 }
 
 function api_patch_customer(customer_code, allData, done_callback){
+    if (customer_name !== "" || customer_code !== "") page = 1;
     $.ajax({
         url: "/customers/"+customer_code+"/",
         data: allData,
