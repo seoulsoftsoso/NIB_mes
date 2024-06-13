@@ -19,11 +19,18 @@
     {% comment %}<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>{% endcomment %}
     {% comment %}<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>{% endcomment %}
     {% comment %}<script src="https://www.jeasyui.com/easyui/jquery.easyui.min.js"></script>{% endcomment %}
+
 <script>
   {% comment %}$.ajaxSetup({
     headers: { "X-CSRFToken": '{{csrf_token}}' }
   });{% endcomment %}
 </script>
+    <style>
+.select2-container--open .select2-dropdown--below {
+    top: -2% !important; /* 드롭다운 메뉴를 아래쪽으로 위치시킵니다 */
+    margin-top: 0px !important; /* 빈 공간을 없앱니다 */
+}
+</style>
 </head>
 {{ ep.media }}
 {% csrf_token %}
@@ -33,22 +40,17 @@
 
 
                     <div class="mb-3 row">
-                        <div class="col-lg-4">
-                            <label for="" class="col-md-2 col-form-label">업체코드</label>
+                        <div id="dropdown-container" class="col-lg-4 row">
+                            <label for="" class="col-md-2 col-form-label"><h4 class="card-title mb-4">업체코드</h4></label>
                             <div class="col-md-10">
                                 {{ ep.enterprise_name_ac }}
-                                {% comment %}<select class="form-select">
-                                    <option>선택및검색</option>
-                                    <option>Large select</option>
-                                    <option>Small select</option>
-                                </select>{% endcomment %}
                             </div>
                         </div>
-                        <div class="col-lg-4">
-                            <label for="" class="col-md-2 col-form-label">사용자</label>
+                        <div class="col-lg-4 row">
+                            <label for="" class="col-md-2 col-form-label"><h4 class="card-title mb-4">사용자</h4></label>
                             <div class="col-md-10">
-                                <select class="form-select" id="id_client_name">
-
+                                <select class="form-control form-control-sm" id="id_client_name" style="width: 100%;" >
+{#                                    {{ ep.client_name_ac }}#}
                                 </select>
                             </div>
                         </div>
@@ -75,24 +77,27 @@
                 <div class="card-body">
                     <form class="app-search d-none d-lg-block">
                         <div class="position-relative">
-                            <input type="text" class="form-control" placeholder="Search...">
+                            <input type="text" class="form-control" id="upcoming_search" placeholder="Search...">
                             <span class="bx bx-search-alt"></span>
                         </div>
                     </form>
                     <h4 class="card-title mb-4">추천메뉴</h4>
-                    <div class="card bg-primary-subtle">
+                    <div class="row mb-4">
                         <div>
                             <div class="row">
                                 <div class="col-12">
-                                    <div class="text-primary p-3 font-size-20" style="display: flex; flex-wrap: wrap;">
+                                    <div class="text-primary font-size-24" style="display: flex; flex-wrap: wrap;">
                                         <div style="margin-right: 5px">
-                                            <span class="badge badge-soft-secondary" data-target="L" value="1000">재고입고</span>
+                                            <span style="margin-right: 8px; margin-bottom: 8px; border-radius: 6px; background-color: #EFEFEF"
+                                                    class="badge badge-soft text-body drag-list" data-target="L" value="1000">재고입고</span>
                                         </div>
                                         <div style="margin-right: 5px">
-                                            <span class="badge badge-soft-secondary">재고출고</span>
+                                            <span style="margin-right: 8px; margin-bottom: 8px; border-radius: 6px; background-color: #EFEFEF"
+                                                    class="badge badge-soft text-body drag-list">재고출고</span>
                                         </div>
                                         <div style="margin-right: 5px">
-                                            <span class="badge badge-soft-secondary">재고조정</span>
+                                            <span style="margin-right: 8px; margin-bottom: 8px; border-radius: 6px; background-color: #EFEFEF"
+                                                    class="badge badge-soft text-body drag-list">재고조정</span>
                                         </div>
                                     </div>
                                 </div>
@@ -113,38 +118,41 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-body">
-                    <h2>메뉴를 구성해주세요!!</h2>
+                    <h2>메뉴를 구성해주세요.</h2>
 
                     <div class="text-center" style="padding:5px">
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <div>
-                                                        <div class="font-size-24 text-primary mb-2">
-                                                            <i class="bx bx-save"></i>
-                                                        </div>
+                        <div class="row card-body border rounded">
+{#                            <div class="col-sm-6">#}
+{#                                <div>#}
+{#                                    <div class="font-size-24 text-primary mb-2">#}
+{#                                        <i class="bx bx-save"></i>#}
+{#                                    </div>#}
+{##}
+{#                                    <div class="mt-3">#}
+{#                                        <a href="javascript: void(0);" class="btn btn-primary btn-sm w-md"#}
+{#                                           onclick="menusave()">Save</a>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+                            <div class="col-sm-12 pt-2" id="trash">
+                                <div class="mt-4 mt-sm-0">
+                                    <p class="mb-2"><img class="me-2" src="{% static 'img/trash.png' %}"> 삭제를 원하는 메뉴를 넣어주세요.</p>
+                                </div>
+                            </div>
 
-                                                        <div class="mt-3">
-                                                            <a href="javascript: void(0);" class="btn btn-primary btn-sm w-md" onclick="menusave()">Save</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6 border rounded" id="trash">
-                                                    <div class="mt-4 mt-sm-0">
-                                                        <div class="font-size-24 text-primary mb-2">
-                                                            <i class="bx bx-trash"></i>
-                                                        </div>
-                                                        <p class="mb-2">삭제할 메뉴는 여기로!!</p>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
+                        </div>
+                    </div>
 
         {% comment %}<div class="easyui-panel" id="trash">aaaaaaa</div>{% endcomment %}
 
-    <div class="easyui-panel" style="padding:5px">
-        <ul id="easytree"></ul>
-    </div>
+                    <div class="easyui-panel" style="padding:5px">
+                        <ul id="easytree"></ul>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 row justify-content-end">
+                            <button class="btn btn-info waves-effect waves-light mt-3" onclick="menusave()" style="width: 20%;">저장</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -169,15 +177,16 @@
         <script src="{% static 'skote/assets/js/app.js' %}"></script>{% endcomment %}
 </body>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
 
         //makeTreeUI();
         //userDrag();
         selectEvent();
 
-        });
+    });
 
     function userDrag(){
+
         $('.task-box').draggable({
                 helper: 'clone',
                 revert: 'invalid'
@@ -205,6 +214,7 @@
             $('#easytree').droppable({
                 accept: '.drag-list',
                 onDrop: function(event, source) {
+                    console.log('source', source)
                     let tree = $('#easytree');
                     let node = tree.tree('getSelected');
 
@@ -257,7 +267,7 @@
     }
 
     function makeTreeUI(data){
-        console.table(data);
+        // console.table(data);
         // 동적으로 JSON 데이터 생성
         let treeData = []
         data.forEach(function (item) {
@@ -380,41 +390,50 @@
                 })
     }
 
-    function drawListbyUser(data){
-
-        let rMList = '';
-        let rSList = '';
+    function drawListbyUser(data) {
         let useable = data.useablemenu;
         let used = data.usedmenu;
-        //console.table(useable);
 
-        useable.forEach(function (sub){
+        // 메뉴 리스트 라이브 검색
+        function renderList(keyword) {
+            let rMList = '';
+            let rSList = '';
 
-            if (sub.type == 'L'){
-                rMList += "<div style='margin-right: 5px'><span class='badge rounded-pill badge-soft-info drag-list' data-target='L' value="
-                rMList += sub.id
-                rMList += ">" + sub.name + '</span></div>'
+            useable.forEach(function (sub) {
+                if (!keyword || sub.name.toLowerCase().includes(keyword.toLowerCase())) {
+                    if (sub.type == 'L') {
+                        rMList += "<div style='margin-right: 8px; margin-bottom: 8px; border-radius: 6px; background-color: #EFEFEF'><span class='badge badge-soft text-body drag-list' data-target='L' value="
+                        rMList += sub.id;
+                        rMList += ">" + sub.name + '</span></div>';
+                    } else {
+                        rSList += "<div style='margin-right: 8px; margin-bottom: 8px; border-radius: 6px; background-color: #EFEFEF'><span class='badge badge-soft text-body drag-list' data-target='S' value=";
+                        rSList += sub.id;
+                        rSList += ">" + sub.name + '</span></div>';
+                    }
+                }
+            });
 
-                $('#lmenu-task').html(rMList);
-            }else{
-                rSList += "<div style='margin-right: 5px'><span class='badge rounded-pill badge-soft-info drag-list' data-target='S' value=";
-                rSList += sub.id;
-                rSList += ">" + sub.name + '</span></div>';
+            $('#lmenu-task').html(rMList);
+            $('#upcoming-task').html(rSList);
 
-                $('#upcoming-task').html(rSList)
-            }
-
-        });
-
-        // 기존 메뉴 구성
-        makeTreeUI(used);
-
-        $('.drag-list').draggable({
+            $('.drag-list').draggable({
                 helper: 'clone',
                 revert: 'invalid'
             });
+    
+        }
+        
+        // 기존 메뉴 구성
+        makeTreeUI(used);
 
+        // 초기화
+        renderList('');
 
+        // 검색 시 함수 호출
+        $('#upcoming_search').on('input', function () {
+            let keyword = $(this).val();
+            renderList(keyword);
+        });
     }
 
     function menusave(){

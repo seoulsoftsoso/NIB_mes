@@ -95,6 +95,9 @@ urlpatterns = [
                 path('basic_information/getlmenulist/', getLmenuList),
                 path('basic_information/setmenubyuser/', setMenuByUser.as_view(), name='setmenubyuser'),
                 #path('getMenulist/', MenuHandler)
+                path('basic_information/user/', UserBasedInfo, name='UserBasedInfo'),
+                path('basic_information/dept_mgmt/', DeptMgmt, name='DeptMgmt'),
+                path('basic_information/company_mgmt/', CompanyMgmt, name='CompanyMgmt'),
 
                 path('', include(router.urls)),
                 #autocomplete

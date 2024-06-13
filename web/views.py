@@ -54,3 +54,22 @@ def Menumaster(request):
     # context['useMenu'] = useMenu
     context['ep'] = enter
     return render(request, 'basic_information/menumaster.html', context)
+
+
+def UserBasedInfo(request):
+
+    context = {}
+    return render(request, 'basic_information/user_based_info.html', context)
+
+
+def DeptMgmt(request):
+
+    context = {}
+    return render(request, 'basic_information/dept_mgmt.html', context)
+
+
+def CompanyMgmt(request):
+
+    context = {}
+    return render(request, 'basic_information/company_mgmt.html', context)
+
