@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.db.models.functions import Coalesce
 from django.shortcuts import render
 
@@ -5,6 +6,7 @@ from api.base.base_form import enterprise_fm
 from api.models import MenuMaster
 
 
+@login_required
 def index(request):
     return render(request, 'index.html', {})
 

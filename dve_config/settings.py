@@ -74,6 +74,9 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 }
 
+LOGIN_URL = '/login/'
+LOGOUT_REDIRECT_URL = '/'
+
 MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -252,3 +255,4 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:7000',
     'http://localhost:8000',
 ]
+

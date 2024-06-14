@@ -20,7 +20,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.conf.urls import url
-
+from django.contrib.auth import views as auth_views
 from api.auto_complete import enterprise_name_ac, client_name_ac
 from api.base.codemaster_views import CodeMasterViewSet, CodeMasterSelectView
 
@@ -86,6 +86,7 @@ urlpatterns = [
                 path('', index),
                 path('accounts/login/', login_page),
                 path('login/', login_page),
+                path('logout/', auth_views.LogoutView.as_view(), name='logout'),
                 path('users/login/', custom_obtain_auth_token),
                 re_path(r'^data/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, }),
 
