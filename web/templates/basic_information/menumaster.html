@@ -26,11 +26,12 @@
   });{% endcomment %}
 </script>
     <style>
-.select2-container--open .select2-dropdown--below {
-    top: -2% !important; /* 드롭다운 메뉴를 아래쪽으로 위치시킵니다 */
-    margin-top: 0px !important; /* 빈 공간을 없앱니다 */
-}
-</style>
+        .select2-container--open .select2-dropdown--below {
+            top: -2% !important;
+            margin-top: 0px !important;
+        }
+    </style>
+    
 </head>
 {{ ep.media }}
 {% csrf_token %}
@@ -121,34 +122,21 @@
                     <h2>메뉴를 구성해주세요.</h2>
 
                     <div class="text-center" style="padding:5px">
-                        <div class="row card-body border rounded">
-{#                            <div class="col-sm-6">#}
-{#                                <div>#}
-{#                                    <div class="font-size-24 text-primary mb-2">#}
-{#                                        <i class="bx bx-save"></i>#}
-{#                                    </div>#}
-{##}
-{#                                    <div class="mt-3">#}
-{#                                        <a href="javascript: void(0);" class="btn btn-primary btn-sm w-md"#}
-{#                                           onclick="menusave()">Save</a>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-                            <div class="col-sm-12 pt-2" id="trash">
+                        <div class="row border rounded" style="height: 80px;">
+                            <div class="col-sm-12 pt-2 d-flex justify-content-center align-items-center" id="trash" style="width: 100%; height: 100%;">
                                 <div class="mt-4 mt-sm-0">
-                                    <p class="mb-2"><img class="me-2" src="{% static 'img/trash.png' %}"> 삭제를 원하는 메뉴를 넣어주세요.</p>
+                                    <p class="mb-2 text-center"><img class="me-2" src="{% static 'img/trash.png' %}"> 삭제를 원하는 메뉴를 넣어주세요.</p>
                                 </div>
                             </div>
-
                         </div>
                     </div>
 
         {% comment %}<div class="easyui-panel" id="trash">aaaaaaa</div>{% endcomment %}
 
-                    <div class="easyui-panel" style="padding:5px">
+                    <div class="easyui-panel" style="width: 100%">
                         <ul id="easytree"></ul>
                     </div>
-                    <div class="row">
+                    <div class="row justify-content-center">
                         <div class="col-lg-12 row justify-content-end">
                             <button class="btn btn-info waves-effect waves-light mt-3" onclick="menusave()" style="width: 20%;">저장</button>
                         </div>
@@ -177,166 +165,136 @@
         <script src="{% static 'skote/assets/js/app.js' %}"></script>{% endcomment %}
 </body>
 <script>
+    let deletedNodes = [];
+    
     $(document).ready(function () {
 
-        //makeTreeUI();
-        //userDrag();
         selectEvent();
 
     });
 
-    function userDrag(){
+    function userDrag() {
 
         $('.task-box').draggable({
-                helper: 'clone',
-                revert: 'invalid'
-            });
+            helper: 'clone',
+            revert: 'invalid'
+        });
 
         $('.drag-list').draggable({
-                helper: 'clone',
-                revert: 'invalid'
-            });
+            helper: 'clone',
+            revert: 'invalid'
+        });
 
         // 트리 영역을 드롭 가능하게 설정
-            {% comment %}$('#easytree').tree({
-                onBeforeDrop: function(event, target, source, point) {
-                    // 드롭 대상이 div 외부인지 확인
-                          if (!$(event.data.target).closest('#div').length) {
-                            // div 외부 드롭 방지
-                              alert(event);
-                            event.preventDefault();
-                          }
-                    return true;
+        {% comment %}$('#easytree').tree({
+            onBeforeDrop: function(event, target, source, point) {
+                // 드롭 대상이 div 외부인지 확인
+                      if (!$(event.data.target).closest('#div').length) {
+                        // div 외부 드롭 방지
+                          alert(event);
+                        event.preventDefault();
+                      }
+                return true;
+            }
+        });{% endcomment %}
+
+        // 트리 영역을 드롭 가능하게 설정
+        $('#easytree').droppable({
+            accept: '.drag-list',
+            onDrop: function (event, source) {
+                //console.log('source', source)
+                let tree = $('#easytree');
+                let node = tree.tree('getSelected');
+
+                // 드롭된 요소의 텍스트와 id를 가져옴
+                let draggedItemText = $(source).text();
+                let draggedItemValue = $(source).attr('value');
+                let draggedItemType = $(source).attr('data-target')
+                let iconcls = 'icon-menus'
+
+                if (draggedItemType === 'L') {
+                    iconcls = 'icon-menul'
                 }
-            });{% endcomment %}
 
-            // 트리 영역을 드롭 가능하게 설정
-            $('#easytree').droppable({
-                accept: '.drag-list',
-                onDrop: function(event, source) {
-                    console.log('source', source)
-                    let tree = $('#easytree');
-                    let node = tree.tree('getSelected');
+                //console.log($(source));
 
-                    // 드롭된 요소의 텍스트와 id를 가져옴
-                    let draggedItemText = $(source).text();
-                    let draggedItemValue = $(source).attr('value');
-                    let draggedItemType = $(source).attr('data-target')
-                    let iconcls = 'icon-menus'
+                {% comment %}if (!$(event.data.target).closest('#div').length) {
+                        // div 외부 드롭 방지
+                          alert(event);
+                        event.preventDefault();
+                      }{% endcomment %}
 
-                    if(draggedItemType==='L'){
-                        iconcls = 'icon-menul'
-                    }
-
-                    console.log($(source));
-
-                    {% comment %}if (!$(event.data.target).closest('#div').length) {
-                            // div 외부 드롭 방지
-                              alert(event);
-                            event.preventDefault();
-                          }{% endcomment %}
-
-                    // 트리에 노드 추가
-                    tree.tree('append', {
-                        parent: (node ? node.target : null),
-                        data: [{
-                            id: draggedItemValue, text: draggedItemText, iconCls: iconcls
-                        }]
-                    });
-                    // drop 된 후 숨김
-                    $(source).hide();
-                }
-            });
-
-
-            $('#trash').droppable({
-
-                onDrop: function(event, source) {
-                    {% comment %}let tree = $('#easytree');
-                    let node = tree.tree('getSelected');
-
-                    if (node){
-                        tree.tree('remove', {
-                          target: node.id // Replace 'node.target' with the ID of the node to remove
-                        });
-                    }{% endcomment %}
-                    // drop 된 후 숨김
-                    $(source).remove();
-                }
-            });
-    }
-
-    function makeTreeUI(data){
-        // console.table(data);
-        // 동적으로 JSON 데이터 생성
-        let treeData = []
-        data.forEach(function (item) {
-            if (item.type == 'L') {
-                // 상위 노드 추가
-                treeData.push({
-                    id: item.id,
-                    text: item.name,
-                    iconCls: 'icon-menul',
-                    children: []
+                // 트리에 노드 추가
+                tree.tree('append', {
+                    parent: (node ? node.target : null),
+                    data: [{
+                        id: draggedItemValue, text: draggedItemText, iconCls: iconcls
+                    }]
                 });
-            } else if (item.type == 'S') {
-                // 하위 노드 추가
-                let parent = treeData.find(parent => parent.id === item.menuauth__parent);
-                if (parent) {
-                    parent.children.push({
-                        id: item.id,
-                        text: item.name,
-                        iconCls: 'icon-menus'
+                // drop 된 후 숨김
+                $(source).hide();
+            }
+        });
+
+
+        $('#trash').droppable({
+
+            {% comment %}onDrop: function(event, source) {
+                let tree = $('#easytree');
+                let node = tree.tree('getSelected');
+
+                if (node){
+                    tree.tree('remove', {
+                      target: node.id // Replace 'node.target' with the ID of the node to remove
                     });
+                }
+                // drop 된 후 숨김
+                $(source).remove();
+            }{% endcomment %}
+            onDrop: function (event, source) {
+                // drop 된 후 숨김
+                let node = $('#easytree').tree('getNode', source);
+                if (node) {
+                    deletedNodes.push(node.id);
+                    $('#easytree').tree('remove', node.target);
                 }
             }
         });
-        console.log(treeData);
-        {% comment %}treeData = [
-            {
-                "id": 1,
-                "text": "기준정보",
-                "iconCls":"icon-menul",
-                "children": [
-                    {
-                        "id": 11,
-                        "text": "권한관리",
-                        "iconCls":"icon-menus"
-                    },
-                    {
-                        "id": 12,
-                        "text": "거래처관리",
-                        "iconCls":"icon-menus"
-                    }
-                ]
-            },
-            {
-                "id": 2,
-                "text": "재고관리",
-                "iconCls":"icon-menul",
-                "children": [
-                    {
-                        "id": 21,
-                        "text": "재고입고",
-                        "iconCls":"icon-menus"
-                    },
-                    {
-                        "id": 22,
-                        "text": "재고현황",
-                        "iconCls":"icon-menus"
-                    }
-                ]
-            }
-        ];{% endcomment %}
+    }
 
+    function makeTreeUI(data) {
+        let treeData = []
+        data.forEach(function (item) {
+            if (item.menuauth__del_flag === "N") {
+                if (item.type == 'L') {
+                    // 상위 노드 추가
+                    treeData.push({
+                        id: item.id,
+                        text: item.name,
+                        iconCls: 'icon-menul',
+                        children: []
+                    });
+                } else if (item.type == 'S') {
+                    // 하위 노드 추가
+                    let parent = treeData.find(parent => parent.id === item.menuauth__parent);
+                    if (parent) {
+                        parent.children.push({
+                            id: item.id,
+                            text: item.name,
+                            iconCls: 'icon-menus'
+                        });
+                    }
+                }
+            }
+        });
         // EasyUI Tree에 동적으로 생성한 JSON 데이터 로드
         $('#easytree').tree({
             data: treeData,
             animate: true,
             dnd: true,
-            onDblClick: function(node){
-                    $(this).tree('beginEdit',node.target);
-                }
+            onDblClick: function (node) {
+                $(this).tree('beginEdit', node.target);
+            }
         });
         // drag영역 활성화
         userDrag();
@@ -399,17 +357,21 @@
             let rMList = '';
             let rSList = '';
 
+            // 상위 메뉴는 라이브 검색 X
             useable.forEach(function (sub) {
-                if (!keyword || sub.name.toLowerCase().includes(keyword.toLowerCase())) {
-                    if (sub.type == 'L') {
-                        rMList += "<div style='margin-right: 8px; margin-bottom: 8px; border-radius: 6px; background-color: #EFEFEF'><span class='badge badge-soft text-body drag-list' data-target='L' value="
-                        rMList += sub.id;
-                        rMList += ">" + sub.name + '</span></div>';
-                    } else {
-                        rSList += "<div style='margin-right: 8px; margin-bottom: 8px; border-radius: 6px; background-color: #EFEFEF'><span class='badge badge-soft text-body drag-list' data-target='S' value=";
-                        rSList += sub.id;
-                        rSList += ">" + sub.name + '</span></div>';
-                    }
+                if (sub.type == 'L') {
+                    rMList += "<div style='margin-right: 8px; margin-bottom: 8px; border-radius: 6px; background-color: #EFEFEF'><span class='badge badge-soft text-body drag-list' data-target='L' value="
+                    rMList += sub.id;
+                    rMList += ">" + sub.name + '</span></div>';
+                }
+            });
+
+            // 하위 메뉴 라이브 검색 필터링
+            useable.forEach(function (sub) {
+                if (sub.type == 'S' && (!keyword || sub.name.toLowerCase().includes(keyword.toLowerCase()))) {
+                    rSList += "<div style='margin-right: 8px; margin-bottom: 8px; border-radius: 6px; background-color: #EFEFEF'><span class='badge badge-soft text-body drag-list' data-target='S' value=";
+                    rSList += sub.id;
+                    rSList += ">" + sub.name + '</span></div>';
                 }
             });
 
@@ -420,9 +382,9 @@
                 helper: 'clone',
                 revert: 'invalid'
             });
-    
+
         }
-        
+
         // 기존 메뉴 구성
         makeTreeUI(used);
 
@@ -443,13 +405,13 @@
         let menunamelist = [];
         let parentlist = [];
 
-        console.table(roots)
+        //console.table(roots)
 
             // 각 루트 노드에 대해 자식 노드 가져오기
         roots.forEach(function(root) {
-            console.log("target   : " + root.target);
+            //console.log("target   : " + root.target);
             if (typeof root.target === 'undefined'){
-                console.log("not target!!!!!");
+                //console.log("not target!!!!!");
                 return
             }else{
                  let children = $('#easytree').tree('getChildren', root.target);
@@ -479,15 +441,25 @@
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             }
 
-            console.log(allData);
+            //console.log(allData);
 
-        api_gp(`/basic_information/setmenubyuser/`, "post", allData, (done) => {
-                    done = done.success
-            if(done){
-                alert('등록완료');
+        {#api_gp(`/basic_information/setmenubyuser/`, "post", allData, (response) => {#}
+        {#            done = done.success#}
+        {#    console.log('done', done)#}
+        {#    if(done){#}
+        {#        alert('등록완료');#}
+        {#    }#}
+        {##}
+        {#        });#}
+        $.ajax({
+            url: "{% url 'setmenubyuser' %}",
+            type: "POST",
+            data: allData,
+            success : function (res) {
+                alert("저장 완료")
+                location.reload()
             }
-
-                });
+        })
 
     }
 
