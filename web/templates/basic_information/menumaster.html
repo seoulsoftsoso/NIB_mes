@@ -190,7 +190,7 @@
             dnd: true,
             onBeforeDrop: function (target, source, point) {
                 let targetNode = $('#easytree').tree('getNode', target);
-                let draggedItemType = $(source).attr('data-target') || source.iconCls === 'icon-menul' ? 'L' : 'S'; // 추가된 부분
+                let draggedItemType = $(source).attr('data-target') || source.iconCls === 'icon-menul' ? 'L' : 'S';
 
                 // 트리에서 타 상위 메뉴에 하위로 들어갈 수 없도록
                 if (draggedItemType === 'L' && targetNode && (targetNode.iconCls === 'icon-menul' || targetNode.iconCls === 'icon-menus')) {
