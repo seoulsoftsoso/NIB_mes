@@ -185,24 +185,28 @@
             revert: 'invalid'
         });
 
-        // 트리 영역을 드롭 가능하게 설정
-        {% comment %}$('#easytree').tree({
-            onBeforeDrop: function(event, target, source, point) {
-                // 드롭 대상이 div 외부인지 확인
-                      if (!$(event.data.target).closest('#div').length) {
-                        // div 외부 드롭 방지
-                          alert(event);
-                        event.preventDefault();
-                      }
-                return true;
+        // 트리 노드도 드래그 가능하게 설정
+        $('#easytree').tree({
+            dnd: true,
+            onBeforeDrop: function (target, source, point) {
+                let targetNode = $('#easytree').tree('getNode', target);
+                let draggedItemType = $(source).attr('data-target') || source.iconCls === 'icon-menul' ? 'L' : 'S'; // 추가된 부분
+
+                // 트리에서 타 상위 메뉴에 하위로 들어갈 수 없도록
+                if (draggedItemType === 'L' && targetNode && (targetNode.iconCls === 'icon-menul' || targetNode.iconCls === 'icon-menus')) {
+                    alert('상위 메뉴는 다른 상위 메뉴나 하위 메뉴의 하위로 들어갈 수 없습니다.');
+                    return false;
+                }
             }
-        });{% endcomment %}
+        });
+
 
         // 트리 영역을 드롭 가능하게 설정
         $('#easytree').droppable({
             accept: '.drag-list',
             onDrop: function (event, source) {
-                //console.log('source', source)
+                console.log('event', event)
+                console.log('source', $(source))
                 let tree = $('#easytree');
                 let node = tree.tree('getSelected');
 
@@ -215,14 +219,13 @@
                 if (draggedItemType === 'L') {
                     iconcls = 'icon-menul'
                 }
+                console.log('node', node)
 
-                //console.log($(source));
-
-                {% comment %}if (!$(event.data.target).closest('#div').length) {
-                        // div 외부 드롭 방지
-                          alert(event);
-                        event.preventDefault();
-                      }{% endcomment %}
+                // 처음 드랍 할 때 타 상위 메뉴에 하위로 들어갈 수 없도록
+                if ((draggedItemType === 'L' && node && (node.iconCls === 'icon-menul' || node.iconCls === 'icon-menus'))) {
+                    alert('상위 메뉴는 다른 상위 메뉴나 하위 메뉴의 하위로 들어갈 수 없습니다.');
+                    return false;
+                }
 
                 // 트리에 노드 추가
                 tree.tree('append', {
@@ -238,19 +241,6 @@
 
 
         $('#trash').droppable({
-
-            {% comment %}onDrop: function(event, source) {
-                let tree = $('#easytree');
-                let node = tree.tree('getSelected');
-
-                if (node){
-                    tree.tree('remove', {
-                      target: node.id // Replace 'node.target' with the ID of the node to remove
-                    });
-                }
-                // drop 된 후 숨김
-                $(source).remove();
-            }{% endcomment %}
             onDrop: function (event, source) {
                 // drop 된 후 숨김
                 let node = $('#easytree').tree('getNode', source);
@@ -263,6 +253,7 @@
     }
 
     function makeTreeUI(data) {
+        console.log(data)
         let treeData = []
         data.forEach(function (item) {
             if (item.menuauth__del_flag === "N") {
@@ -270,7 +261,7 @@
                     // 상위 노드 추가
                     treeData.push({
                         id: item.id,
-                        text: item.name,
+                        text: item.menuauth__alias,
                         iconCls: 'icon-menul',
                         children: []
                     });
@@ -280,7 +271,7 @@
                     if (parent) {
                         parent.children.push({
                             id: item.id,
-                            text: item.name,
+                            text: item.menuauth__alias,
                             iconCls: 'icon-menus'
                         });
                     }
@@ -349,6 +340,7 @@
     }
 
     function drawListbyUser(data) {
+        //console.table(data)
         let useable = data.useablemenu;
         let used = data.usedmenu;
 
@@ -359,19 +351,21 @@
 
             // 상위 메뉴는 라이브 검색 X
             useable.forEach(function (sub) {
+                let element_name = sub.menuauth__alias ? sub.menuauth__alias : sub.name;
                 if (sub.type == 'L') {
                     rMList += "<div style='margin-right: 8px; margin-bottom: 8px; border-radius: 6px; background-color: #EFEFEF'><span class='badge badge-soft text-body drag-list' data-target='L' value="
                     rMList += sub.id;
-                    rMList += ">" + sub.name + '</span></div>';
+                    rMList += ">" + element_name + '</span></div>';
                 }
             });
 
             // 하위 메뉴 라이브 검색 필터링
             useable.forEach(function (sub) {
+                let element_name = sub.menuauth__alias ? sub.menuauth__alias : sub.name;
                 if (sub.type == 'S' && (!keyword || sub.name.toLowerCase().includes(keyword.toLowerCase()))) {
                     rSList += "<div style='margin-right: 8px; margin-bottom: 8px; border-radius: 6px; background-color: #EFEFEF'><span class='badge badge-soft text-body drag-list' data-target='S' value=";
                     rSList += sub.id;
-                    rSList += ">" + sub.name + '</span></div>';
+                    rSList += ">" + element_name + '</span></div>';
                 }
             });
 
@@ -457,7 +451,7 @@
             data: allData,
             success : function (res) {
                 alert("저장 완료")
-                location.reload()
+                window.top.location.reload(true);
             }
         })
 
