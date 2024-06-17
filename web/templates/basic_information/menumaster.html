@@ -205,8 +205,8 @@
         $('#easytree').droppable({
             accept: '.drag-list',
             onDrop: function (event, source) {
-                console.log('event', event)
-                console.log('source', $(source))
+                //console.log('event', event)
+                //console.log('source', $(source))
                 let tree = $('#easytree');
                 let node = tree.tree('getSelected');
 
@@ -219,7 +219,7 @@
                 if (draggedItemType === 'L') {
                     iconcls = 'icon-menul'
                 }
-                console.log('node', node)
+                //console.log('node', node)
 
                 // 처음 드랍 할 때 타 상위 메뉴에 하위로 들어갈 수 없도록
                 if ((draggedItemType === 'L' && node && (node.iconCls === 'icon-menul' || node.iconCls === 'icon-menus'))) {
@@ -253,7 +253,7 @@
     }
 
     function makeTreeUI(data) {
-        console.log(data)
+        //console.log(data)
         let treeData = []
         data.forEach(function (item) {
             if (item.menuauth__del_flag === "N") {

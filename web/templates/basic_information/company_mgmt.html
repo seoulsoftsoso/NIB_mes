@@ -18,6 +18,22 @@
         text-align: center;
         vertical-align: middle;
     }
+
+    .dataTables_wrapper .top {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .dataTables_wrapper .dataTables_filter {
+        order: 1; /* 검색란을 오른쪽으로 */
+        margin-left: auto;
+    }
+
+    .dataTables_wrapper .dt-buttons {
+        order: 0; /* 버튼을 왼쪽으로 */
+    }
 </style>
 <body>
 
@@ -159,6 +175,7 @@
 
     $(document).ready(function () {
         company_datatable = new DataTable('#company_datatable', {
+            lengthChange: false, // 데이터 건수 select false 
             columnDefs: [
                 {
                     targets: 0,
@@ -171,7 +188,31 @@
             ],
             drawCallback: function () {
                 $('#company_datatable th:first-child').removeClass('sorting sorting_asc sorting_desc');
-            }
+            },
+            dom: '<"top"Bf>rt<"bottom"ip><"clear">',
+            buttons: [
+                {
+                    className: "btn btn-soft-primary waves-effect waves-light",
+                    text: '등록',
+                    action: function (e, dt, node, config) {
+                        alert('등록');
+                    }
+                },
+                {
+                    className: "btn btn-soft-primary waves-effect waves-light",
+                    text: '수정',
+                    action: function (e, dt, node, config) {
+                        alert('수정');
+                    }
+                },
+                {
+                    className: "btn btn-soft-primary waves-effect waves-light",
+                    text: '삭제',
+                    action: function (e, dt, node, config) {
+                        alert('삭제');
+                    }
+                }
+            ]
         })
 
     });
