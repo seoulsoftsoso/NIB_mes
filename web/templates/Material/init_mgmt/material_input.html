@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    {% include "header.html" %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+</head>
+<style>
+    th:first-child .sorting,
+    th:first-child .sorting_asc,
+    th:first-child .sorting_desc {
+        display: none !important;
+    }
+
+    #material_datatable th, tbody {
+        text-align: center;
+        vertical-align: middle !important;
+    }
+
+    .dataTables_wrapper .top {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .dataTables_wrapper .dataTables_filter {
+        order: 1; /* 검색란을 오른쪽으로 */
+        margin-left: auto;
+    }
+
+    .dataTables_wrapper .dt-buttons {
+        order: 0; /* 버튼을 왼쪽으로 */
+    }
+</style>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title mb-5">재고 입고</h4>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card job-filter">
+                            <div class="card-body p-3">
+                                
+                                <form action="javascript:void(0);">
+                                    <div class="row g-3">
+                                        <div class="col-xxl-3 col-lg-4">
+                                            <div class="position-relative">
+                                                <input type="text" class="form-control" id="product_name_num"
+                                                       autocomplete="off" placeholder="품목번호 또는 품목명으로 검색">
+                                            </div>
+                                        </div>
+                                        <!--end col-->
+                                        <div class="col-xxl-3 col-lg-4">
+                                            <div class="position-relative">
+                                                <input type="text" class="form-control" id="locationInput"
+                                                       autocomplete="off" placeholder="입고번호 또는 입고처명으로 검색">
+                                            </div>
+                                        </div>
+                                        <!--end col-->
+                                        <div class="col-xxl-2 col-lg-6">
+                                            <div class="position-relative">
+                                                <div id="datepicker1">
+                                                    <input type="text" class="form-control" placeholder="기간 선택"
+                                                           data-date-format="yyyy-mm-dd" autocomplete="off"
+                                                           data-date-container='#datepicker1' data-date-autoclose="true"
+                                                           id="daterange">
+                                                </div><!-- input-group -->
+                                            </div>
+                                        </div>
+                                        <!--end col-->
+
+                                        <div class="col-xxl-1 col-lg-6">
+                                            <div class="position-relative h-100 hstack gap-3">
+                                                <a href="#collapseExample" data-bs-toggle="collapse"
+                                                   class="btn btn-outline-secondary waves-effect h-100 w-100">
+                                                    <i class="dripicons-plus pt-5"></i> 필터 추가</a>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-xxl-3 col-lg-6">
+                                            <div class="position-relative h-100 hstack gap-3 d-flex justify-content-end">
+                                                <button type="submit" class="btn btn-primary h-100 w-40" 
+                                                        data-bs-toggle="modal" data-bs-target="#exampleModalFullscreen">
+                                                    <i class="dripicons-plus pt-5"></i> 입고서 작성
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <!--end col-->
+                                        <div class="collapse" id="collapseExample">
+                                            <div class="pt-4">
+                                                <div class="row g-3">
+                                                    <div class="col-xxl-4 col-lg-6">
+                                                        <div>
+                                                            <label for="experience"
+                                                                   class="form-label">상태</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   id="init_stand_by" value="입고 대기">
+                                                            <label class="form-check-label"
+                                                                   for="init_stand_by">입고 대기</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   id="init_part" value="부분 입고">
+                                                            <label class="form-check-label" for="init_part">부분 입고</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   id="init_complete" value="입고 완료">
+                                                            <label class="form-check-label"
+                                                                   for="init_complete">입고 완료</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xxl-4 col-lg-6">
+                                                        <div>
+                                                            <label for="jobType" class="form-label">유형</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   id="complete_product" value="cp">
+                                                            <label class="form-check-label" for="complete_product">제품</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   id="half_product" value="hp">
+                                                            <label class="form-check-label" for="half_product">반제품</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   id="raw_material" value="rm">
+                                                            <label class="form-check-label" for="raw_material">원재료</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   id="subsidiary_material" value="sm">
+                                                            <label class="form-check-label" for="subsidiary_material">부재료</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xxl-4 col-lg-6">
+                                                        <div>
+                                                            <label for="jobType" class="form-label">위치</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   id="warehouse1" value="option3">
+                                                            <label class="form-check-label" for="warehouse1">창고A</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   id="warehouse2" value="option3">
+                                                            <label class="form-check-label" for="warehouse2">창고B</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   id="warehouse3" value="option3">
+                                                            <label class="form-check-label" for="warehouse3">창고C</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   id="warehouse4" value="option3">
+                                                            <label class="form-check-label" for="warehouse4">창고D</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   id="seoul" value="option3">
+                                                            <label class="form-check-label" for="seoul">서울</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   id="office" value="option3">
+                                                            <label class="form-check-label" for="office">사무실</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   id="chung_ju" value="option3">
+                                                            <label class="form-check-label" for="chung_ju">충주</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--end row-->
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end col-->
+                </div>
+                <!--end row-->
+
+                <div class="row mt-4">
+                    <div class="col-xxl-12">
+                        <table id="material_datatable" class="table table-bordered dt-responsive  nowrap w-100 mt-5">
+                            <thead>
+                            <tr>
+                                <th><input type="checkbox" id="select_all"></th>
+                                <th style="width: 3%;">순번</th>
+                                <th>상태</th>
+                                <th>입고(예정)일</th>
+                                <th>입고번호</th>
+                                <th>입고처</th>
+                                <th>품번</th>
+                                <th>품목</th>
+                                <th>유형</th>
+                                <th>단위</th>
+                                <th>입고현황</th>
+                                <th>구매가</th>
+                                <th>판매가</th>
+                                <th>위치</th>
+                            </tr>
+                            </thead>
+
+
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td>1</td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-secondary disabled" style="color: red !important;">
+                                            <b>입고 대기</b>
+                                        </button>
+                                    </td>
+                                    <td>2024-07-01</td>
+                                    <td>AA-BB104CC</td>
+                                    <td>테헤란</td>
+                                    <td>A1001</td>
+                                    <td>버섯가루</td>
+                                    <td>원재료</td>
+                                    <td>kg</td>
+                                    <td>(0/3)</td>
+                                    <td>100,000</td>
+                                    <td>-</td>
+                                    <td>서울</td>
+                                </tr>
+                            
+                            <tr>
+                                    <td></td>
+                                    <td>2</td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-secondary disabled" style="color: darkorange !important;">
+                                            <b>부분 입고</b>
+                                        </button>
+                                    </td>
+                                    <td>2024-06-30</td>
+                                    <td>AA-ZBS534</td>
+                                    <td>솔릭</td>
+                                    <td>A1023</td>
+                                    <td>마늘가루</td>
+                                    <td>원재료</td>
+                                    <td>kg</td>
+                                    <td>(1/4)</td>
+                                    <td>100,000</td>
+                                    <td>-</td>
+                                    <td>창고A</td>
+                                </tr>
+                            
+                            <tr>
+                                    <td></td>
+                                    <td>3</td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-secondary disabled" style="color: #4cae4c !important;">
+                                            <b>입고 완료</b>
+                                        </button>
+                                    </td>
+                                    <td>2024-06-29</td>
+                                    <td>AA-HQT325</td>
+                                    <td>테헤란</td>
+                                    <td>C1021</td>
+                                    <td>포장지</td>
+                                    <td>부재료</td>
+                                    <td>ea</td>
+                                    <td>(100/100)</td>
+                                    <td>200,000</td>
+                                    <td>-</td>
+                                    <td>창고B</td>
+                                </tr>
+                            
+                            <tr>
+                                    <td></td>
+                                    <td>4</td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-secondary disabled" style="color: red !important;">
+                                            <b>입고 대기</b>
+                                        </button>
+                                    </td>
+                                    <td>2024-06-04</td>
+                                    <td>TZ-AWBX32</td>
+                                    <td>테헤란</td>
+                                    <td>T23122</td>
+                                    <td>포장상자</td>
+                                    <td>부재료</td>
+                                    <td>ea</td>
+                                    <td>(0/50)</td>
+                                    <td>200,000</td>
+                                    <td>-</td>
+                                    <td>창고C</td>
+                                </tr>
+                            
+                            <tr>
+                                    <td></td>
+                                    <td>5</td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-secondary disabled" style="color: red !important;">
+                                            <b>입고 대기</b>
+                                        </button>
+                                    </td>
+                                    <td>2024-05-23</td>
+                                    <td>QA-GSE784</td>
+                                    <td>테헤란</td>
+                                    <td>N12125</td>
+                                    <td>건조파</td>
+                                    <td>반제품</td>
+                                    <td>kg</td>
+                                    <td>(0/4)</td>
+                                    <td>50,000</td>
+                                    <td>-</td>
+                                    <td>창고D</td>
+                                </tr>
+                            
+                            <tr>
+                                    <td></td>
+                                    <td>6</td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-secondary disabled" style="color: #4cae4c !important;">
+                                            <b>입고 완료</b>
+                                        </button>
+                                    </td>
+                                    <td>2024-04-15</td>
+                                    <td>YJ-JRSF154</td>
+                                    <td>테헤란</td>
+                                    <td>L1587</td>
+                                    <td>건조파</td>
+                                    <td>제품</td>
+                                    <td>kg</td>
+                                    <td>(0/4)</td>
+                                    <td>50,000</td>
+                                    <td>-</td>
+                                    <td>서울</td>
+                                </tr>
+                            
+                            
+
+                            </tbody>
+                        </table>
+                        {% include 'Material/init_mgmt/fullscreen_modal.html' %}
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+{% include 'footer.html' %}
+{#<script src="{% static 'skote/assets/js/pages/job-grid-list.init.js' %}"></script>#}
+<script>
+
+    let material_table = null;
+
+    $(document).ready(function () {
+        $(function () {
+            $('#daterange').daterangepicker({
+                locale: {
+                    format: 'YYYY-MM-DD'
+                },
+                autoUpdateInput: false
+            }, function (start, end, label) {
+                $('#daterange').val(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
+                filterTable()
+            });
+        });
+        
+        // DataTable 초기화
+        var material_table = $('#material_datatable').DataTable({
+            lengthChange: false,
+            searching: false,
+            columnDefs: [
+                {
+                    targets: 0,
+                    orderable: false,
+                    className: 'table-active dt-body-center',
+                    render: function (data, type, full, meta) {
+                        return '<input type="checkbox" name="id[]" value="">';
+                    }
+                }
+            ],
+            drawCallback: function () {
+                $('#material_datatable th:first-child').removeClass('sorting sorting_asc sorting_desc');
+            }
+        });
+
+        // 필터 입력 이벤트 리스너
+        $('#product_name_num, #locationInput').on('keyup change', function () {
+            console.log('wnbpsbz')
+            filterTable();
+        });
+
+        // 체크박스 이벤트 리스너
+        $('input[type="checkbox"]').on('change', function () {
+            filterTable();
+        });
+
+        function filterTable() {
+            var product_name_num = $('#product_name_num').val().toLowerCase();
+            var locationInput = $('#locationInput').val().toLowerCase();
+            var dateRange = $('#daterange').val().toLowerCase();
+            var startDate = null;
+            var endDate = null;
+            var init_stand_by = $('#init_stand_by').is(':checked');
+            var init_part = $('#init_part').is(':checked');
+            var init_complete = $('#init_complete').is(':checked');
+            var completeProductChecked = $('#complete_product').is(':checked');
+            var halfProductChecked = $('#half_product').is(':checked');
+            var raw_material = $('#raw_material').is(':checked');
+            var subsidiary_material = $('#subsidiary_material').is(':checked');
+            var warehouse1 = $('#warehouse1').is(':checked');
+            var warehouse2 = $('#warehouse2').is(':checked');
+            var warehouse3 = $('#warehouse3').is(':checked');
+            var warehouse4 = $('#warehouse4').is(':checked');
+            var seoul = $('#seoul').is(':checked');
+            var office = $('#office').is(':checked');
+            var chung_ju = $('#chung_ju').is(':checked');
+
+            if (dateRange) {
+                var dates = dateRange.split(' - ');
+                startDate = moment(dates[0], 'YYYY-MM-DD');
+                endDate = moment(dates[1], 'YYYY-MM-DD');
+            }
+
+            var statusFilters = [];
+            if (init_stand_by) statusFilters.push('입고 대기');
+            if (init_part) statusFilters.push('부분 입고');
+            if (init_complete) statusFilters.push('입고 완료');
+
+            // DataTable 필터링
+            material_table.rows().every(function () {
+                var data = this.data();
+                var showRow = true;
+
+                // 검색어 필터링
+                if (product_name_num && data[6].toLowerCase().indexOf(product_name_num) === -1 && data[7].toLowerCase().indexOf(product_name_num) === -1) {
+                    showRow = false;
+                }
+
+                if (locationInput && data[4].toLowerCase().indexOf(locationInput) === -1 && data[5].toLowerCase().indexOf(locationInput) === -1) {
+                    showRow = false;
+                }
+
+                if (dateRange) {
+                    var rowDate = moment(data[3], 'YYYY-MM-DD');
+                    if (!rowDate.isBetween(startDate, endDate, undefined, '[]')) { // []는 경계값 포함
+                        showRow = false;
+                    }
+                }
+
+                // 체크박스 필터링
+                if (statusFilters.length > 0 && !statusFilters.some(status => $(data[2]).text().trim().includes(status))) {
+                    showRow = false;
+                }
+
+                if (completeProductChecked && data[8].toLowerCase() !== '제품') {
+                    showRow = false;
+                }
+
+                if (halfProductChecked && data[8].toLowerCase() !== '반제품') {
+                    showRow = false;
+                }
+
+                if (raw_material && data[8].toLowerCase() !== '원재료') {
+                    showRow = false;
+                }
+
+                if (subsidiary_material && data[8].toLowerCase() !== '부재료') {
+                    showRow = false;
+                }
+
+                if (warehouse1 && data[13].toLowerCase() !== '창고a') {
+                    showRow = false;
+                }
+
+                if (warehouse2 && data[13].toLowerCase() !== '창고b') {
+                    showRow = false;
+                }
+
+                if (warehouse3 && data[13].toLowerCase() !== '창고c') {
+                    showRow = false;
+                }
+
+                if (warehouse4 && data[13].toLowerCase() !== '창고d') {
+                    showRow = false;
+                }
+
+                if (seoul && data[13].toLowerCase() !== '서울') {
+                    showRow = false;
+                }
+
+                if (office && data[13].toLowerCase() !== '사무실') {
+                    showRow = false;
+                }
+
+                if (chung_ju && data[13].toLowerCase() !== '충주') {
+                    showRow = false;
+                }
+
+                // 행 표시 여부 결정
+                if (showRow) {
+                    this.node().style.display = '';
+                } else {
+                    this.node().style.display = 'none';
+                }
+            });
+
+            // DataTable 다시 그리기
+            material_table.draw();
+        }
+    });
+
+    // "select_all" 체크박스 전체 선택
+    function selectAllCheckboxes(checked) {
+        var rows = material_table.rows({'search': 'applied'}).nodes();
+        $('input[type="checkbox"]', rows).prop('checked', checked);
+    }
+
+    // "select_all" 체크박스 클릭 이벤트
+    $('#select_all').on('click', function () {
+        selectAllCheckboxes(this.checked);
+    });
+
+    // 개별 행 체크박스 클릭 이벤트
+    $('#material_datatable tbody').on('change', 'input[type="checkbox"]', function () {
+        if (!this.checked) {
+            var el = $('#select_all').get(0);
+            if (el && el.checked && ('indeterminate' in el)) {
+                el.indeterminate = true;
+            }
+        }
+    });
+    
+    
+    
+    
+    
+</script>
+</body>
+</html>

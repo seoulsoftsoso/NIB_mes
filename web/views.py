@@ -75,3 +75,9 @@ def CompanyMgmt(request):
     context = {}
     return render(request, 'basic_information/company_mgmt.html', context)
 
+
+def Material_input(request):
+
+    context = {}
+    return render(request, 'Material/init_mgmt/material_input.html', context)
+

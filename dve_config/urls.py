@@ -100,6 +100,10 @@ urlpatterns = [
                 path('basic_information/dept_mgmt/', DeptMgmt, name='DeptMgmt'),
                 path('basic_information/company_mgmt/', CompanyMgmt, name='CompanyMgmt'),
 
+
+                # 재고
+                path('material/input/', Material_input, name='Material_input'),
+
                 path('', include(router.urls)),
                 #autocomplete
                 url('autocomplete/menumaster/enterprise_name_ac$', enterprise_name_ac.as_view(), name='enterprise_name_ac'),

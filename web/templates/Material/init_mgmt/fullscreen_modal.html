@@ -1,0 +1,302 @@
+{% load static %}
+<style>
+    .red_font {
+        color: red;
+    }
+    
+    #item_table th, tbody {
+        text-align: center;
+        vertical-align: middle !important;
+    }
+
+    #item_table th {
+        background-color: #eeeeee;
+    }
+    
+    .modal_checkbox {
+        transform: scale(1.5);
+    }
+
+    .file-upload {
+        display: none;
+    }
+
+    .bx-upload-label {
+        cursor: pointer;
+        margin-bottom: 0;
+    }
+
+    .bx-upload {
+        font-size: 1.4rem;
+        cursor: pointer;
+        margin-top: 1%;
+    }
+</style>
+<!-- sample modal content -->
+<div id="exampleModalFullscreen" class="modal fade" tabindex="-1" aria-labelledby="#exampleModalFullscreenLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalFullscreenLabel">입고서</h5>
+                <div>
+                    <button class="btn btn-light waves-effect ">초기화</button>
+                    <button type="button" class="btn-close ms-5" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <div class="row justify-content-center">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group row align-items-center">
+                                <label for="location_select" class="col-sm-2 col-form-label">위치 <span
+                                        class="red_font">*</span></label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" name="state" id="location_select">
+                                        <option>Select</option>
+                                        <optgroup label="Alaskan/Hawaiian Time Zone">
+                                            <option value="AK">Alaska</option>
+                                            <option value="HI">Hawaii</option>
+                                        </optgroup>
+                                        <optgroup label="Pacific Time Zone">
+                                            <option value="CA">California</option>
+                                            <option value="NV">Nevada</option>
+                                            <option value="OR">Oregon</option>
+                                            <option value="WA">Washington</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-group row align-items-center">
+                                <label for="location_select" class="col-sm-2 col-form-label">작성일</label>
+                                <div class="col-sm-6">
+                                    <div class="input-group" id="modal_datepicker1">
+                                        <input type="text" class="form-control" id="fixed_date" placeholder="today" readonly>
+                                    </div><!-- input-group -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-5">
+                        <div class="col-lg-6">
+                            <div class="form-group row align-items-center">
+                                <label for="location_select" class="col-sm-2 col-form-label">입고처 <span class="red_font">*</span></label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" name="state" id="location_select">
+                                        <option>Select</option>
+                                        <optgroup label="Alaskan/Hawaiian Time Zone">
+                                            <option value="AK">Alaska</option>
+                                            <option value="HI">Hawaii</option>
+                                        </optgroup>
+                                        <optgroup label="Pacific Time Zone">
+                                            <option value="CA">California</option>
+                                            <option value="NV">Nevada</option>
+                                            <option value="OR">Oregon</option>
+                                            <option value="WA">Washington</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-group row align-items-center">
+                                <label for="location_select" class="col-sm-2 col-form-label">입고(예정)일 <span
+                                        class="red_font">*</span></label>
+                                <div class="col-sm-6">
+                                    <div class="input-group" id="modal_datepicker2">
+                                        <input type="text" class="form-control" placeholder="입고(예정)일"
+                                               data-date-format="yyyy-mm-dd" data-date-container='#modal_datepicker2'
+                                               data-provide="datepicker">
+
+                                        <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
+                                    </div><!-- input-group -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-11 mt-5">
+                        <div class="row justify-content-between">
+                            <div class="col-lg-4 d-flex justify-content-start">
+                                <h4>품목정보</h4>
+                            </div>
+                            <div class="col-lg-4 d-flex justify-content-end">
+                                <button type="button" class="btn btn-outline-dark waves-effect waves-light w-50">바코드 스캔
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-editable table-nowrap align-middle table-edits" id="item_table">
+                                            <thead>
+                                            <tr>
+                                                <th>품목 <span class="red_font">*</span></th>
+                                                <th>현재 재고</th>
+                                                <th>단가</th>
+                                                <th>입고 수량 <span class="red_font">*</span></th>
+                                                <th>메모</th>
+                                                <th>첨부파일</th>
+                                                <th>수정</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr data-id="1">
+                                                <td data-field="name1">David McHenry</td>
+                                                <td data-field="name2">David McHenry</td>
+                                                <td data-field="name3">David McHenry</td>
+                                                <td data-field="age">24</td>
+                                                <td data-field="gender">Male</td>
+                                                <td data-field="file" class="file-click">
+                                                    <input type="file" class="file-upload" id="formFile1">
+                                                    <label for="formFile1" class="bx-upload-label">
+{#                                                        <i class="fas fa-upload file-icon"></i>#}
+                                                        <i class="bx bx-upload"></i>
+                                                    </label>
+                                                    <span class="file-name"></span>
+                                                </td>
+                                                <td style="width: 100px">
+                                                    <a class="btn btn-outline-secondary btn-sm edit" title="Edit">
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr data-id="2">
+                                                <td data-field="name">Frank Kirk</td>
+                                                <td data-field="name">Frank Kirk</td>
+                                                <td data-field="name">Frank Kirk</td>
+                                                <td data-field="age">22</td>
+                                                <td data-field="gender">Male</td>
+                                                <td data-field="file"></td>
+                                                <td>
+                                                    <a class="btn btn-outline-secondary btn-sm edit" title="Edit">
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr data-id="3">
+                                                <td data-field="name">Rafael Morales</td>
+                                                <td data-field="name">Rafael Morales</td>
+                                                <td data-field="name">Rafael Morales</td>
+                                                <td data-field="age">26</td>
+                                                <td data-field="gender">Male</td>
+                                                <td data-field="file"></td>
+                                                <td>
+                                                    <a class="btn btn-outline-secondary btn-sm edit" title="Edit">
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr data-id="4">
+                                                <td data-field="name">Mark Ellison</td>
+                                                <td data-field="name">Mark Ellison</td>
+                                                <td data-field="name">Mark Ellison</td>
+                                                <td data-field="age">32</td>
+                                                <td data-field="gender">Male</td>
+                                                <td data-field="file"></td>
+                                                <td>
+                                                    <a class="btn btn-outline-secondary btn-sm edit" title="Edit">
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr data-id="5">
+                                                <td data-field="name">Minnie Walter</td>
+                                                <td data-field="name">Minnie Walter</td>
+                                                <td data-field="name">Minnie Walter</td>
+                                                <td data-field="age">27</td>
+                                                <td data-field="gender">Female</td>
+                                                <td data-field="file"></td>
+                                                <td>
+                                                    <a class="btn btn-outline-secondary btn-sm edit" title="Edit">
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div> <!-- container-fluid -->
+                        </div>
+                        <!-- End Page-content -->
+                    </div>
+                    
+                    <div class="col-xxl-11">
+                        <div>
+                            <input class="modal_checkbox me-3" type="checkbox"/>
+                            <span>입고 내역을 저장하고 즉시 입고 처리합니다.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xxl-11 mt-5">
+                        <div>
+                            <button type="button" class="btn btn-primary waves-effect waves-light">저장</button>                            
+                            <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">돌아가기</button>
+                        </div>
+                    </div>
+                        
+                    
+                </div>
+            </div>
+
+{#            <div class="modal-footer">#}
+{#                <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>#}
+{#                <button type="button" class="btn btn-primary waves-effect waves-light">Save changes</button>#}
+{#            </div>#}
+        </div><!-- /.modal-content -->
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        
+        function getTodayDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = ('0' + (today.getMonth() + 1)).slice(-2);
+            const day = ('0' + today.getDate()).slice(-2);
+            return year + '-' + month + '-' + day;
+        }
+        $('#fixed_date').val(getTodayDate());
+        
+
+        $('#formFile1').on('change', function (event) {
+            const fileInput = $(this);
+            console.log('fileInput', fileInput)
+            const fileNameSpan = fileInput.next().next('.file-name');
+            if (fileInput[0].files.length > 0) {
+                const fileName = fileInput[0].files[0].name;
+                fileNameSpan.text(fileName);
+
+                // 파일 아이콘 변경
+                const fileExtension = fileName.split('.').pop().toLowerCase();
+                let fileIconClass = 'fas fa-file';
+                if (fileExtension === 'pdf') {
+                    fileIconClass = 'fas fa-file-pdf';
+                } else if (fileExtension === 'doc' || fileExtension === 'docx') {
+                    fileIconClass = 'fas fa-file-word';
+                } else if (fileExtension === 'xls' || fileExtension === 'xlsx') {
+                    fileIconClass = 'fas fa-file-excel';
+                } else if (fileExtension === 'jpg' || fileExtension === 'jpeg' || fileExtension === 'png') {
+                    fileIconClass = 'fas fa-file-image';
+                }
+
+                 const fileIcon = fileInput.next().find('.bx-upload'); // 아이콘을 찾는 부분
+                fileIcon.attr('class', fileIconClass + ' file-icon');
+            } else {
+                fileNameSpan.text('');
+                fileInput.next().find('.file-icon').attr('class', 'bx bx-upload');
+            }
+        });
+
+    })
+</script>
