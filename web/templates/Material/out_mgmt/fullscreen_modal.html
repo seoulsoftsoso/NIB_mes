@@ -55,7 +55,7 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalFullscreenLabel">입고서</h5>
+                <h5 class="modal-title" id="exampleModalFullscreenLabel">출고서</h5>
                 <div>
                     <button class="btn btn-light waves-effect ">초기화</button>
                     <button type="button" class="btn-close ms-5" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -104,7 +104,7 @@
                     <div class="row mt-5">
                         <div class="col-lg-6">
                             <div class="form-group row align-items-center">
-                                <label for="location_select" class="col-sm-2 col-form-label">입고처 <span class="red_font">*</span></label>
+                                <label for="location_select" class="col-sm-2 col-form-label">출고처 <span class="red_font">*</span></label>
                                 <div class="col-sm-6">
                                     <select class="form-control" name="state" id="init_place_select">
                                         <option>Select</option>
@@ -128,11 +128,11 @@
 
                         <div class="col-lg-6">
                             <div class="form-group row align-items-center">
-                                <label for="location_select" class="col-sm-2 col-form-label">입고(예정)일 <span
+                                <label for="location_select" class="col-sm-2 col-form-label">출고(예정)일 <span
                                         class="red_font">*</span></label>
                                 <div class="col-sm-6">
                                     <div class="input-group" id="modal_datepicker2">
-                                        <input type="text" class="form-control" placeholder="입고(예정)일"
+                                        <input type="text" class="form-control" placeholder="출고(예정)일"
                                                data-date-format="yyyy-mm-dd" data-date-container='#modal_datepicker2'
                                                data-provide="datepicker">
 
@@ -164,7 +164,8 @@
                                                 <th style="width: 15%">품목 <span class="red_font">*</span></th>
                                                 <th>현재 재고</th>
                                                 <th>단가</th>
-                                                <th>입고 수량 <span class="red_font">*</span></th>
+                                                <th>출고 수량 <span class="red_font">*</span></th>
+                                                <th>총액</th>
                                                 <th>메모</th>
                                                 <th>첨부파일</th>
                                                 <th>저장</th>
@@ -193,6 +194,7 @@
                                                 <td data-field="name2">David McHenry</td>
                                                 <td data-field="name3">David McHenry</td>
                                                 <td data-field="age">24</td>
+                                                <td data-field="gender">Male</td>
                                                 <td data-field="gender">Male</td>
                                                 <td data-field="file" class="file-click no-edit">
                                                     <input type="file" class="file-upload" id="formFile1">
@@ -229,6 +231,7 @@
                                                 <td><input type="text" class="form-control" name="current_stock"></td>
                                                 <td><input type="text" class="form-control" name="unit_price"></td>
                                                 <td><input type="text" class="form-control" name="quantity"></td>
+                                                <td><input type="text" class="form-control" name="amount"></td>
                                                 <td><input type="text" class="form-control" name="memo"></td>
                                                 <td class="file-click no-edit">
                                                     <input type="file" class="file-upload">
@@ -254,7 +257,7 @@
                     <div class="col-xxl-11">
                         <div>
                             <input class="modal_checkbox me-3" type="checkbox"/>
-                            <span>입고 내역을 저장하고 즉시 입고 처리합니다.</span>
+                            <span>출고 내역을 저장하고 즉시 출고 처리합니다.</span>
                         </div>
                     </div>
                     

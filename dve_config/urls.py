@@ -90,6 +90,8 @@ urlpatterns = [
                 path('users/login/', custom_obtain_auth_token),
                 re_path(r'^data/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, }),
 
+                path('dashboard/', dashboard_page, name="dashboard_page"),
+
                 path('basic_information/codemaster/', codemaster),
                 path('basic_information/enterprise/', new_enterprise),
                 path('basic_information/menumaster/', Menumaster),
@@ -103,6 +105,12 @@ urlpatterns = [
 
                 # 재고
                 path('material/input/', Material_input, name='Material_input'),
+
+
+                # 출고
+                path('material/output/', Material_output, name='Material_output'),
+
+
 
                 path('', include(router.urls)),
                 #autocomplete

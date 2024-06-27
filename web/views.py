@@ -81,3 +81,15 @@ def Material_input(request):
     context = {}
     return render(request, 'Material/init_mgmt/material_input.html', context)
 
+
+def Material_output(request):
+
+    context = {}
+    return render(request, 'Material/out_mgmt/material_output.html', context)
+
+
+def dashboard_page(request):
+
+    context = {}
+    return render(request, 'dashboard.html', context)
+

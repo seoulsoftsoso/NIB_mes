@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    {% include "header.html" %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+</head>
+<style>
+    th:first-child .sorting,
+    th:first-child .sorting_asc,
+    th:first-child .sorting_desc {
+        display: none !important;
+    }
+
+    #material_datatable th, tbody {
+        text-align: center;
+        vertical-align: middle !important;
+    }
+
+    .dataTables_wrapper .top {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .dataTables_wrapper .dataTables_filter {
+        order: 1; /* 검색란을 오른쪽으로 */
+        margin-left: auto;
+    }
+
+    .dataTables_wrapper .dt-buttons {
+        order: 0; /* 버튼을 왼쪽으로 */
+    }
+</style>
+<body>
+
+{#<div class="layout-wrapper layout-content-navbar">#}
+{#    <div class="col-12">#}
+{#        <div class="card">#}
+{#            <div class="card-body">#}
+{##}
+{#                <div class="d-flex">#}
+{#                    <h4>기준일자 오늘</h4><h4 class="ms-2" id="today_h4"></h4>#}
+{#                </div>#}
+{##}
+{#                <div class="row">#}
+{#                    <div class="col-lg-12">#}
+{#                        <div class="card job-filter">#}
+{#                            <div class="card-body p-3">#}
+{#                                #}
+{##}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{##}
+{##}
+{#            </div>#}
+{#        </div>#}
+{#    </div> <!-- end col -->#}
+{#</div> <!-- end row -->#}
+
+
+<div class="container-fluid mt-5">
+
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <div class="d-flex">
+                    <h4>기준일자 오늘</h4><h4 class="ms-2" id="today_h4"></h4>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- end page title -->
+
+    <div class="row">
+
+        <div class="col-xl-12">
+            <div class="row d-flex align-items-stretch">
+                <div class="col-lg-4">
+                    <div class="card mini-stats-wid h-100">
+                        <div class="ms-3" style="margin-top: 4%">
+                            <h4 class="card-title mb-4">현재 재고 현황</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row justify-content-center mt-4">
+                                <div class="col-lg-4 text-center">
+                                    <div class="d-flex flex-wrap justify-content-center">
+                                        <div class="me-3">
+                                            <p class="text-muted mb-2">총 재고</p>
+                                            <h5 class="mb-0">120</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 text-center">
+                                    <div class="d-flex flex-wrap justify-content-center">
+                                        <div class="me-3">
+                                            <p class="text-muted mb-2">입고</p>
+                                            <h5 class="mb-0">60</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 text-center">
+                                    <div class="d-flex flex-wrap justify-content-center">
+                                        <div class="me-3">
+                                            <p class="text-muted mb-2">출고</p>
+                                            <h5 class="mb-0">60</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-center mt-5 pb-4">
+                                <div class="col-lg-4 text-center">
+                                    <div class="d-flex flex-wrap justify-content-center">
+                                        <div class="me-3">
+                                            <p class="text-muted mb-2">어제 총 재고</p>
+                                            <h5 class="mb-0">120</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 text-center">
+                                    <div class="d-flex flex-wrap justify-content-center">
+                                        <div class="me-3">
+                                            <p class="text-muted mb-2">어제 입고</p>
+                                            <h5 class="mb-0">60</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 text-center">
+                                    <div class="d-flex flex-wrap justify-content-center">
+                                        <div class="me-3">
+                                            <p class="text-muted mb-2">어제 출고</p>
+                                            <h5 class="mb-0">60</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card blog-stats-wid h-100">
+                        <div class="card-body">
+                            
+                            <h4 class="card-title mb-4">현재 출하 현황</h4>
+
+                            <div class="row text-center">
+                                <div class="col-lg-7">
+                                    <canvas id="out_doughnut" data-colors='["--bs-primary", "#ebeff2"]' class="chartjs-chart"></canvas>
+                                </div>
+                                <div class="col-lg-5 m-auto">
+                                    <div>
+                                        <h5>출하완료 00</h5>
+                                    </div>
+                                    <div class="mt-3">
+                                        <h5>출하예정 00</h5>
+                                    </div>
+                                    <div class="mt-3">
+                                        <h5>미출하 00</h5>
+                                    </div>
+                                    <div class="mt-3">
+                                        <h5>오늘 출하 60%</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card blog-stats-wid h-100">
+                        <div class="card-body">
+                            
+                            <h4 class="card-title mb-4">현재 입고 현황</h4>
+
+                            <div class="row text-center">
+                                <div class="col-lg-7">
+                                    <canvas id="in_doughnut" data-colors='["--bs-primary", "#ebeff2"]' class="chartjs-chart"></canvas>
+                                </div>
+                                <div class="col-lg-5 m-auto">
+                                    <div>
+                                        <h5>입고완료 00</h5>
+                                    </div>
+                                    <div class="mt-3">
+                                        <h5>입고예정 00</h5>
+                                    </div>
+                                    <div class="mt-3">
+                                        <h5>미입고 00</h5>
+                                    </div>
+                                    <div class="mt-3">
+                                        <h5>오늘 입고 60%</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+            
+        </div>
+        <!-- end col -->
+        
+
+    </div>
+    <!-- end row -->
+
+    <div class="row mt-5">
+        <div class="col-xl-12">
+            <div class="row">
+                <div class="col-xl-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row d-flex align-items-start">
+                                <div class="me-2">
+                                    <h5 class="card-title mb-4">안전재고 현황</h5>
+                                </div>
+                                <div class="row card-body mt-4">
+                                    
+                                    <div class="col-xl-4">
+                                        <h6 class="card-title mb-4">위험 재고</h6>
+                                        <div class="">
+                                            <div class="table-responsive">
+                                            <table class="table align-middle mb-0 table-nowrap">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Product</th>
+                                                        <th>Product Desc</th>
+                                                        <th colspan="2">Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="product">
+                                                        <td>
+                                                            <img src="{% static 'skote/assets/images/product/img-1.png' %}" alt="product-img"
+                                                                title="product-img" class="avatar-md" />
+                                                        </td>
+                                                        <td>
+                                                            <h5 class="font-size-14 text-truncate"><a href="ecommerce-product-detail.html" class="text-dark">Half sleeve T-shirt</a></h5>
+                                                            <p class="mb-0">Color : <span class="fw-medium">Maroon</span></p>
+                                                        </td>
+                                                        <td>$<span class="product-price">450.50</span></td>
+                                                    </tr>
+                                                    <tr class="product">
+                                                        <td>
+                                                            <img src="{% static 'skote/assets/images/product/img-2.png' %}" alt="product-img"
+                                                                title="product-img" class="avatar-md" />
+                                                        </td>
+                                                        <td>
+                                                            <h5 class="font-size-14 text-truncate"><a href="ecommerce-product-detail.html" class="text-dark">Light blue T-shirt</a></h5>
+                                                            <p class="mb-0">Color : <span class="fw-medium">Light blue</span></p>
+                                                        </td>
+                                                        <td>$<span class="product-price">225.40</span></td>
+                                                    </tr>
+                                                    <tr class="product">
+                                                        <td>
+                                                            <img src="{% static 'skote/assets/images/product/img-3.png' %}" alt="product-img"
+                                                                title="product-img" class="avatar-md" />
+                                                        </td>
+                                                        <td>
+                                                            <h5 class="font-size-14 text-truncate"><a href="ecommerce-product-detail.html" class="text-dark">Black Color T-shirt</a></h5>
+                                                            <p class="mb-0">Color : <span class="fw-medium">Black</span></p>
+                                                        </td>
+                                                        <td>$<span class="product-price">152.10</span></td>
+                                                    </tr>
+                                                    <tr class="product">
+                                                        <td>
+                                                            <img src="{% static 'skote/assets/images/product/img-4.png' %}" alt="product-img"
+                                                                title="product-img" class="avatar-md" />
+                                                        </td>
+                                                        <td>
+                                                            <h5 class="font-size-14 text-truncate"><a href="ecommerce-product-detail.html" class="text-dark">Hoodie (Blue)</a></h5>
+                                                            <p class="mb-0">Color : <span class="fw-medium">Blue</span></p>
+                                                        </td>
+                                                        <td>$<span class="product-price">145.25</span></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <h6 class="card-title mb-4">발주 권고</h6>
+                                        <div class="">
+                                            <div class="table-responsive">
+                                            <table class="table align-middle mb-0 table-nowrap">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Product</th>
+                                                        <th>Product Desc</th>
+                                                        <th colspan="2">Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="product">
+                                                        <td>
+                                                            <img src="{% static 'skote/assets/images/product/img-1.png' %}" alt="product-img"
+                                                                title="product-img" class="avatar-md" />
+                                                        </td>
+                                                        <td>
+                                                            <h5 class="font-size-14 text-truncate"><a href="ecommerce-product-detail.html" class="text-dark">Half sleeve T-shirt</a></h5>
+                                                            <p class="mb-0">Color : <span class="fw-medium">Maroon</span></p>
+                                                        </td>
+                                                        <td>$<span class="product-price">450.50</span></td>
+                                                    </tr>
+                                                    <tr class="product">
+                                                        <td>
+                                                            <img src="{% static 'skote/assets/images/product/img-2.png' %}" alt="product-img"
+                                                                title="product-img" class="avatar-md" />
+                                                        </td>
+                                                        <td>
+                                                            <h5 class="font-size-14 text-truncate"><a href="ecommerce-product-detail.html" class="text-dark">Light blue T-shirt</a></h5>
+                                                            <p class="mb-0">Color : <span class="fw-medium">Light blue</span></p>
+                                                        </td>
+                                                        <td>$<span class="product-price">225.40</span></td>
+                                                    </tr>
+                                                    <tr class="product">
+                                                        <td>
+                                                            <img src="{% static 'skote/assets/images/product/img-3.png' %}" alt="product-img"
+                                                                title="product-img" class="avatar-md" />
+                                                        </td>
+                                                        <td>
+                                                            <h5 class="font-size-14 text-truncate"><a href="ecommerce-product-detail.html" class="text-dark">Black Color T-shirt</a></h5>
+                                                            <p class="mb-0">Color : <span class="fw-medium">Black</span></p>
+                                                        </td>
+                                                        <td>$<span class="product-price">152.10</span></td>
+                                                    </tr>
+                                                    <tr class="product">
+                                                        <td>
+                                                            <img src="{% static 'skote/assets/images/product/img-4.png' %}" alt="product-img"
+                                                                title="product-img" class="avatar-md" />
+                                                        </td>
+                                                        <td>
+                                                            <h5 class="font-size-14 text-truncate"><a href="ecommerce-product-detail.html" class="text-dark">Hoodie (Blue)</a></h5>
+                                                            <p class="mb-0">Color : <span class="fw-medium">Blue</span></p>
+                                                        </td>
+                                                        <td>$<span class="product-price">145.25</span></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                        
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <h6 class="card-title mb-4">재고 만료 안내</h6>
+                                        <div class="">
+                                            <div class="table-responsive">
+                                            <table class="table align-middle mb-0 table-nowrap">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Product</th>
+                                                        <th>Product Desc</th>
+                                                        <th colspan="2">Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="product">
+                                                        <td>
+                                                            <img src="{% static 'skote/assets/images/product/img-1.png' %}" alt="product-img"
+                                                                title="product-img" class="avatar-md" />
+                                                        </td>
+                                                        <td>
+                                                            <h5 class="font-size-14 text-truncate"><a href="ecommerce-product-detail.html" class="text-dark">Half sleeve T-shirt</a></h5>
+                                                            <p class="mb-0">Color : <span class="fw-medium">Maroon</span></p>
+                                                        </td>
+                                                        <td>$<span class="product-price">450.50</span></td>
+                                                    </tr>
+                                                    <tr class="product">
+                                                        <td>
+                                                            <img src="{% static 'skote/assets/images/product/img-2.png' %}" alt="product-img"
+                                                                title="product-img" class="avatar-md" />
+                                                        </td>
+                                                        <td>
+                                                            <h5 class="font-size-14 text-truncate"><a href="ecommerce-product-detail.html" class="text-dark">Light blue T-shirt</a></h5>
+                                                            <p class="mb-0">Color : <span class="fw-medium">Light blue</span></p>
+                                                        </td>
+                                                        <td>$<span class="product-price">225.40</span></td>
+                                                    </tr>
+                                                    <tr class="product">
+                                                        <td>
+                                                            <img src="{% static 'skote/assets/images/product/img-3.png' %}" alt="product-img"
+                                                                title="product-img" class="avatar-md" />
+                                                        </td>
+                                                        <td>
+                                                            <h5 class="font-size-14 text-truncate"><a href="ecommerce-product-detail.html" class="text-dark">Black Color T-shirt</a></h5>
+                                                            <p class="mb-0">Color : <span class="fw-medium">Black</span></p>
+                                                        </td>
+                                                        <td>$<span class="product-price">152.10</span></td>
+                                                    </tr>
+                                                    <tr class="product">
+                                                        <td>
+                                                            <img src="{% static 'skote/assets/images/product/img-4.png' %}" alt="product-img"
+                                                                title="product-img" class="avatar-md" />
+                                                        </td>
+                                                        <td>
+                                                            <h5 class="font-size-14 text-truncate"><a href="ecommerce-product-detail.html" class="text-dark">Hoodie (Blue)</a></h5>
+                                                            <p class="mb-0">Color : <span class="fw-medium">Blue</span></p>
+                                                        </td>
+                                                        <td>$<span class="product-price">145.25</span></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                        
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row d-flex align-items-start">
+                                <div class="me-2">
+                                    <h5 class="card-title mb-4">월간 재고 회전율</h5>
+                                </div>
+                                <div class="card-body">
+
+                                    <div class="row text-center">
+                                        <div class="col-4">
+                                            <h5 class="mb-0">2541</h5>
+                                            <p class="text-muted text-truncate">Activated</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <h5 class="mb-0">84845</h5>
+                                            <p class="text-muted text-truncate">Pending</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <h5 class="mb-0">12001</h5>
+                                            <p class="text-muted text-truncate">Deactivated</p>
+                                        </div>
+                                    </div>
+
+                                    <canvas id="bar" data-colors='["--bs-success-rgb, 0.8", "--bs-success"]' height="460"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- end row -->
+
+
+    <div class="row mt-5">
+        <div class="col-xl-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-start">
+                        <div class="me-2">
+                            <h5 class="card-title mb-4">현재 판매 순위</h5>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0 table-nowrap">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Product</th>
+                                <th>Product Desc</th>
+                                <th colspan="2">Total</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="product">
+                                <td>
+                                    <img src="{% static 'skote/assets/images/product/img-1.png' %}" alt="product-img"
+                                         title="product-img" class="avatar-md"/>
+                                </td>
+                                <td>
+                                    <h5 class="font-size-14 text-truncate"><a href="ecommerce-product-detail.html"
+                                                                              class="text-dark">Half sleeve T-shirt</a>
+                                    </h5>
+                                    <p class="mb-0">Color : <span class="fw-medium">Maroon</span></p>
+                                </td>
+                                <td>$<span class="product-price">450.50</span></td>
+                            </tr>
+                            <tr class="product">
+                                <td>
+                                    <img src="{% static 'skote/assets/images/product/img-2.png' %}" alt="product-img"
+                                         title="product-img" class="avatar-md"/>
+                                </td>
+                                <td>
+                                    <h5 class="font-size-14 text-truncate"><a href="ecommerce-product-detail.html"
+                                                                              class="text-dark">Light blue T-shirt</a>
+                                    </h5>
+                                    <p class="mb-0">Color : <span class="fw-medium">Light blue</span></p>
+                                </td>
+                                <td>$<span class="product-price">225.40</span></td>
+                            </tr>
+                            <tr class="product">
+                                <td>
+                                    <img src="{% static 'skote/assets/images/product/img-3.png' %}" alt="product-img"
+                                         title="product-img" class="avatar-md"/>
+                                </td>
+                                <td>
+                                    <h5 class="font-size-14 text-truncate"><a href="ecommerce-product-detail.html"
+                                                                              class="text-dark">Black Color T-shirt</a>
+                                    </h5>
+                                    <p class="mb-0">Color : <span class="fw-medium">Black</span></p>
+                                </td>
+                                <td>$<span class="product-price">152.10</span></td>
+                            </tr>
+                            <tr class="product">
+                                <td>
+                                    <img src="{% static 'skote/assets/images/product/img-4.png' %}" alt="product-img"
+                                         title="product-img" class="avatar-md"/>
+                                </td>
+                                <td>
+                                    <h5 class="font-size-14 text-truncate"><a href="ecommerce-product-detail.html"
+                                                                              class="text-dark">Hoodie (Blue)</a></h5>
+                                    <p class="mb-0">Color : <span class="fw-medium">Blue</span></p>
+                                </td>
+                                <td>$<span class="product-price">145.25</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+        <div class="col-xl-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-start">
+                        <div class="me-2">
+                            <h5 class="card-title mb-4">전체 판매 현황</h5>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <h5 class="mb-0">86541</h5>
+                                <p class="text-muted text-truncate">Activated</p>
+                            </div>
+                            <div class="col-4">
+                                <h5 class="mb-0">2541</h5>
+                                <p class="text-muted text-truncate">Pending</p>
+                            </div>
+                            <div class="col-4">
+                                <h5 class="mb-0">102030</h5>
+                                <p class="text-muted text-truncate">Deactivated</p>
+                            </div>
+                        </div>
+
+                        <canvas id="lineChart" data-colors='["--bs-primary-rgb, 0.2", "--bs-primary", "--bs-light-rgb, 0.2", "--bs-light"]' height="338"></canvas>
+                    </div>
+
+                    
+                </div>
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</div>
+
+<!-- End Page-content -->
+{% include 'footer.html' %}
+
+<!-- apex chart -->
+<script src="{% static 'skote/assets/libs/apexcharts/apexcharts.min.js' %}"></script>
+
+<!-- Chart JS -->
+<script src="{% static 'skote/assets/libs/chart.js/chart.umd.js' %}"></script>
+<script src="{% static 'skote/assets/js/pages/chartjs.init.js' %}"></script> 
+
+<script src="{% static 'skote/assets/js/pages/dashboard-blog.init.js' %}"></script>
+<script>
+    var today = new Date();
+
+    function getCurrentDate() {
+        var year = today.getFullYear();
+        var month = (today.getMonth() + 1).toString().padStart(2, '0');
+        var day = today.getDate().toString().padStart(2, '0');
+
+        return year + '년' + month + '월' + day + '일';
+    }
+
+    document.getElementById('today_h4').innerHTML = getCurrentDate();
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // 도넛 차트를 그릴 캔버스 요소 가져오기
+        var ctx = document.getElementById('out_doughnut').getContext('2d');
+
+        // 도넛 차트 데이터와 옵션 설정
+        var doughnutChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['출하완료', '출하예정', '미출하'],
+                datasets: [{
+                    data: [20, 30, 50], // 실제 데이터 값 입력
+                    backgroundColor: ['#007bff', '#ebeff2', '#ffc107'], // 색상 설정
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true, // 범례 표시
+                        position: 'bottom' // 범례 위치 설정
+                    }
+                }
+            }
+        });
+    });
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        // 도넛 차트를 그릴 캔버스 요소 가져오기
+        var ctx = document.getElementById('in_doughnut').getContext('2d');
+
+        // 도넛 차트 데이터와 옵션 설정
+        var doughnutChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['입고완료', '입고예정', '미입고'],
+                datasets: [{
+                    data: [20, 30, 50], // 실제 데이터 값 입력
+                    backgroundColor: ['#007bff', '#ebeff2', '#ffc107'], // 색상 설정
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true, // 범례 표시
+                        position: 'bottom' // 범례 위치 설정
+                    }
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

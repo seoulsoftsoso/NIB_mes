@@ -44,9 +44,7 @@
                                 <!-- Tab panes -->
                                 <div class="tab-content" id="tab_content-list">
 
-
-
-                    </div>
+                                </div>
 
 
                             </div>
@@ -133,6 +131,7 @@
 
     function detach_all() {
         let tabs = $("#tab_header-list .nav-item .nav-link");
+        console.log('tabs', tabs)
 
         for (let i = 0; i < tabs.length; i++) {
             let tab_title = tabs[i].text.replace("×", "").trim();
@@ -271,5 +270,10 @@
     //new Sortable(dragArea, {
     //    animation: 350
     //});
+
+    // 디폴트로 index.html 대신 dashboard.html 보여줌
+    window.onload = function () {
+        url_click('/dashboard/', 'dashboard', '대시보드');
+    };
 </script>
 </html>
