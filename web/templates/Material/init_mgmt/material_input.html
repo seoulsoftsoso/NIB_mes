@@ -215,8 +215,7 @@
                                 <th>유형</th>
                                 <th>단위</th>
                                 <th>입고현황</th>
-                                <th>구매가</th>
-                                <th>판매가</th>
+                                <th>단가</th>
                                 <th>위치</th>
                             </tr>
                             </thead>
@@ -240,7 +239,6 @@
                                     <td>kg</td>
                                     <td>(0/3)</td>
                                     <td>100,000</td>
-                                    <td>-</td>
                                     <td>서울</td>
                                 </tr>
                             
@@ -261,7 +259,6 @@
                                     <td>kg</td>
                                     <td>(1/4)</td>
                                     <td>100,000</td>
-                                    <td>-</td>
                                     <td>창고A</td>
                                 </tr>
                             
@@ -282,7 +279,6 @@
                                     <td>ea</td>
                                     <td>(100/100)</td>
                                     <td>200,000</td>
-                                    <td>-</td>
                                     <td>창고B</td>
                                 </tr>
                             
@@ -303,7 +299,6 @@
                                     <td>ea</td>
                                     <td>(0/50)</td>
                                     <td>200,000</td>
-                                    <td>-</td>
                                     <td>창고C</td>
                                 </tr>
                             
@@ -324,7 +319,6 @@
                                     <td>kg</td>
                                     <td>(0/4)</td>
                                     <td>50,000</td>
-                                    <td>-</td>
                                     <td>창고D</td>
                                 </tr>
                             
@@ -345,7 +339,6 @@
                                     <td>kg</td>
                                     <td>(0/4)</td>
                                     <td>50,000</td>
-                                    <td>-</td>
                                     <td>서울</td>
                                 </tr>
                             
@@ -394,6 +387,16 @@
                     render: function (data, type, full, meta) {
                         return '<input type="checkbox" name="id[]" value="">';
                     }
+                }
+            ],
+            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 text-end"B>>' +
+                '<"row"<"col-sm-12"tr>>' +
+                '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            buttons: [
+                {
+                    extend: 'excel',
+                    text: '엑셀 내보내기',
+                    className: 'btn btn-success',
                 }
             ],
             drawCallback: function () {

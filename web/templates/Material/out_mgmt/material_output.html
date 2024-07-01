@@ -215,8 +215,8 @@
                                 <th>유형</th>
                                 <th>단위</th>
                                 <th>출고현황</th>
-                                <th>구매가</th>
-                                <th>판매가</th>
+                                <th>단가</th>
+                                <th>속성</th>
                                 <th>위치</th>
                             </tr>
                             </thead>
@@ -394,6 +394,16 @@
                     render: function (data, type, full, meta) {
                         return '<input type="checkbox" name="id[]" value="">';
                     }
+                }
+            ],
+            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 text-end"B>>' +
+                '<"row"<"col-sm-12"tr>>' +
+                '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            buttons: [
+                {
+                    extend: 'excel',
+                    text: '엑셀 내보내기',
+                    className: 'btn btn-success',
                 }
             ],
             drawCallback: function () {

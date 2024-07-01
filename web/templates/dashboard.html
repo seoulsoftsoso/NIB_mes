@@ -4,67 +4,12 @@
     <meta charset="UTF-8">
     <title>Title</title>
     {% load static %}
-    {% include "header.html" %}
+{#    {% include "header.html" %}#}
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
 </head>
-<style>
-    th:first-child .sorting,
-    th:first-child .sorting_asc,
-    th:first-child .sorting_desc {
-        display: none !important;
-    }
 
-    #material_datatable th, tbody {
-        text-align: center;
-        vertical-align: middle !important;
-    }
-
-    .dataTables_wrapper .top {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .dataTables_wrapper .dataTables_filter {
-        order: 1; /* 검색란을 오른쪽으로 */
-        margin-left: auto;
-    }
-
-    .dataTables_wrapper .dt-buttons {
-        order: 0; /* 버튼을 왼쪽으로 */
-    }
-</style>
 <body>
-
-{#<div class="layout-wrapper layout-content-navbar">#}
-{#    <div class="col-12">#}
-{#        <div class="card">#}
-{#            <div class="card-body">#}
-{##}
-{#                <div class="d-flex">#}
-{#                    <h4>기준일자 오늘</h4><h4 class="ms-2" id="today_h4"></h4>#}
-{#                </div>#}
-{##}
-{#                <div class="row">#}
-{#                    <div class="col-lg-12">#}
-{#                        <div class="card job-filter">#}
-{#                            <div class="card-body p-3">#}
-{#                                #}
-{##}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{##}
-{#            </div>#}
-{#        </div>#}
-{#    </div> <!-- end col -->#}
-{#</div> <!-- end row -->#}
-
-
-<div class="container-fluid mt-5">
+<div class="container-fluid mt-5" id="dashboard_content">
 
     <!-- start page title -->
     <div class="row">

@@ -18,7 +18,11 @@
         <!-- sidebar menu area end -->
         <div id="content" class="main-content" >
             <div class="page-content">
-                <div class="container-fluid">
+                
+                <!-- sub_menu가 선택되지 않았을 때 보이고 선택하면 숨겨야 함. -->
+                {% include 'dashboard.html' %}
+                
+                <div class="container-fluid" id="tab_container" style="display: none">
                     <!-- start page title -->
                     <div class="row-no-gutters">
                         <div class="card">
@@ -272,8 +276,32 @@
     //});
 
     // 디폴트로 index.html 대신 dashboard.html 보여줌
-    window.onload = function () {
-        url_click('/dashboard/', 'dashboard', '대시보드');
-    };
+    //window.onload = function () {
+      //  url_click('/dashboard/', 'dashboard', '대시보드');
+    //};
+
+    $(document).ready(function () {
+        function showDashboard() {
+            $("#dashboard_content").show();
+            $("#tab_container").hide();
+        }
+
+        function hideDashboard() {
+            $("#dashboard_content").hide();
+            $("#tab_container").show();
+        }
+
+        var $sideMenu = $("#side-menu");
+
+        $sideMenu.on("click", "a", function () {
+            hideDashboard();
+        });
+
+        if ($sideMenu.find(".active").length) {
+            hideDashboard();
+        } else {
+            showDashboard();
+        }
+    });
 </script>
 </html>

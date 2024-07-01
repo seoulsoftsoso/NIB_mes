@@ -165,7 +165,7 @@
                                                 <th>현재 재고</th>
                                                 <th>단가</th>
                                                 <th>출고 수량 <span class="red_font">*</span></th>
-                                                <th>총액</th>
+                                                <th>속성</th>
                                                 <th>메모</th>
                                                 <th>첨부파일</th>
                                                 <th>저장</th>
@@ -192,9 +192,9 @@
                                                     </select>
                                                 </td>
                                                 <td data-field="name2">David McHenry</td>
-                                                <td data-field="name3">David McHenry</td>
                                                 <td data-field="age">24</td>
-                                                <td data-field="gender">Male</td>
+                                                <td data-field="amount">Male</td>
+                                                <td data-field="status">Male</td>
                                                 <td data-field="gender">Male</td>
                                                 <td data-field="file" class="file-click no-edit">
                                                     <input type="file" class="file-upload" id="formFile1">
@@ -272,7 +272,7 @@
                 </div>
             </div>
             {% include 'Material/init_mgmt/plus_location_modal.html' %}
-            {% include 'Material/init_mgmt/plus_customer_modal.html' %}
+            {% include 'Material/out_mgmt/plus_customer_modal.html' %}
             {% include 'Material/init_mgmt/plus_item_modal.html' %}
             
         </div><!-- /.modal-content -->
