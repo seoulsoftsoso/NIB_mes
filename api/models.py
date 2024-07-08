@@ -1,4 +1,5 @@
 import datetime
+import os
 
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
@@ -7,6 +8,26 @@ from django.db.models import Model
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils import timezone
+
+
+def sign_upload_path(instance, filename):
+    return os.path.join('sign', filename)
+
+
+def logo_upload_path(instance, filename):
+    return os.path.join('logo', filename)
+
+
+def item_master_img_upload_path(instance, filename):  # 품목기준정보 이미지 경로
+    return os.path.join('item_master_img', filename)
+
+
+def item_in_img_upload_path(instance, filename):  # 입고 관리 이미지 경로
+    return os.path.join('item_in_img', filename)
+
+
+def item_out_img_upload_path(instance, filename):  # 출고 관리 이미지 경로
+    return os.path.join('item_out_img', filename)
 
 
 class EnterpriseMaster(models.Model):
@@ -19,6 +40,23 @@ class EnterpriseMaster(models.Model):
 
     # permissions = models.BigIntegerField(verbose_name='권한')
     permissions = models.CharField(max_length=100, null=True, verbose_name='권한')
+    licensee_number = models.CharField(max_length=50, null=False, verbose_name='사업자 번호')
+    owner_name = models.CharField(max_length=20, null=True, verbose_name='대표자')
+    business_conditions = models.CharField(max_length=50, null=True, verbose_name='업종')
+    business_event = models.CharField(max_length=20, null=True, verbose_name='업태')
+    address = models.CharField(max_length=128, null=True, verbose_name='주소')
+    email = models.CharField(max_length=36, null=True, verbose_name='이메일')
+    office_phone = models.CharField(max_length=36, null=True, verbose_name='대표 전화')
+    office_fax = models.CharField(max_length=36, null=True, verbose_name='팩스')
+    sign = models.FileField(upload_to=sign_upload_path, default=None, null=True, verbose_name='날인')
+    logo = models.FileField(upload_to=logo_upload_path, default=None, null=True, verbose_name='로고')
+    delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N: 삭제안함, Y: 삭제
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')  # 최초작성일
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')  # 최종작성일
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='enterprise_created_by',
+                                   verbose_name='최초작성자')  # 최초작성자
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='enterprise_updated_by',
+                                   verbose_name='최종작성자')  # 최종작성자
 
 
 class GroupCodeMaster(models.Model):
@@ -29,7 +67,8 @@ class GroupCodeMaster(models.Model):
     code = models.CharField(max_length=10, verbose_name='그룹코드')
     name = models.CharField(max_length=16, verbose_name='그룹코드 이름')
     enable = models.BooleanField(default=True, verbose_name='사용구분')
-
+    description = models.CharField(max_length=128, null=True, verbose_name='설명')
+    delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N: 삭제안함, Y: 삭제
     created_by = models.ForeignKey('UserMaster',
                                    models.SET_NULL, null=True,
                                    related_name='group_code_master_created_by',
@@ -187,7 +226,8 @@ class Menu_Auth(models.Model):
 
 
 class ColumnMaster(models.Model):
-    menu = models.ForeignKey('MenuMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='메뉴아이디', related_name='column')
+    menu = models.ForeignKey('MenuMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='메뉴아이디',
+                             related_name='column')
     label = models.CharField(max_length=64, null=True, verbose_name='컬럼명')
     label_en = models.CharField(max_length=64, null=True, verbose_name='컬럼명(영)')
     pre_label = models.CharField(max_length=128, null=True, verbose_name='선행자')
@@ -209,3 +249,206 @@ class ColumnMaster(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
     attr = models.CharField(max_length=64, null=True, verbose_name='속성')
     tier = models.CharField(max_length=1, null=False, default='M', verbose_name='테이블계층')  # 메인과 sub테이블 구분 M,S
+
+
+class ItemMaster(models.Model):
+    ITEM_TYPE_CHOICES = [
+        ('P', '제품'),
+        ('S', '반제품'),
+        ('R', '원재료'),
+        ('M', '부재료'),
+        ('O', '기타'),
+    ]
+
+    item_code = models.CharField(max_length=255, null=True, verbose_name='품번')
+    item_name = models.CharField(max_length=255, null=True, verbose_name='품명')
+    item_detail = models.CharField(max_length=255, null=True, verbose_name='품명상세')
+    standard = models.CharField(max_length=255, null=True, verbose_name='규격')
+    model = models.CharField(max_length=255, null=True, verbose_name='모델')
+    unitname = models.CharField(max_length=255, null=True, verbose_name='단위')
+    mass = models.CharField(max_length=255, null=True, verbose_name='무게_질량')
+    color = models.CharField(max_length=255, null=True, verbose_name='색상')
+    item_type = models.CharField(max_length=1, null=True, choices=ITEM_TYPE_CHOICES, verbose_name='품목 유형')  # ITEM_TYPE_CHOICES
+    item_category = models.CharField(max_length=255, null=True, verbose_name='카테고리')
+    current_quan = models.FloatField(null=True, verbose_name='현 재고')
+    safe_quan = models.FloatField(null=True, verbose_name='안전 재고')
+    qr_code = models.CharField(max_length=255, null=True, verbose_name='QR 코드')
+    item_image = models.FileField(upload_to=item_master_img_upload_path, default=None, null=True, verbose_name='품목 이미지')
+    enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, default=1, related_name='item_master_enterprise',
+                                   verbose_name='업체', null=False)
+    del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
+    created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='최초작성자',
+                                   related_name='item_created_by')
+    updated_by = models.ForeignKey('UserMaster', on_delete=models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='item_updated_by')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
+
+
+class Warehouse(models.Model):
+    code = models.CharField(max_length=255, null=True, verbose_name='창고 코드')
+    name = models.CharField(max_length=255, null=True, verbose_name='창고 이름')
+    region = models.CharField(max_length=64, null=True, verbose_name='창고 지역')
+    enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, default=1, related_name='warehouse_enterprise',
+                                   verbose_name='업체', null=False)
+    del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
+    created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='최초작성자',
+                                   related_name='warehouse_created_by')
+    updated_by = models.ForeignKey('UserMaster', on_delete=models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='warehouse_updated_by')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
+
+
+class WarehouseRack(models.Model):
+    rack_code = models.CharField(max_length=128, null=True, verbose_name='랙 코드')
+    rack_name = models.CharField(max_length=128, null=True, verbose_name='랙 명')
+    rack_row = models.IntegerField(null=True, verbose_name='행')
+    rack_line = models.IntegerField(null=True, verbose_name='열')
+    wr_etc = models.CharField(max_length=255, null=True, verbose_name='기타 메모')
+    warehouse = models.ForeignKey('Warehouse', on_delete=models.DO_NOTHING, null=False, verbose_name='창고',
+                                  related_name='warehouse_rack')
+    del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
+    created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='최초작성자',
+                                   related_name='rack_created_by')
+    updated_by = models.ForeignKey('UserMaster', on_delete=models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='rack_updated_by')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
+
+
+class UnitPrice(models.Model):
+    UNIT_TYPE_CHOICES = [
+        ('P', '구매'),
+        ('S', '판매')
+    ]
+
+    unit_price = models.IntegerField(null=True, verbose_name='단가')
+    unit_type = models.CharField(max_length=1, null=True, choices=UNIT_TYPE_CHOICES, verbose_name='구분')  # UNIT_TYPE_CHOICES
+    fee_rate = models.IntegerField(null=True, verbose_name='수수료')
+    u_item = models.ForeignKey('ItemMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='품목정보',
+                               related_name='unit_prise_item', )
+    # u_custom = models.ForeignKey('CustomMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='거래처 정보',
+    #                              related_name='unit_prise_custom')
+    etc = models.CharField(max_length=255, null=True, verbose_name='기타 메모')
+    del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
+    created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='최초작성자',
+                                   related_name='uprice_created_by')
+    updated_by = models.ForeignKey('UserMaster', on_delete=models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='uprice_updated_by')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
+
+
+class ItemIn(models.Model):
+    IN_TYPE_CHOICES = [
+        ('P', '구매 입고'),
+        ('M', '생산 입고'),
+        ('C', '재고 조정'),
+    ]
+
+    IN_STATUS_CHOICES = [
+        ('F', '입고 완료'),
+        ('P', '부분 입고'),
+        ('W', '입고 대기'),
+        ('C', '입고 취소'),
+    ]
+
+    in_no = models.CharField(max_length=64, null=True, verbose_name='입고 번호')
+    in_type = models.CharField(max_length=1, null=True, choices=IN_TYPE_CHOICES, verbose_name='구분')  # IN_TYPE_CHOICES
+    in_status = models.CharField(max_length=1, null=True, choices=IN_STATUS_CHOICES, verbose_name='상태')  # IN_STATUS_CHOICES
+    due_date = models.DateTimeField(null=True, verbose_name='입고 예정일')
+    in_at = models.DateTimeField(null=True, verbose_name='입고일')
+    in_quan = models.FloatField(null=True, verbose_name='수량')
+    in_note = models.CharField(max_length=255, null=True, verbose_name='메모')
+    in_image = models.FileField(upload_to=item_in_img_upload_path, default=None, null=True, verbose_name='품목 이미지')
+    in_item = models.ForeignKey('ItemMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='품목 정보',
+                                related_name='item_in_item')
+    wh = models.ForeignKey('Warehouse', on_delete=models.DO_NOTHING, null=False, verbose_name='창고 정보',
+                                related_name='item_in_warehouse')
+    wr = models.ForeignKey('WarehouseRack', on_delete=models.DO_NOTHING, null=False, verbose_name='위치 정보',
+                                related_name='item_in_rack')
+    uprice = models.ForeignKey('UnitPrice', on_delete=models.DO_NOTHING, null=False, verbose_name='단가 정보',
+                                related_name='item_in_price')
+    # in_custom = models.ForeignKey('CustomMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='입고처 정보',
+    #                               related_name='unit_prise_custom')  # 구매처(공급사), 판매처(고객사)
+    del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
+    created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='최초작성자',
+                                   related_name='item_in_created_by')
+    updated_by = models.ForeignKey('UserMaster', on_delete=models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='item_in_updated_by')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
+
+
+class ItemInSub(models.Model):  # 부분 입고 시 사용
+    in_at_sub = models.DateTimeField(null=True, verbose_name='입고일')
+    in_quan_sub = models.FloatField(null=True, verbose_name='입고 수량')
+    in_etc_sub = models.CharField(max_length=255, null=True, verbose_name='특이 사항')
+    in_item = models.ForeignKey('ItemIn', on_delete=models.DO_NOTHING, null=False, verbose_name='입고 관리 정보',
+                                related_name='sub_item_in')
+    del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
+    created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='최초작성자',
+                                   related_name='item_sub_created_by')
+    updated_by = models.ForeignKey('UserMaster', on_delete=models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='item_sub_updated_by')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
+
+
+class ItemOut(models.Model):
+    OUT_TYPE_CHOICES = [
+        ('P', '구매'),
+        ('M', '생산'),
+        ('C', '재고 조정'),
+    ]
+
+    OUT_STATUS_CHOICES = [
+        ('F', '입고 완료'),
+        ('P', '부분 입고'),
+        ('W', '입고 대기'),
+        ('C', '입고 취소'),
+    ]
+
+    out_no = models.CharField(max_length=64, null=True, verbose_name='출고 번호')
+    out_type = models.CharField(max_length=1, null=True, choices=OUT_TYPE_CHOICES, verbose_name='속성')  # OUT_TYPE_CHOICES
+    out_status = models.CharField(max_length=1, null=True, choices=OUT_STATUS_CHOICES, verbose_name='상태')  # OUT_STATUS_CHOICES
+    out_date = models.DateTimeField(null=True, verbose_name='출고 예정일')
+    out_at = models.DateTimeField(null=True, verbose_name='출고일')
+    out_quan = models.FloatField(null=True, verbose_name='수량')
+    out_note = models.CharField(max_length=255, null=True, verbose_name='메모')
+    out_image = models.FileField(upload_to=item_out_img_upload_path, default=None, null=True, verbose_name='품목 이미지')
+    out_item = models.ForeignKey('ItemMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='품목 정보',
+                                related_name='item_out_item')
+    out_wh = models.ForeignKey('Warehouse', on_delete=models.DO_NOTHING, null=False, verbose_name='창고 정보',
+                           related_name='item_out_warehouse')
+    out_wr = models.ForeignKey('WarehouseRack', on_delete=models.DO_NOTHING, null=False, verbose_name='위치 정보',
+                           related_name='item_out_rack')
+    out_uprice = models.ForeignKey('UnitPrice', on_delete=models.DO_NOTHING, null=False, verbose_name='단가 정보',
+                               related_name='item_out_price')
+    # out_custom = models.ForeignKey('CustomMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='입고처 정보',
+    #                               related_name='out_price_custom')  # 구매처(공급사), 판매처(고객사)
+    del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
+    created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='최초작성자',
+                                   related_name='item_out_created_by')
+    updated_by = models.ForeignKey('UserMaster', on_delete=models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='item_out_updated_by')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
+
+
+class ItemOutSub(models.Model):  # 부분 입고 시 사용
+    out_at_sub = models.DateTimeField(null=True, verbose_name='출고일')
+    out_quan_sub = models.FloatField(null=True, verbose_name='출고 수량')
+    out_etc_sub = models.CharField(max_length=255, null=True, verbose_name='특이 사항')
+    out_item = models.ForeignKey('ItemIn', on_delete=models.DO_NOTHING, null=False, verbose_name='입고 관리 정보',
+                                related_name='out_sub_item_in')
+    del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
+    created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='최초작성자',
+                                   related_name='out_sub_created_by')
+    updated_by = models.ForeignKey('UserMaster', on_delete=models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='out_sub_updated_by')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
+
+

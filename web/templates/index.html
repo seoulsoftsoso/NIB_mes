@@ -135,7 +135,7 @@
 
     function detach_all() {
         let tabs = $("#tab_header-list .nav-item .nav-link");
-        console.log('tabs', tabs)
+        //console.log('tabs', tabs)
 
         for (let i = 0; i < tabs.length; i++) {
             let tab_title = tabs[i].text.replace("×", "").trim();
@@ -241,7 +241,7 @@
         $("#tab_header-list").empty();
         $("#tab_content-list").empty();
         dom_store = {};
-        console.log("All tabs are deleted");
+        //console.log("All tabs are deleted");
     }
 
     // let not_active_setting_time = 10 * 60;

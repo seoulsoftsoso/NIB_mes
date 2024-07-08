@@ -1,9 +1,12 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import Prefetch
 from django.db.models.functions import Coalesce
 from django.shortcuts import render
 
+from api.Item.common import get_item_data
 from api.base.base_form import enterprise_fm
-from api.models import MenuMaster
+from api.models import MenuMaster, ItemMaster, UnitPrice
+from dve_config import settings
 
 
 @login_required
@@ -59,37 +62,58 @@ def Menumaster(request):
 
 
 def UserBasedInfo(request):
-
     context = {}
     return render(request, 'basic_information/user_based_info.html', context)
 
 
 def DeptMgmt(request):
-
     context = {}
     return render(request, 'basic_information/dept_mgmt.html', context)
 
 
 def CompanyMgmt(request):
-
     context = {}
     return render(request, 'basic_information/company_mgmt.html', context)
 
 
 def Material_input(request):
-
     context = {}
     return render(request, 'Material/init_mgmt/material_input.html', context)
 
 
 def Material_output(request):
-
     context = {}
     return render(request, 'Material/out_mgmt/material_output.html', context)
 
 
 def dashboard_page(request):
-
     context = {}
     return render(request, 'dashboard.html', context)
+
+
+def Material_status(request):
+    items = get_item_data()
+    context = {
+        'result': items,
+        'MEDIA_URL': settings.MEDIA_URL,
+    }
+    return render(request, 'Material/material_list/material_list.html', context)
+
+
+def item_info(request):
+    enterprise = request.user.enterprise_id
+
+    result = ItemMaster.objects.filter(del_flag='N', enterprise_id=enterprise).prefetch_related(
+        Prefetch('unit_prise_item', queryset=UnitPrice.objects.filter(del_flag='N'))
+    )
+
+    context = {
+        'result': result,
+        'MEDIA_URL': settings.MEDIA_URL,
+    }
+
+    # return render(request, 'basic_information/Item/item_info.html', context)
+    return render(request, 'basic_information/Item/item_info2.html', context)
+
+
 

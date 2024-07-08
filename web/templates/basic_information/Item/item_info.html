@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    {% include "header.html" %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+</head>
+<style>
+    th:first-child .sorting,
+    th:first-child .sorting_asc,
+    th:first-child .sorting_desc {
+        display: none !important;
+    }
+
+    #material_datatable th, tbody {
+        text-align: center;
+        vertical-align: middle !important;
+    }
+    
+    .dataTables_filter {
+        display: flex;
+    }
+    
+    .dataTables_filter input {
+        height: 35px;
+        width: 260px !important;
+        margin-left: 0 !important;
+    }
+</style>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title mb-5">품목 기준 정보</h4>
+
+                <div class="row mt-4">
+                    <div class="col-xxl-12">
+                        <table id="material_datatable" class="table align-middle mb-0 table-nowrap nowrap w-100 mt-5 dt-responsive">
+                            <thead class="table-light">
+                            <tr>
+                                <th style="width: 3%;">순번</th>
+                                <th style="width: 14%">사진</th>
+                                <th>품번</th>
+                                <th>품목</th>
+                                <th>유형</th>
+                                <th>단위</th>
+                                <th>속성</th>
+                                <th style="width: 16%">생성일</th>
+                            </tr>
+                            </thead>
+                            <tbody id="material-table-body">
+                            {% for obj in result %}
+                                <tr style="cursor: pointer" data-item-id="{{ obj.id }}" onclick="read_full_modal(
+                                    '{{ obj.id }}', '{{ obj.item_code }}', '{{ obj.item_name }}', '{{ obj.standard }}', '{{ model }}',
+                                    '{{ obj.item_type }}', '{{ obj.item_category }}', '{{ obj.current_quan }}', '{{ obj.safe_quan }}',
+                                        '{{ obj.qr_code }}', '{{ obj.item_image }}')">
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>
+                                        {% if obj.item_image %}
+                                            <img src="{{ obj.item_image.url }}" class="avatar-md"/>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ obj.item_code }}</td>
+                                    <td>{{ obj.item_name }}</td>
+                                    <td>{{ obj.get_item_type_display }}</td>
+                                    <td>{{ obj.unitname }}</td>
+                                    <td>
+                                        {% for price in obj.unit_prise_item.all %}
+                                            {{ price.get_unit_type_display }}<br>
+                                        {% endfor %}
+                                    </td>
+                                    <td>{{ obj.created_at|date:"Y-m-d a g:i" }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {% include 'Material/material_list/fullscreen_modal.html' %}
+                        {% include 'basic_information/Item/read_FullScreenModal.html' %}
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+{% include 'footer.html' %}
+{#<script src="{% static 'skote/assets/js/pages/job-grid-list.init.js' %}"></script>#}
+<script>
+
+    let material_table = null;
+    let tableBody = $('#material-table-body');
+    let modal = $('#read_fullscreen_modal');
+
+    $(document).ready(function () {
+        
+        // DataTable 초기화
+        material_table = $('#material_datatable').DataTable({
+            lengthChange: false,
+            searching: true,
+            dom: '<"row"<"col-sm-12 col-md-6"f><"col-sm-12 col-md-6 text-end"B>>' + // 'f'를 추가하여 검색란 표시
+                '<"row"<"col-sm-12"tr>>' +
+                '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            buttons: [
+                {
+                    extend: 'excel',
+                    text: '엑셀 내보내기',
+                    className: 'btn btn-success me-3',
+                },
+                {
+                    text: '+ 품목 추가',
+                    className: 'btn btn-info waves-effect waves-light',
+                    attr: {
+                        'data-bs-toggle': 'modal',
+                        'data-bs-target': '#exampleModalFullscreen'
+                    }
+                }
+            ],
+            language: {
+                search: "_INPUT_",  // search 문구를 입력 필드로 대체
+                searchPlaceholder: "품목형, 유형, 속성 검색", // placeholder 추가
+                emptyTable: "등록된 데이터가 없습니다."
+            },
+            drawCallback: function () {
+                $('#material_datatable th:first-child').removeClass('sorting sorting_asc sorting_desc');
+            },
+            initComplete: function() {
+                $('.dataTables_filter input').addClass('form-control');
+            }
+        });
+
+        //tableBody.on('click', 'tr', function() {
+          //  const itemId = $(this).data('item-id');
+
+            //modal.modal('show');
+        //});
+
+    });
+
+    function read_full_modal(id, item_code, item_name, standard, model, item_type, item_category, current_quan, safe_quan, qr_code, item_image) {
+        console.log(id)
+    }
+    
+    
+</script>
+</body>
+</html>

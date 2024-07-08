@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    {% include "header.html" %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+</head>
+<style>
+    th:first-child .sorting,
+    th:first-child .sorting_asc,
+    th:first-child .sorting_desc {
+        display: none !important;
+    }
+
+    #material_datatable th, tbody {
+        text-align: center;
+        vertical-align: middle !important;
+    }
+    
+    .dataTables_filter {
+        display: flex;
+    }
+    
+    .dataTables_filter input {
+        height: 35px;
+        width: 260px !important;
+        margin-left: 0 !important;
+    }
+</style>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title mb-5">재고 목록</h4>
+
+                <div class="row mt-4">
+                    <div class="col-xxl-12">
+                        <table id="material_datatable"
+                               class="table align-middle mb-0 table-nowrap nowrap w-100 mt-5 dt-responsive">
+                            <thead class="table-light">
+                            <tr>
+                                <th style="width: 3%;">순번</th>
+                                <th>사진</th>
+                                <th>품번</th>
+                                <th>품목</th>
+                                <th>유형</th>
+                                <th>단위</th>
+                                <th>수량</th>
+                                <th>단가</th>
+                                <th>속성</th>
+                                <th>생성일</th>
+                            </tr>
+                            </thead>
+                        
+                            <tbody>
+                            {% for obj in result %}
+                                {% load custom_filters %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td><img src="{{ MEDIA_URL|urljoin:obj.item_image }}" alt="이미지 없음" style="width: 70px;"/></td>
+                                    <td>{{ obj.item_code }}</td>
+                                    <td>{{ obj.item_name }}</td>
+                                    <td>{{ obj.item_type_display }}</td>
+                                    <td>{{ obj.mass }}</td>
+                                    <td>{{ obj.current_quan }}</td>
+                                    <td>{{ obj.unit_prise_item__unit_price }}</td>
+                                    <td>{{ obj.unit_type_display }}</td>
+                                    <td>{{ obj.created_at }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {% include 'Material/material_list/fullscreen_modal.html' %}
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+{% include 'footer.html' %}
+{#<script src="{% static 'skote/assets/js/pages/job-grid-list.init.js' %}"></script>#}
+<script>
+
+    let material_table = null;
+
+    $(document).ready(function () {
+        
+        // DataTable 초기화
+        material_table = $('#material_datatable').DataTable({
+            lengthChange: false,
+            searching: true,
+            dom: '<"row"<"col-sm-12 col-md-6"f><"col-sm-12 col-md-6 text-end"B>>' + // 'f'를 추가하여 검색란 표시
+                '<"row"<"col-sm-12"tr>>' +
+                '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            buttons: [
+                {
+                    extend: 'excel',
+                    text: '엑셀 내보내기',
+                    className: 'btn btn-success me-3',
+                },
+                {
+                    text: '+ 품목 추가',
+                    className: 'btn btn-info waves-effect waves-light',
+                    attr: {
+                        'data-bs-toggle': 'modal',
+                        'data-bs-target': '#exampleModalFullscreen'
+                    }
+                }
+            ],
+            language: {
+                search: "_INPUT_",  // search 문구를 입력 필드로 대체
+                searchPlaceholder: "품목형, 유형, 속성 검색" // placeholder 추가
+            },
+            drawCallback: function () {
+                $('#material_datatable th:first-child').removeClass('sorting sorting_asc sorting_desc');
+            },
+            initComplete: function() {
+                $('.dataTables_filter input').addClass('form-control');
+            }
+        });
+
+    });
+    
+    
+</script>
+</body>
+</html>

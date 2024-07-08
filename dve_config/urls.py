@@ -21,6 +21,8 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.conf.urls import url
 from django.contrib.auth import views as auth_views
+
+from api.Item.common import *
 from api.auto_complete import enterprise_name_ac, client_name_ac
 from api.base.codemaster_views import CodeMasterViewSet, CodeMasterSelectView
 
@@ -101,14 +103,19 @@ urlpatterns = [
                 path('basic_information/user/', UserBasedInfo, name='UserBasedInfo'),
                 path('basic_information/dept_mgmt/', DeptMgmt, name='DeptMgmt'),
                 path('basic_information/company_mgmt/', CompanyMgmt, name='CompanyMgmt'),
+                path('basic_information/item/', item_info, name='item_info'),
 
 
-                # 재고
-                path('material/input/', Material_input, name='Material_input'),
+                # Item
+                path('item/get/', get_item_masters.as_view(), name='get_item_masters'),  # 품목
+                path('item/add/', ItemAdd.as_view(), name='ItemAdd'),  # 품목 추가
+                path('item/update/', Update_Item.as_view(), name='update_item'),
 
 
-                # 출고
-                path('material/output/', Material_output, name='Material_output'),
+                # 재고 관리
+                path('material/status/', Material_status, name='Material_status'),  # 재고 목록
+                path('material/input/', Material_input, name='Material_input'),  # 입고
+                path('material/output/', Material_output, name='Material_output'),  # 출고
 
 
 
