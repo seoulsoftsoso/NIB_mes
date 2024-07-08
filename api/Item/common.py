@@ -10,14 +10,19 @@ from django.views import View
 from api.models import ItemMaster, UnitPrice
 
 
-def get_item_data():
-    items = ItemMaster.objects.filter(del_flag="N").prefetch_related(
+def get_item_data(item_id=None):
+    query = ItemMaster.objects.filter(del_flag="N").prefetch_related(
         Prefetch('unit_prise_item', queryset=UnitPrice.objects.filter(del_flag="N"), to_attr='unit_prices')
     ).annotate(
         item_type_display=F('item_type'),
         unit_type=F('unit_prise_item__unit_type'),
         created_date=TruncDate('created_at')
-    ).values(
+    )
+
+    if item_id is not None:
+        query = query.filter(id=item_id)
+
+    items = query.values(
         'id', 'item_code', 'item_name', 'item_detail', 'standard', 'created_date',
         'model', 'unitname', 'mass', 'item_category', 'current_quan',
         'safe_quan', 'color', 'qr_code', 'item_image', 'item_type_display',
@@ -30,13 +35,27 @@ def get_item_data():
         item['unit_type_display'] = dict(UnitPrice.UNIT_TYPE_CHOICES).get(item['unit_type'], '')
         item['created_at'] = item['created_date'].strftime('%Y-%m-%d')
 
-    return list(items)
+    result = list(items)
+
+    # 단일 항목 요청 시 첫 번째 항목만 반환
+    if item_id is not None and result:
+        return result[0]
+
+    return result
 
 
 class get_item_masters(View):
     def get(self, request, *args, **kwargs):
         items = get_item_data()
         context = {'results': items}
+        return JsonResponse(context, safe=False)
+
+
+class get_one_item_masters(View):
+    def get(self, request, *args, **kwargs):
+        item_id = request.GET.get('item_id', None)
+        one_item = get_item_data(item_id)
+        context = {'results': one_item}
         return JsonResponse(context, safe=False)
 
 

@@ -107,7 +107,8 @@ urlpatterns = [
 
 
                 # Item
-                path('item/get/', get_item_masters.as_view(), name='get_item_masters'),  # 품목
+                path('item/get/', get_item_masters.as_view(), name='get_item_masters'),  # 품목 전체
+                path('item/get/one', get_one_item_masters.as_view(), name='get_one_item_masters'),  # 품목 한개
                 path('item/add/', ItemAdd.as_view(), name='ItemAdd'),  # 품목 추가
                 path('item/update/', Update_Item.as_view(), name='update_item'),
 

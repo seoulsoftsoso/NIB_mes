@@ -1,0 +1,147 @@
+{% load static %}
+<!-- sample modal content -->
+<div id="readonlyModal" class="modal fade" tabindex="-1" aria-labelledby="#exampleModalFullscreenLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalFullscreenLabel">품목 추가</h5>
+                <div>
+                    <button type="button" class="btn btn-primary waves-effect waves-light" id="item_edit_btn">수정</button>
+                    <button type="button" class="btn btn-secondary waves-effect" id="item_delete_btn">삭제</button>
+                    <button type="button" class="btn-close ms-5" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="col-xxl-6">
+                    <h6>품목 정보</h6>
+                </div>
+                <hr class="my-3" style="border-color: black">
+                <form id="item_form">
+                    {% csrf_token %}
+                    <div class="card">
+                        <div class="row">
+                            
+                            <div class="mb-3 row">
+                                <label for="example-text-input" class="col-md-1 col-form-label">품목명<span class="red_font">*</span></label>
+                                <div class="col-md-4">
+                                    <h5 class="pt-2" id="item_name"></h5>
+                                </div>
+                                
+                                <label for="example-text-input" class="col-md-1 col-form-label ms-3">바코드</label>
+                                <div class="col-md-4 d-flex">
+                                    <h5 class="pt-2" id="qr_code"></h5>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="row">
+                            
+                            <div class="mb-3 row">
+                                <label for="example-text-input" class="col-md-1 col-form-label">품목코드<span class="red_font">*</span></label>
+                                <div class="col-md-4">
+                                    <h5 class="pt-2" id="item_code"></h5>
+                                </div>
+                                
+                                <label for="example-text-input" class="col-md-1 col-form-label ms-3">첨부</label>
+                                <div class="col-md-4">
+                                    <img id="item_image" style="width: 80px"/>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="row">
+                            
+                            <div class="mb-3 row">
+                                <label for="example-text-input" class="col-md-1 col-form-label">품목유형<span class="red_font">*</span></label>
+                                <div class="col-md-4">
+                                    <h5 class="pt-2" id="item_type"></h5>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="row">
+                            
+                            <div class="mb-3 row">
+                                <label for="example-text-input" class="col-md-1 col-form-label">단가<span class="red_font">*</span></label>
+                                <div class="col-md-4">
+                                    <h5 class="pt-2" id="unit_price"></h5>
+                                </div>
+                            </div>
+                            
+                        </div>
+                       
+                    </div>
+                    
+                    <div class="col-xxl-6">
+                        <h6>품목 속성</h6>
+                    </div>
+                    <hr class="my-3" style="border-color: black">
+                    
+                    <div class="card">
+                        <div class="row">
+                            
+                            <div class="mb-3 row">
+                                <label for="example-text-input" class="col-md-1 col-form-label">카테고리<span class="red_font">*</span></label>
+                                <div class="col-md-3">
+                                    <h5 class="pt-2" id="item_category"></h5>
+                                </div>
+                                
+                                <label for="example-text-input" class="col-md-1 col-form-label">모델<span class="red_font">*</span></label>
+                                <div class="col-md-3">
+                                    <h5 class="pt-2" id="item_model"></h5>
+                                </div>
+                                
+                                <label for="example-text-input" class="col-md-1 col-form-label">규격<span class="red_font">*</span></label>
+                                <div class="col-md-3">
+                                    <h5 class="pt-2" id="item_standard"></h5>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="col-xxl-6">
+                        <h6>품목 수량</h6>
+                    </div>
+                    <hr class="my-3" style="border-color: black">
+                    
+                    <div class="card">
+                        <div class="row">
+                            <div class="mb-3 row">
+                                <label for="example-text-input" class="col-md-1 col-form-label">초기수량<span class="red_font">*</span></label>
+                                <div class="col-md-3">
+                                    <h5 class="pt-2" id="current_quan"></h5>
+                                </div>
+                                
+                                <label for="example-text-input" class="col-md-1 col-form-label">안전재고<span class="red_font">*</span></label>
+                                <div class="col-md-3">
+                                    <h5 class="pt-2" id="safe_quan"></h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="col-xxl-11 mt-5">
+                    <div>
+                        <button type="button" class="btn btn-primary waves-effect waves-light" id="item_add_btn">저장</button>
+                        <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">돌아가기</button>
+                    </div>
+                </div>
+                
+            </div>
+            
+        </div><!-- /.modal-content -->
+    </div>
+</div>
+
+<script>
+
+</script>

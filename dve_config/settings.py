@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 
     'rest_framework',
     'rest_framework.authtoken',
@@ -137,7 +138,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'cube',
         'USER': 'root',
-        'PASSWORD': 'root11',
+        'PASSWORD': 'hong11',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
@@ -239,8 +240,8 @@ CELERY_ENABLE_UTC = False
 # url
 # MEDIA_URL = 'http://175.212.116.77:8238/data/'  # For debug
 # MEDIA_URL = 'http://mes.seoulsoft.kr/data/'  # For debug
-MEDIA_URL = 'http://127.0.0.1:8002/data/'  # For debug
-# MEDIA_URL = 'http://192.168.0.12:9000/data/'  # For debug
+MEDIA_URL = 'http://127.0.0.1:8000/data/'  # For debug
+# MEDIA_URL = 'http://192.168.0.122:8270/data/'  # For debug
 MEDIA_ROOT = os.path.join(BASE_DIR, 'data')
 
 

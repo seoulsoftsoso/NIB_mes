@@ -111,6 +111,7 @@
     let tableBody = $('#material-table-body');
     let modal = $('#read_fullscreen_modal');
     let select_item = null;
+    let defaultImageUrl = "{% static 'img/no_img.avif' %}";
 
     $(document).ready(function () {
         
@@ -199,7 +200,7 @@
                 <tr>
                     <th scope="row">이미지</th>
                     <td>
-                        ${item_image ? `<img src="${item_image}" alt="품목 이미지" style="max-width: 300px;">` : '이미지 없음'}
+                        <img src="${item_image || defaultImageUrl}" alt="품목 이미지" style="max-width: 120px;" onerror="this.src='${defaultImageUrl}';">
                     </td>
                 </tr>
             </tbody>
