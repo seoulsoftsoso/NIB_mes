@@ -97,6 +97,14 @@
     let material_table = null;
 
     $(document).ready(function () {
+
+        $('#item_edit_btn').on('click', function () {
+            $('#readonlyModal').modal('hide');
+            $('#readonlyModal').on('hidden.bs.modal', function (e) {
+                $('#exampleModalFullscreen').modal('show');
+                $(this).off('hidden.bs.modal');
+            });
+        });
         
         // DataTable 초기화
         material_table = $('#material_datatable').DataTable({
@@ -136,7 +144,6 @@
 
 
     function showReadonlyModal(id, MEDIA_URL) {
-        console.log(MEDIA_URL)
         $.ajax({
             url: "{% url 'get_one_item_masters' %}",
             method: 'GET',

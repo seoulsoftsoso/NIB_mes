@@ -112,8 +112,7 @@ def item_info(request):
         'MEDIA_URL': settings.MEDIA_URL,
     }
 
-    # return render(request, 'basic_information/Item/item_info.html', context)
-    return render(request, 'basic_information/Item/item_info2.html', context)
+    return render(request, 'basic_information/Item/item_info.html', context)
 
 
 
