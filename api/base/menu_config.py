@@ -74,18 +74,19 @@ class MenuHandler(viewsets.ModelViewSet):
 def getLmenuList(request):
     user_id = request.GET.get('user_id')
     client = request.GET.get('client')
-    qs = MenuMaster.objects.filter(del_flag="N").values(
+    qs = MenuMaster.objects.filter(del_flag="N", menuauth__user=user_id).values(
         'id', 'code', 'name', 'type', 'i_class', 'menuauth__id', 'menuauth__alias', 'menuauth__order',
         'menuauth__parent', 'menuauth__menu', 'menuauth__del_flag'
     ).order_by('type').distinct()
 
-    qs_used = qs.filter(menuauth__user=user_id).order_by('menuauth__order')
+    # qs_used = qs.filter(menuauth__user=user_id).order_by('menuauth__order')
 
-    qs_used_json = list(qs_used)
+    qs_used_json = list(qs)
 
     context = {}
     context['useablemenu'] = list(qs)
     context['usedmenu'] = qs_used_json
+    context['success'] = 'tru'
 
     return JsonResponse(context)
 

@@ -22,114 +22,166 @@
             </div>
             
             <div class="modal-body">
-{#                <div class="card">#}
-{#                    <div class="col-xxl-12">#}
-{#                        <label class="form-label">거래처명 <span class="red_font">*</span></label>#}
-{#                        <input class="form-control" type="text" placeholder="거래처 이름을 입력해주세요"/>#}
-{#                    </div>#}
-{#                </div>#}
                 <div class="col-xxl-6">
                     <h6>품목 정보</h6>
                 </div>
                 <hr class="my-3" style="border-color: black">
-                
-                <div class="card">
-                    <div class="row">
-                        <div class="col-xxl-6">
-                            <label class="form-label">품목명 <span class="red_font">*</span></label>
-                            <input class="form-control" type="text" placeholder="품목 이름을 입력해주세요"/>
-                        </div>
-                        
-                        <div class="col-xxl-4">
-                            <label class="form-label">바코드</label>
-                            <input class="form-control" type="text" placeholder="바코드"/>
-                        </div>
-                        
-                        <div class="col-xxl-2">
-                            <label class="btn-outline-info">스캔</label>
-                            <button type="button" class="btn btn-info waves-effect waves-light">스캔</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="row">
-                        <div class="col-xxl-6">
-                            <label class="form-label">품목코드 <span class="red_font">*</span></label>
-                            <input class="form-control" type="text" placeholder="품목 코드를 입력해주세요"/>
-                        </div>
-                        
-                        <div class="col-xxl-6">
-                            <label class="form-label">품목유형 <span class="red_font">*</span></label>
-                            <input class="form-control" type="text" placeholder="제품/반제품/원재료/부재료 등 유형 입력"/>
+                <form id="item_form">
+                    {% csrf_token %}
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-xxl-6">
+                                <label class="form-label">품목명 <span class="red_font">*</span></label>
+                                <input class="form-control" type="text" id="item_name" name="item_name" placeholder="품목 이름을 입력해주세요"/>
+                            </div>
+                            
+                            <div class="col-xxl-4">
+                                <label class="form-label">바코드</label>
+                                <input class="form-control" type="text" id="item_barcode" name="item_barcode" placeholder="바코드"/>
+                            </div>
+                            
+                            <div class="col-xxl-2">
+                                <label class="btn-outline-info">스캔</label>
+                                <button type="button" class="btn btn-info waves-effect waves-light">스캔</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="card">
-                    <div class="row">
-                        <div class="col-xxl-6">
-                            <label class="form-label">단가</label>
-                            <input class="form-control" type="text" placeholder="구매가를 입력해주세요"/>
-                        </div>
-                        
-                        <div class="col-xxl-6">
-                            <label class="form-label">첨부</label>
-                            <input class="form-control" type="file"/>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-xxl-6">
-                    <h6>품목 속성</h6>
-                </div>
-                <hr class="my-3" style="border-color: black">
-                
-                <div class="card">
-                    <div class="row">
-                        <div class="col-xxl-4">
-                            <label class="form-label">카테고리</label>
-                            <input class="form-control" type="text" placeholder="카테고리"/>
-                        </div>
-                        
-                        <div class="col-xxl-4">
-                            <label class="form-label">모델</label>
-                            <input class="form-control" type="text" placeholder="모델"/>
-                        </div>
-                        
-                        <div class="col-xxl-4">
-                            <label class="form-label">규격</label>
-                            <input class="form-control" type="text" placeholder="규격"/>
+                    
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-xxl-6">
+                                <label class="form-label">품목코드 <span class="red_font">*</span></label>
+                                <input class="form-control" type="text" id="item_code" name="item_code" placeholder="품목 코드를 입력해주세요"/>
+                            </div>
+                            
+                            <div class="col-xxl-6">
+                                <label class="form-label">품목유형 <span class="red_font">*</span></label>
+                                <select class="form-select" id="item_type" name="item_type">
+                                        <option disabled selected>품목 유형을 선택 해주세요.</option>
+                                        <option value="P">제품</option>
+                                        <option value="S">반제품</option>
+                                        <option value="R">원재료</option>
+                                        <option value="M">부재료</option>
+                                        <option value="O">기타</option>
+                                    </select>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="col-xxl-6">
-                    <h6>품목 수량</h6>
-                </div>
-                <hr class="my-3" style="border-color: black">
-                
-                <div class="card">
-                    <div class="row">
-                        <div class="col-xxl-6">
-                            <label class="form-label">초기 수량</label>
-                            <input class="form-control" type="text" placeholder="초기 수량"/>
-                        </div>
-                        
-                        <div class="col-xxl-6">
-                            <label class="form-label">안전 재고</label>
-                            <input class="form-control" type="text" placeholder="안전 재고"/>
+                    
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-xxl-6">
+                                <label class="form-label">단가</label>
+                                <input class="form-control" type="text" id="item_unit_price" name="item_unit_price" placeholder="구매가를 입력해주세요"/>
+                            </div>
+                            
+                            <div class="col-xxl-6">
+                                <label class="form-label">첨부</label>
+                                <input class="form-control" type="file" id="item_image" name="item_image"/>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
+                    
+                    <div class="col-xxl-6">
+                        <h6>품목 속성</h6>
+                    </div>
+                    <hr class="my-3" style="border-color: black">
+                    
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-xxl-4">
+                                <label class="form-label">카테고리</label>
+                                <input class="form-control" type="text" id="item_category" name="item_category" placeholder="카테고리"/>
+                            </div>
+                            
+                            <div class="col-xxl-4">
+                                <label class="form-label">모델</label>
+                                <input class="form-control" type="text" id="item_model" name="item_model" placeholder="모델"/>
+                            </div>
+                            
+                            <div class="col-xxl-4">
+                                <label class="form-label">규격</label>
+                                <input class="form-control" type="text" id="item_standard" name="item_standard" placeholder="규격"/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xxl-6">
+                        <h6>품목 수량</h6>
+                    </div>
+                    <hr class="my-3" style="border-color: black">
+                    
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-xxl-6">
+                                <label class="form-label">초기 수량</label>
+                                <input class="form-control" type="text" id="quan" name="quan" placeholder="초기 수량"/>
+                            </div>
+                            
+                            <div class="col-xxl-6">
+                                <label class="form-label">안전 재고</label>
+                                <input class="form-control" type="text" id="safe_quan" name="safe_quan" placeholder="안전 재고"/>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
             
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">취소</button>
-                <button type="button" class="btn btn-primary waves-effect waves-light">저장</button>
+                <button type="button" class="btn btn-primary waves-effect waves-light" id="item_add_btn">저장</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<script>
+    $("#item_add_btn").click(function (e) {
+        e.preventDefault();
+        var formData = new FormData($("#item_form")[0]);
+
+        formData.append('action', 'create')
+
+        $.ajax({
+            url: "{% url 'ItemAdd' %}",
+            type: "post",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                console.log('res', response)
+
+                var item = response.item;
+                var rowHtml = `
+                <tr data-id="${item.id}">
+                    <td data-field="name1" class="no-edit">
+                        <select class="form-control" name="state" id="item_select">
+                            <option>${item.item_name}</option>
+                        </select>
+                    </td>
+                    <td data-field="name2">${item.current_quan || ''}</td>
+                    <td data-field="name3">${item.unit_price || ''}</td>
+                    <td><input type="number" class="form-control" id="in_quan" placeholder="입고수량"/></td>
+                    <td data-field="status">${item.unit_type_display || ''}</td>
+                    <td><input type="text" class="form-control" id="in_note" placeholder="메모"/></td>
+                    <td data-field="file" class="file-click no-edit">
+                        <input type="file" class="file-upload" id="formFile${item.id}">
+                        <label for="formFile${item.id}" class="bx-upload-label">
+                            <i class="bx bx-upload"></i>
+                        </label>
+                        <span class="file-name">${item.file_name || ''}</span>
+                    </td>
+                </tr>
+            `;
+                $('#item_modal').modal('hide');
+                $('#tableBody').append(rowHtml);
+
+                alert(response.message);
+            },
+            error: function (xhr, status, error) {
+                alert("오류가 발생했습니다: " + xhr.responseJSON.error);
+            }
+        });
+    });
+</script>
                                        

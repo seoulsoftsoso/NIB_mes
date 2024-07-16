@@ -1,10 +1,57 @@
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+import traceback
+
+from django.views import View
+from django.http import JsonResponse
+from api.models import CustomerMaster
 
 
+def get_customer_master(enterprise):
+    query = CustomerMaster.objects.filter(enterprise=enterprise, del_flag='N').values(
+        'id', 'c_name', 'business_num', 'business_type', 'business_sort', 'postal_code', 'address', 'sign', 'logo',
+        'owner_name',
+        'official_tel', 'official_fax', 'official_email', 'manager_tel', 'manager_email', 'memo', 'created_by_id',
+        'enterprise_id'
+    )
 
-from api.permission import MesPermission
+    result = list(query)
 
-from rest_framework.pagination import PageNumberPagination
+    return result
+
+
+class GetCustomer(View):
+    def get(self, request, *args, **kwargs):
+        enterprise = request.user.enterprise_id
+        customer = get_customer_master(enterprise=enterprise)
+        context = {'result': customer}
+        return JsonResponse(context)
+
+
+class CustomerCreate(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            formdata = request.POST
+            customer = CustomerMaster(
+                c_name=formdata.get('c_name'),
+                business_num=formdata.get('business_num'),
+                business_type=formdata.get('business_type'),
+                business_sort=formdata.get('business_sort'),
+                address=formdata.get('address'),
+                owner_name=formdata.get('owner_name'),
+                official_tel=formdata.get('official_tel'),
+                official_email=formdata.get('official_email'),
+                manager_tel=formdata.get('manager_tel'),
+                manager_email=formdata.get('manager_email'),
+                memo=formdata.get('memo'),
+                enterprise_id=request.user.enterprise_id,
+                created_by_id=request.user.id
+            )
+
+            customer.save()
+
+            return JsonResponse({'success': True})
+
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({'error': str(e)}, status=400)
 

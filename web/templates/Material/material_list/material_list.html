@@ -95,15 +95,57 @@
 <script>
 
     let material_table = null;
+    let currentItem = null;
+    let media_url = null;
 
     $(document).ready(function () {
 
         $('#item_edit_btn').on('click', function () {
             $('#readonlyModal').modal('hide');
             $('#readonlyModal').on('hidden.bs.modal', function (e) {
+                
+                //console.log('current', currentItem)
+                $("#item_name").val(currentItem.item_name);
+                $("#item_barcode").val(currentItem.qr_code);
+                $("#item_code").val(currentItem.item_code);
+                // select 요소 처리
+                var $itemType = $("#item_type");
+                $itemType.find('option').each(function() {
+                    if ($(this).text() === currentItem.item_type_display) {
+                        $itemType.val($(this).val());
+                        return false;
+                    }
+                });
+                // 이미지 처리
+                var imageUrl = currentItem.item_image ? (media_url + currentItem.item_image) : '';
+                if (imageUrl) {
+                    $("#item_image_preview").attr("src", imageUrl);
+                    $("#item_image_div").show();
+                } else {
+                    $("#item_image_div").hide();
+                }
+                
+                $("#item_unit_price").val(currentItem.unit_prise_item__unit_price);
+                $("#item_category").val(currentItem.item_category);
+                $("#item_model").val(currentItem.model);
+                $("#item_standard").val(currentItem.standard);
+                $("#quan").val(currentItem.current_quan);
+                $("#safe_quan").val(currentItem.safe_quan);
+                
                 $('#exampleModalFullscreen').modal('show');
                 $(this).off('hidden.bs.modal');
             });
+        });
+        
+        $("#item_image").change(function() {
+            if (this.files && this.files[0]) {
+                $("#item_image_div").show();
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#item_image_preview').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
         });
         
         // DataTable 초기화
@@ -140,9 +182,34 @@
             }
         });
 
+        function resetModalForm() {
+            $('#item_form').trigger("reset");
+            $('#item_id').val('');
+            // 이미지 미리보기 초기화 및 숨기기
+            $('#item_image_preview').attr('src', '');
+            $('#item_image_div').hide();
+            
+            $('#exampleModalFullscreen select').prop('selectedIndex', 0);
+        }
+        
+        $('#exampleModalFullscreen .btn-close').on('click', function () {
+            resetModalForm();
+        });
+        $('#exampleModalFullscreen .btn-secondary[data-bs-dismiss="modal"]').on('click', function () {
+            resetModalForm();
+        });
+
+        $("#reset_btn").click(function () {
+            if (confirm("내용을 초기화 하시겠습니까?") === true) {
+                resetModalForm()
+            } else {
+                return false;
+            }
+        })
+
+        
     });
-
-
+    
     function showReadonlyModal(id, MEDIA_URL) {
         $.ajax({
             url: "{% url 'get_one_item_masters' %}",
@@ -151,15 +218,19 @@
               item_id: id  
             },
             success: function (data) {
-                console.log(data.results)
+                //console.log(data.results)
+                // 다른 함수에서 쓰이기 위함
+                currentItem = data.results;
+                media_url = MEDIA_URL;
                 // 모달에 데이터를 채우는 로직
+                $('#exampleModalFullscreen #item_id').val(data.results.id);
                 $('#readonlyModal #item_name').text(data.results.item_name);
                 $('#readonlyModal #qr_code').text(data.results.qr_code);
                 $('#readonlyModal #item_code').text(data.results.item_code);
                 $('#readonlyModal #item_type').text(data.results.item_type_display);
                 // 이미지 src 설정
                 if (data.results.item_image) {
-                    $('#readonlyModal #item_image').attr('src', MEDIA_URL + data.results.item_image);
+                    $('#readonlyModal #item_image').attr('src', media_url + data.results.item_image);
                 } else {
                     $('#readonlyModal #item_image').attr('src', '{% static 'img/no_img.avif' %}');
                 }
@@ -172,9 +243,10 @@
             }
         });
 
-        // 모달을 보여줍니다.
         $('#readonlyModal').modal('show');
     }
+    
+    
     
     
 </script>

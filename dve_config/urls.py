@@ -23,14 +23,16 @@ from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 
 from api.Item.common import *
+from api.Item.item_input import *
 from api.auto_complete import enterprise_name_ac, client_name_ac
 from api.base.codemaster_views import CodeMasterViewSet, CodeMasterSelectView
-
+from api.base.customer_views import *
 
 from api.base.enterprise_views import EnterpriseMasterViewSet
 
 
 from api.base.groupcodemaster_views import GroupCodeMasterViewSet, GenerateCodeMaster
+from api.base.warehouse_views import *
 from api.base.menu_config import MenuHandler, getLmenuList, setMenuByUser
 
 from api.base.user_views import UserMasterViewSet, UserMasterSelectViewSet
@@ -105,6 +107,21 @@ urlpatterns = [
                 path('basic_information/company_mgmt/', CompanyMgmt, name='CompanyMgmt'),
                 path('basic_information/item/', item_info, name='item_info'),
 
+                # 재고 관리 페이지
+                path('material/status/', Material_status, name='Material_status'),  # 재고 목록
+                path('material/input/', Material_input, name='Material_input'),  # 입고
+                path('material/output/', Material_output, name='Material_output'),  # 출고
+
+                # 입고
+                path('material/input/create', InputCreate.as_view(), name='InputCreate'),
+
+                # 거래처
+                path('customer/get', GetCustomer.as_view(), name='GetCustomer'),
+                path('customer/create', CustomerCreate.as_view(), name='CustomerCreate'),
+
+                # 창고
+                path('warehouse/get', GetWarehouse.as_view(), name='GetWarehouse'),
+                path('warehouse/create', WarehouseCreate.as_view(), name='WarehouseCreate'),
 
                 # Item
                 path('item/get/', get_item_masters.as_view(), name='get_item_masters'),  # 품목 전체
@@ -113,10 +130,6 @@ urlpatterns = [
                 path('item/update/', Update_Item.as_view(), name='update_item'),
 
 
-                # 재고 관리
-                path('material/status/', Material_status, name='Material_status'),  # 재고 목록
-                path('material/input/', Material_input, name='Material_input'),  # 입고
-                path('material/output/', Material_output, name='Material_output'),  # 출고
 
 
 

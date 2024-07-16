@@ -21,53 +21,82 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
-            <div class="modal-body">
-                <div class="card">
-                    <div class="col-xxl-12">
-                        <label class="form-label">창고명 <span class="red_font">*</span></label>
-                        <input class="form-control" type="text" placeholder="창고 이름을 입력해주세요"/>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="col-xxl-12">
-                        <label class="form-label">위치</label>
-                        <input class="form-control" type="text" placeholder="위치를 입력해주세요"/>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="row">
-                        <div class="col-xxl-6">
-                            <label class="form-label">RACK 명</label>
-                            <input class="form-control" type="text" placeholder="RACK 이름을 입력해주세요"/>
-                        </div>
-                        
-                        <div class="col-xxl-3">
-                            <label class="form-label">행</label>
-                            <input class="form-control" type="text" placeholder="행"/>
-                        </div>
-                        
-                        <div class="col-xxl-3">
-                            <label class="form-label">열</label>
-                            <input class="form-control" type="text" placeholder="열"/>
+            <form id="location_form">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="col-xxl-12">
+                            <label class="form-label">창고명 <span class="red_font">*</span></label>
+                            <input class="form-control" type="text" id="name" name="name" placeholder="창고 이름을 입력해주세요"/>
                         </div>
                     </div>
-                </div>
-                
-                <div class="card">
-                    <div class="col-xxl-12">
-                        <label class="form-label">메모</label>
-                        <textarea class="form-control" type="text" placeholder="메모를 입력해주세요"></textarea>
+                    
+                    <div class="card">
+                        <div class="col-xxl-12">
+                            <label class="form-label">위치</label>
+                            <input class="form-control" type="text" id="region" name="region" placeholder="위치를 입력해주세요"/>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-xxl-6">
+                                <label class="form-label">RACK 명</label>
+                                <input class="form-control" type="text" id="rack_name" name="rack_name" placeholder="RACK 이름을 입력해주세요"/>
+                            </div>
+                            
+                            <div class="col-xxl-3">
+                                <label class="form-label">행</label>
+                                <input class="form-control" type="text" id="col" name="col" placeholder="행"/>
+                            </div>
+                            
+                            <div class="col-xxl-3">
+                                <label class="form-label">열</label>
+                                <input class="form-control" type="text" id="row" name="row" placeholder="열"/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="col-xxl-12">
+                            <label class="form-label">메모</label>
+                            <textarea class="form-control" type="text" id="memo" name="memo" placeholder="메모를 입력해주세요"></textarea>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </form>
             
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">취소</button>
-                <button type="button" class="btn btn-primary waves-effect waves-light">저장</button>
+                <button type="button" class="btn btn-primary waves-effect waves-light" onclick="add_warehouse()">저장</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-                                       
+                  
+<script>
+    function add_warehouse() {
+        var formData = new FormData($("#location_form")[0]);
+
+        $.ajax({
+            url: "{% url 'WarehouseCreate' %}",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                console.log(res);
+                var $select = $("#location_select");
+                if (res.id && res.name) {
+                    var newOption = new Option(res.name, res.id, true, true);
+                    $select.append(newOption);
+                }
+                alert('등록 되었습니다.')
+                $("#location_modal").modal('hide');
+            },
+            error: function (xhr, status, error) {
+                alert("오류가 발생했습니다: " + xhr.responseJSON.error);
+            }
+        })
+    }
+</script>

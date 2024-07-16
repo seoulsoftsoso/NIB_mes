@@ -92,7 +92,9 @@ def dashboard_page(request):
 
 
 def Material_status(request):
-    items = get_item_data()
+    enterprise = request.user.enterprise_id
+
+    items = get_item_data(enterprise_id=enterprise)
     context = {
         'result': items,
         'MEDIA_URL': settings.MEDIA_URL,

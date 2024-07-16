@@ -8,7 +8,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalFullscreenLabel">품목 추가</h5>
                 <div>
-                    <button class="btn btn-light waves-effect ">초기화</button>
+                    <button class="btn btn-light waves-effect" id="reset_btn">초기화</button>
                     <button type="button" class="btn-close ms-5" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
@@ -23,7 +23,7 @@
                     {% csrf_token %}
                     <div class="card">
                         <div class="row">
-                            
+                            <input type="hidden" name="item_id" id="item_id" value="{{ item.id|default:'' }}">
                             <div class="mb-3 row">
                                 <label for="example-text-input" class="col-md-1 col-form-label">품목명<span class="red_font">*</span></label>
                                 <div class="col-md-4">
@@ -68,6 +68,12 @@
                                         <option value="M">부재료</option>
                                         <option value="O">기타</option>
                                     </select>
+                                </div>
+
+                                <div class="col-md-4 d-flex justify-content-center align-items-center">
+                                    <div id="item_image_div" style="height: 150px; display: none">
+                                        <img id="item_image_preview" src="" alt="Item Image" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                    </div>
                                 </div>
                             </div>
                             
@@ -151,19 +157,29 @@
 
 <script>
 $("#item_add_btn").click(function (e) {
-    e.preventDefault();  // 폼 제출 방지
+    e.preventDefault();
     var formData = new FormData($("#item_form")[0]);
     
+    // 기존 아이템 ID가 있으면 수정, 없으면 생성
+    var itemId = $("#item_id").val();
+    formData.append('action', itemId ? 'update' : 'create');
+    if (itemId) {
+        formData.append('item_id', itemId);
+    }
+
     $.ajax({
         url: "{% url 'ItemAdd' %}",
         type: "post",
         data: formData,
         processData: false,
         contentType: false,  
-        success: function () {
-            alert("등록 되었습니다.")
-            location.reload()
+        success: function (response) {
+            alert(response.message);
+            location.reload();
+        },
+        error: function(xhr, status, error) {
+            alert("오류가 발생했습니다: " + xhr.responseJSON.error);
         }
-    })
+    });
 });
 </script>

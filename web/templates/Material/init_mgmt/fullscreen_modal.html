@@ -44,213 +44,191 @@
             </div>
 
             <div class="modal-body">
-                <div class="row justify-content-center">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="form-group row align-items-center">
-                                <label for="location_select select2" class="col-sm-2 col-form-label">위치 <span class="red_font">*</span></label>
-                                <div class="col-sm-6">
-                                    <select class="form-control" id="location_select">
-                                        <option>Select</option>
-                                        <optgroup label="Alaskan/Hawaiian Time Zone">
-                                            <option value="AK">Alaska</option>
-                                            <option value="HI">Hawaii</option>
-                                        </optgroup>
-                                        <optgroup label="Pacific Time Zone">
-                                            <option value="CA">California</option>
-                                            <option value="NV">Nevada</option>
-                                            <option value="OR">Oregon</option>
-                                            <option value="WA">Washington</option>
-                                        </optgroup>
-                                        <optgroup label="----------------------------------------------------------">
-                                            <option value="add_location">+  위치 추가</option>
-                                        </optgroup>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-6">
-                            <div class="form-group row align-items-center">
-                                <label for="location_select" class="col-sm-2 col-form-label">작성일</label>
-                                <div class="col-sm-6">
-                                    <div class="input-group" id="modal_datepicker1">
-                                        <input type="text" class="form-control" id="fixed_date" placeholder="today" readonly>
-                                    </div><!-- input-group -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mt-5">
-                        <div class="col-lg-6">
-                            <div class="form-group row align-items-center">
-                                <label for="location_select" class="col-sm-2 col-form-label">입고처 <span class="red_font">*</span></label>
-                                <div class="col-sm-6">
-                                    <select class="form-control" name="state" id="init_place_select">
-                                        <option>Select</option>
-                                        <optgroup label="Alaskan/Hawaiian Time Zone">
-                                            <option value="AK">Alaska</option>
-                                            <option value="HI">Hawaii</option>
-                                        </optgroup>
-                                        <optgroup label="Pacific Time Zone">
-                                            <option value="CA">California</option>
-                                            <option value="NV">Nevada</option>
-                                            <option value="OR">Oregon</option>
-                                            <option value="WA">Washington</option>
-                                        </optgroup>
-                                        <optgroup label="----------------------------------------------------------">
-                                            <option value="add_customer">+  거래처 추가</option>
-                                        </optgroup>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-6">
-                            <div class="form-group row align-items-center">
-                                <label for="location_select" class="col-sm-2 col-form-label">입고(예정)일 <span
-                                        class="red_font">*</span></label>
-                                <div class="col-sm-6">
-                                    <div class="input-group" id="modal_datepicker2">
-                                        <input type="text" class="form-control" placeholder="입고(예정)일"
-                                               data-date-format="yyyy-mm-dd" data-date-container='#modal_datepicker2'
-                                               data-provide="datepicker">
-
-                                        <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
-                                    </div><!-- input-group -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xxl-11 mt-5">
-                        <div class="row justify-content-between">
-                            <div class="col-lg-4 d-flex justify-content-start">
-                                <h4>품목정보</h4>
-                            </div>
-                            <div class="col-lg-4 d-flex justify-content-end">
-                                <button type="button" class="btn btn-outline-dark waves-effect waves-light w-50">바코드 스캔
-                                </button>
-                            </div>
-                        </div>
-
+                {% csrf_token %}
+                    <div class="row justify-content-center">
                         <div class="row">
-                            <div class="col-12">
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-nowrap align-middle" id="item_table">
-                                            <thead>
-                                            <tr>
-                                                <th style="width: 15%">품목 <span class="red_font">*</span></th>
-                                                <th>현재 재고</th>
-                                                <th>단가</th>
-                                                <th>입고 수량 <span class="red_font">*</span></th>
-                                                <th>속성</th>
-                                                <th>메모</th>
-                                                <th>첨부파일</th>
-                                                <th>저장</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="tableBody">
-                                            <tr data-id="1">
-                                                <td data-field="name1" class="no-edit">
-                                                    <select class="form-control" name="state" id="item_select">
-                                                        <option>Select</option>
-                                                        <optgroup label="Alaskan/Hawaiian Time Zone">
-                                                            <option value="AK">Alaska</option>
-                                                            <option value="HI">Hawaii</option>
-                                                        </optgroup>
-                                                        <optgroup label="Pacific Time Zone">
-                                                            <option value="CA">California</option>
-                                                            <option value="NV">Nevada</option>
-                                                            <option value="OR">Oregon</option>
-                                                            <option value="WA">Washington</option>
-                                                        </optgroup>
-                                                        <optgroup label="-------------------------">
-                                                            <option value="add_item">+  품목 추가</option>
-                                                        </optgroup>
-                                                    </select>
-                                                </td>
-                                                <td data-field="name2">David McHenry</td>
-                                                <td data-field="name3">David McHenry</td>
-                                                <td data-field="age">24</td>
-                                                <td data-field="status">구매</td>
-                                                <td data-field="gender">Male</td>
-                                                <td data-field="file" class="file-click no-edit">
-                                                    <input type="file" class="file-upload" id="formFile1">
-                                                    <label for="formFile1" class="bx-upload-label">
-{#                                                        <i class="fas fa-upload file-icon"></i>#}
-                                                        <i class="bx bx-upload"></i>
-                                                    </label>
-                                                    <span class="file-name"></span>
-                                                </td>
-                                                <td style="width: 5%">
-                                                    <a class="btn btn-outline-secondary btn-sm edit" title="Save">
-                                                        <i class="bx bx-save" style="font-size: large"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
+                            <div class="col-lg-6">
+                                <div class="form-group row align-items-center">
+                                    <label for="location_select select2" class="col-sm-2 col-form-label">위치 <span class="red_font">*</span></label>
+                                    <div class="col-sm-6">
+                                        <select class="form-control" id="location_select" name="location_select">
                                             
-                                            </tbody>
-                                        </table>
-                                        <div class="d-flex justify-content-end">
-                                            <button class="btn btn-soft-dark waves-effect waves-light" id="addRowBtn"><i class="bx bx-plus-circle"></i> 행 추가</button>
-                                        </div>
-
-                                        <template id="newRowTemplate">
-                                            <tr>
-                                                <td data-field="name1" class="no-edit">
-                                                    <select class="form-control" name="state">
-                                                        <option>Select</option>
-                                                        <optgroup label="Alaskan/Hawaiian Time Zone">
-                                                            <option value="AK">Alaska</option>
-                                                            <option value="HI">Hawaii</option>
-                                                        </optgroup>
-                                                    </select>
-                                                </td>
-                                                <td><input type="text" class="form-control" name="current_stock"></td>
-                                                <td><input type="text" class="form-control" name="unit_price"></td>
-                                                <td><input type="text" class="form-control" name="quantity"></td>
-                                                <td><input type="text" class="form-control" name="status"></td>
-                                                <td><input type="text" class="form-control" name="memo"></td>
-                                                <td class="file-click no-edit">
-                                                    <input type="file" class="file-upload">
-                                                    <label class="bx-upload-label">
-                                                        <i class="bx bx-upload"></i>
-                                                    </label>
-                                                    <span class="file-name"></span>
-                                                </td>
-                                                <td style="width: 5%">
-                                                    <a class="btn btn-outline-secondary btn-sm edit" title="Save">
-                                                        <i class="bx bx-save" style="font-size: large"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </template>
+                                        </select>
                                     </div>
                                 </div>
-                            </div> <!-- container-fluid -->
+                            </div>
+    
+                            <div class="col-lg-6">
+                                <div class="form-group row align-items-center">
+                                    <label for="location_select" class="col-sm-2 col-form-label">작성일</label>
+                                    <div class="col-sm-6">
+                                        <div class="input-group" id="modal_datepicker1">
+                                            <input type="text" class="form-control" id="fixed_date" name="fixed_date" placeholder="today" readonly>
+                                        </div><!-- input-group -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <!-- End Page-content -->
-                    </div>
-                    
-                    <div class="col-xxl-11">
-                        <div>
-                            <input class="modal_checkbox me-3" type="checkbox"/>
-                            <span>입고 내역을 저장하고 즉시 입고 처리합니다.</span>
+    
+                        <div class="row mt-5">
+                            <div class="col-lg-6">
+                                <div class="form-group row align-items-center">
+                                    <label for="location_select" class="col-sm-2 col-form-label">입고처 <span class="red_font">*</span></label>
+                                    <div class="col-sm-6">
+                                        <select class="form-control" name="init_place_select" id="init_place_select">
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="col-lg-6">
+                                <div class="form-group row align-items-center">
+                                    <label for="location_select" class="col-sm-2 col-form-label">입고(예정)일 <span
+                                            class="red_font">*</span></label>
+                                    <div class="col-sm-6">
+                                        <div class="input-group" id="modal_datepicker2">
+                                            <input type="text" class="form-control" placeholder="입고(예정)일"
+                                                   data-date-format="yyyy-mm-dd" data-date-container='#modal_datepicker2'
+                                                   data-provide="datepicker" id="due_date" name="due_date"/>
+    
+                                            <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
+                                        </div><!-- input-group -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="col-xxl-11 mt-5">
-                        <div>
-                            <button type="button" class="btn btn-primary waves-effect waves-light">저장</button>                            
-                            <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">돌아가기</button>
+    
+                        <div class="col-xxl-11 mt-5">
+                            <div class="row justify-content-between">
+                                <div class="col-lg-4 d-flex justify-content-start">
+                                    <h4>품목정보</h4>
+                                </div>
+                                <div class="col-lg-4 d-flex justify-content-end">
+                                    <button type="button" class="btn btn-outline-dark waves-effect waves-light w-50">바코드 스캔
+                                    </button>
+                                </div>
+                            </div>
+    
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-nowrap align-middle" id="item_table">
+                                                <thead>
+                                                <tr>
+                                                    <th style="width: 15%">품목 <span class="red_font">*</span></th>
+                                                    <th style="width: 15%">입고 상태</th>
+                                                    <th style="width: 10%">현재 재고</th>
+                                                    <th style="width: 10%">단가</th>
+                                                    <th style="width: 10%">입고 수량 <span class="red_font">*</span></th>
+                                                    <th style="width: 15%">속성</th>
+                                                    <th>메모</th>
+                                                    <th>첨부파일</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="tableBody">
+                                                <tr data-id="1">
+                                                    <td>
+                                                        <select class="form-control item_select" name="item_select" id="item_select">
+                                                            
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control" name="in_status" id="in_status">
+                                                            <option disabled selected>입고상태를 선택 해주세요</option>
+                                                            <option value="F">입고 완료</option>
+                                                            <option value="P">부분 입고</option>
+                                                            <option value="W">입고 대기</option>
+                                                            <option value="C">입고 취소</option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" class="form-control" name="current_quan" id="current_quan"></td>
+                                                    <td><input type="text" class="form-control" name="unit_price" id="unit_price"></td>
+                                                    <td><input type="text" class="form-control" name="in_quan" id="in_quan"></td>
+                                                    <td>
+                                                        <select class="form-control status_select" id="in_type" name="in_type">
+                                                            <option disabled selected>속성을 선택 해주세요</option>
+                                                            <option value="P">구매 입고</option>
+                                                            <option value="M">생산 입고</option>
+                                                            <option value="C">재고 조정</option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" class="form-control" name="memo"></td>
+                                                    <td data-field="file" class="file-click">
+                                                        <input type="file" class="file-upload" id="formFile1" name="formFile1">
+                                                        <label for="formFile1" class="bx-upload-label">
+    {#                                                        <i class="fas fa-upload file-icon"></i>#}
+                                                            <i class="bx bx-upload"></i>
+                                                        </label>
+                                                        <span class="file-name"></span>
+                                                    </td>
+                                                </tr>
+                                                
+                                                </tbody>
+                                            </table>
+                                            <div class="d-flex justify-content-end">
+                                                <button class="btn btn-soft-dark waves-effect waves-light" id="addRowBtn"><i class="bx bx-plus-circle"></i> 행 추가</button>
+                                            </div>
+    
+                                            <template id="newRowTemplate">
+                                                <tr data-id="1">
+                                                    <td>
+                                                        <select class="form-control item_select" name="item_select" id="item_select">
+                                                            
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control" name="in_status" id="in_status">
+                                                            <option disabled selected>입고상태를 선택 해주세요</option>
+                                                            <option value="F">입고 완료</option>
+                                                            <option value="P">부분 입고</option>
+                                                            <option value="W">입고 대기</option>
+                                                            <option value="C">입고 취소</option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" class="form-control" name="current_quan" id="current_quan"></td>
+                                                    <td><input type="text" class="form-control" name="unit_price" id="unit_price"></td>
+                                                    <td><input type="text" class="form-control" name="in_quan" id="in_quan"></td>
+                                                    <td>
+                                                        <select class="form-control status_select" id="in_type" name="in_type">
+                                                            <option disabled selected>속성을 선택 해주세요</option>
+                                                            <option value="P">구매 입고</option>
+                                                            <option value="M">생산 입고</option>
+                                                            <option value="C">재고 조정</option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" class="form-control" name="memo"></td>
+                                                    <td data-field="file" class="file-click">
+                                                        <input type="file" class="file-upload" name="formFile">
+                                                        <label class="bx-upload-label">
+                                                            <i class="bx bx-upload"></i>
+                                                        </label>
+                                                        <span class="file-name"></span>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div> <!-- container-fluid -->
+                            </div>
+                            <!-- End Page-content -->
                         </div>
-                    </div>
                         
-                    
-                </div>
+                        <div class="col-xxl-11">
+                            <div>
+                                <input class="modal_checkbox me-3" type="checkbox" id="immediately_check" name="immediately_check"/>
+                                <span>입고 내역을 저장하고 즉시 입고 처리합니다.</span>
+                            </div>
+                        </div>
+                        
+                        <div class="col-xxl-11 mt-5">
+                            <div>
+                                <button type="button" class="btn btn-primary waves-effect waves-light" onclick="add_init()">저장</button>                            
+                                <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">돌아가기</button>
+                            </div>
+                        </div>
+                    </div>
             </div>
             {% include 'Material/init_mgmt/plus_location_modal.html' %}
             {% include 'Material/init_mgmt/plus_customer_modal.html' %}
@@ -260,17 +238,48 @@
     </div>
 </div>
 <script>
+    
     $(document).ready(function () {
-        $('#location_select, #init_place_select, #item_select').select2({
-            dropdownParent: $('#exampleModalFullscreen')
-        });
+        let itemData = null;
+
+        // itemData ajax 요청
+        function fetchItemData() {
+            
+            return $.ajax({
+                url: "{% url 'get_item_masters' %}",
+                type: "GET"
+            });
+        }
+
+        // item_select 초기화
+        function initSelect2(element) {
+            $(element).select2({
+                dropdownParent: $('#exampleModalFullscreen'),
+                data: function () {
+                    return itemData || [];
+                }
+            });
+        }
+
+        // item_select 업데이트 함수
+        function loadAndUpdateSelect2(element) {
+            if (itemData) {
+                console.log('item', itemData)
+                updateSelect2WithData(element, itemData);
+            } else {
+                fetchItemData().done(function (res) {
+                    itemData = res.results;
+                    updateSelect2WithData(element, itemData);
+                }).fail(function (xhr, status, error) {
+                    console.error("Error fetching items:", error);
+                });
+            }
+        }
 
         // 모달이 열릴 때마다 검색 입력란에 포커스 설정
         $('#exampleModalFullscreen').on('shown.bs.modal', function () {
             $('.select2-search__field').focus();
         });
-
-       
 
         function getTodayDate() {
             const today = new Date();
@@ -282,12 +291,13 @@
 
         $('#fixed_date').val(getTodayDate());
 
-        
+
         // 첨부파일
-        $('#formFile1').on('change', function (event) {
+        $('#tableBody').on('change', '.file-upload', function (event) {
             const fileInput = $(this);
-            console.log('fileInput', fileInput)
-            const fileNameSpan = fileInput.next().next('.file-name');
+            const fileNameSpan = fileInput.siblings('.file-name');
+            const fileIcon = fileInput.siblings('.bx-upload-label').find('i');
+
             if (fileInput[0].files.length > 0) {
                 const fileName = fileInput[0].files[0].name;
                 fileNameSpan.text(fileName);
@@ -305,83 +315,222 @@
                     fileIconClass = 'fas fa-file-image';
                 }
 
-                const fileIcon = fileInput.next().find('.bx-upload'); // 아이콘을 찾는 부분
                 fileIcon.attr('class', fileIconClass + ' file-icon');
             } else {
                 fileNameSpan.text('');
-                fileInput.next().find('.file-icon').attr('class', 'bx bx-upload');
+                fileIcon.attr('class', 'bx bx-upload');
             }
         });
 
-        
-        // editable table
-        $('#item_table tbody').on('dblclick', 'td', function () {
-            var $td = $(this);
+        // 행 추가 클릭 시 테이블 행 추가
+        $('#addRowBtn').click(function () {
+            var template = $('#newRowTemplate').html();
+            var $newRow = $(template);
 
-            // 품목, 첨부파일, 수정 칸은 편집 X
-            if ($td.is('[data-field="name1"]') || $td.hasClass('file-click') || $td.find('.edit').length > 0) {
-                return;
-            }
+            // ID 생성 및 할당
+            var uniqueId = 'formFile' + Date.now();
+            $newRow.find('.file-upload').attr('id', uniqueId);
+            $newRow.find('.bx-upload-label').attr('for', uniqueId);
 
-            var originalContent = $td.text().trim();
-            var $input = $('<input>', {
-                type: 'text',
-                class: 'form-control',
-                value: originalContent,
-                blur: function () {
-                    var newContent = $(this).val().trim();
-                    $td.text(newContent);
-                },
-                keyup: function (e) {
-                    if (e.which === 13) { // Enter key
-                        $(this).blur();
-                    }
-                }
-            });
+            $('#tableBody').append($newRow);
 
-            $td.html($input);
-            $input.focus().select();
-        });
-
-        // 다른 곳 클릭 시 input blur 처리
-        $(document).on('click', function (e) {
-            var $target = $(e.target);
-            if (!$target.closest('td').find('input').length) {
-                $('td').find('input').blur();
-            }
+            // 추가된 행의 select 초기화 및 데이터 로드
+            var $newSelect = $newRow.find('.item_select');
+            initSelect2($newSelect);
+            loadAndUpdateSelect2($newSelect);
         });
         
-
-        // "위치 추가" 옵션 클릭 이벤트 핸들러
-        $('#location_select').change(function () {
-            if ($(this).val() === 'add_location') {
-                $('#location_modal').modal('show')
-                $(this).val('Select');
-            }
-        });
         
-        $('#init_place_select').change(function () {
-            if ($(this).val() === 'add_customer') {
-                $('#customer_modal').modal('show')
-                $(this).val('Select');
-            }
-        });
-        
-        $('#item_select').change(function () {
+        // select option '품목 추가' 클릭 시 모달창 팝업
+        $('.item_select').change(function () {
             if ($(this).val() === 'add_item') {
                 $('#item_modal').modal('show')
                 $(this).val('Select');
             }
         });
-        
-        $('#addRowBtn').click(function () {
-            var template = $('#newRowTemplate').html();
-            $('#tableBody').append(template);
 
-            $('#tableBody select').select2({
-                dropdownParent: $('#exampleModalFullscreen')
+        // select2 데이터 업데이트 함수
+        function updateSelect2WithData(element, data) {
+            var $select = $(element);
+            // 기존 옵션 제거
+            $select.empty();
+        
+            // "품목을 선택해주세요" 옵션 추가
+            var $defaultOption = new Option("품목을 선택해주세요", "", true, true);
+            $defaultOption.disabled = true;
+            $select.append($defaultOption);
+        
+            // 받은 데이터로 옵션 추가
+            $.each(data, function (index, item) {
+                var optionText = item.item_name + ' (' + item.item_code + ')';
+                var option = new Option(optionText, item.id, false, false);
+                $(option).data('item', item);
+                $select.append(option);
             });
+        
+            // "품목 추가" 옵션 그룹 추가
+            var $optgroup = $('<optgroup label="-------------------------"></optgroup>');
+            var $addItemOption = $('<option value="add_item">+ 품목 추가</option>');
+            $optgroup.append($addItemOption);
+            $select.append($optgroup);
+        
+            // Select2에 변경사항 알림
+            $select.trigger('change');
+        }
+        
+        // item_select2 선택 이벤트 처리
+        $(document).on('select2:select', '.item_select', function (e) {
+            var data = e.params.data;
+            var $row = $(this).closest('tr');
+            
+            if (data.id === 'add_item') {
+                console.log("품목 추가 옵션 선택됨");
+                // 품목 추가 모달 열기 등의 로직
+                $(this).val(null).trigger('change');
+            } else {
+                var item = $(e.params.data.element).data('item');
+                if (item) {
+                    $row.find('[name="current_quan"]').val(item.current_quan);
+                    $row.find('[name="unit_price"]').val(item.unit_prise_item__unit_price);
+                    // 다른 필드들도 필요에 따라 추가
+                }
+            }
         });
-    
+
+        // 초기 Select2 요소에 대한 이벤트 처리
+        $(document).on('select2:opening', '.item_select', function (e) {
+            loadAndUpdateSelect2(this);
+        });
+
+        // 초기 데이터 로드 (페이지 로드 시 이미 존재하는 select 요소들에 대해)
+        $('.item_select').each(function () {
+            initSelect2(this);
+            loadAndUpdateSelect2(this);
+        });
+
+
     })
+    
+     // 위치 select2 초기화 및 데이터 생성
+    $('#location_select').select2({
+        placeholder: '위치를 선택해주세요',
+        allowClear: true,
+        ajax: {
+            url: "{% url 'GetWarehouse' %}",
+            dataType: 'json',
+            processResults: function (data) {
+                var processedData = data.result.map(function (location) {
+                    return {
+                        id: location.id,
+                        text: location.name
+                    };
+                });
+                processedData.push({
+                    id: 'add_location',
+                    text: '+ 위치 추가',
+                    disabled: false
+                });
+                return {
+                    results: processedData
+                };
+            }
+        },
+    });
+   
+    // select option '위치 추가' 클릭 시 모달창 팝업
+    $('#location_select').change(function () {
+        if ($(this).val() === 'add_location') {
+            $('#location_modal').modal('show')
+            $(this).val('Select');
+        }
+    });
+    
+    // 입고처 select2 초기화 및 데이터 생성
+    $('#init_place_select').select2({
+        placeholder: '입고처를 선택해주세요',
+        allowClear: true,
+        ajax: {
+            url: "{% url 'GetCustomer' %}",
+            dataType: 'json',
+            processResults: function (data) {
+                var processedData = data.result.map(function (customer) {
+                    return {
+                        id: customer.id,
+                        text: customer.c_name
+                    };
+                });
+                processedData.push({
+                    id: 'add_customer',
+                    text: '+ 거래처 추가',
+                    disabled: false
+                });
+                return {
+                    results: processedData
+                };
+            }
+        },
+    });
+
+    // select option '거래처 추가' 클릭 시 모달창 팝업
+    $('#init_place_select').change(function () {
+        if ($(this).val() === 'add_customer') {
+            $('#customer_modal').modal('show')
+            $(this).val('Select');
+        }
+    });
+
+
+     function add_init() {
+        var tableData = [];
+        var formData = new FormData();
+
+        // 테이블 데이터 수집
+        $('#tableBody tr').each(function (index) {
+            var row = $(this);
+            var rowData = {
+                item: row.find('.item_select').val(),
+                status: row.find('[name="in_status"]').val(),
+                current_quan: row.find('[name="current_quan"]').val(),
+                unit_price: row.find('[name="unit_price"]').val(),
+                in_quan: row.find('[name="in_quan"]').val(),
+                in_type: row.find('[name="in_type"]').val(),
+                memo: row.find('[name="memo"]').val()
+            };
+
+            // 파일 처리
+            var fileInput = row.find('.file-upload')[0];
+            if (fileInput.files.length > 0) {
+                formData.append('file_' + index, fileInput.files[0]);
+            }
+
+            tableData.push(rowData);
+        });
+
+        // 테이블 데이터를 JSON 문자열로 변환하여 FormData에 추가
+        formData.append('tableData', JSON.stringify(tableData));
+
+        // 다른 input 요소 데이터 수집 (예시)
+        formData.append('location_select', $('#location_select').val());
+        formData.append('fixed_date', $('#fixed_date').val());
+        formData.append('init_place_select', $('#init_place_select').val());
+        formData.append('due_date', $('#due_date').val());
+        formData.append('immediately_check', $('#immediately_check').val());
+        formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
+
+
+        $.ajax({
+            url: "{% url 'InputCreate' %}",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                console.log(res);
+            },
+            error: function (xhr, status, error) {
+                alert("오류가 발생했습니다: " + xhr.responseJSON.error);
+            }
+        })
+    }
+   
 </script>

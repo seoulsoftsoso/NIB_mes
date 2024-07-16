@@ -9,7 +9,7 @@
                 <h5 class="modal-title" id="exampleModalFullscreenLabel">품목 추가</h5>
                 <div>
                     <button type="button" class="btn btn-primary waves-effect waves-light" id="item_edit_btn">수정</button>
-                    <button type="button" class="btn btn-secondary waves-effect" id="item_delete_btn">삭제</button>
+                    <button type="button" class="btn btn-secondary waves-effect" id="item_delete_btn" onclick="DeleteItem()">삭제</button>
                     <button type="button" class="btn-close ms-5" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
@@ -131,7 +131,6 @@
 
                 <div class="col-xxl-11 mt-5">
                     <div>
-                        <button type="button" class="btn btn-primary waves-effect waves-light" id="item_add_btn">저장</button>
                         <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">돌아가기</button>
                     </div>
                 </div>
@@ -143,5 +142,30 @@
 </div>
 
 <script>
+    function DeleteItem() {
+        //console.log(currentItem.id)
+        if (confirm("정말 삭제하시겠습니까??") === true) { 
+            const formData = new FormData();
 
+            formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
+            formData.append('type', 'D');
+            formData.append('item_id', currentItem.id);
+
+            //console.log('formData', formData)
+
+            $.ajax({
+                url: "{% url 'update_item' %}",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function () {
+                    alert('삭제 되었습니다.')
+                    location.reload()
+                },
+            })
+        } else {
+            return false;
+        }
+    }
 </script>
