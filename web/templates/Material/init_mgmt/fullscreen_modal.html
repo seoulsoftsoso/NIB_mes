@@ -143,7 +143,10 @@
                                                             <option value="C">입고 취소</option>
                                                         </select>
                                                     </td>
-                                                    <td><input type="text" class="form-control" name="current_quan" id="current_quan"></td>
+                                                    <td>
+                                                      <input type="text" class="form-control" name="current_quan" id="current_quan" readonly 
+                                                             data-toggle="tooltip" data-placement="top" title="현재 재고는 '재고 조정' 메뉴에서만 수정이 가능합니다.">
+                                                    </td>
                                                     <td><input type="text" class="form-control" name="unit_price" id="unit_price"></td>
                                                     <td><input type="text" class="form-control" name="in_quan" id="in_quan"></td>
                                                     <td>
@@ -154,7 +157,7 @@
                                                             <option value="C">재고 조정</option>
                                                         </select>
                                                     </td>
-                                                    <td><input type="text" class="form-control" name="memo"></td>
+                                                    <td><input type="text" class="form-control" id="memo" name="memo"></td>
                                                     <td data-field="file" class="file-click">
                                                         <input type="file" class="file-upload" id="formFile1" name="formFile1">
                                                         <label for="formFile1" class="bx-upload-label">
@@ -187,7 +190,10 @@
                                                             <option value="C">입고 취소</option>
                                                         </select>
                                                     </td>
-                                                    <td><input type="text" class="form-control" name="current_quan" id="current_quan"></td>
+                                                    <td>
+                                                      <input type="text" class="form-control" name="current_quan" id="current_quan" readonly 
+                                                             data-toggle="tooltip" data-placement="top" title="현재 재고는 '재고 조정' 메뉴에서만 수정이 가능합니다.">
+                                                    </td>
                                                     <td><input type="text" class="form-control" name="unit_price" id="unit_price"></td>
                                                     <td><input type="text" class="form-control" name="in_quan" id="in_quan"></td>
                                                     <td>
@@ -216,6 +222,7 @@
                         </div>
                         
                         <div class="col-xxl-11">
+                            <input type="hidden" id="ItemInHidden" name="ItemInHidden">
                             <div>
                                 <input class="modal_checkbox me-3" type="checkbox" id="immediately_check" name="immediately_check"/>
                                 <span>입고 내역을 저장하고 즉시 입고 처리합니다.</span>
@@ -224,7 +231,8 @@
                         
                         <div class="col-xxl-11 mt-5">
                             <div>
-                                <button type="button" class="btn btn-primary waves-effect waves-light" onclick="add_init()">저장</button>                            
+                                <button type="button" class="btn btn-primary waves-effect waves-light" id="create_btn" onclick="add_init()">저장</button>
+{#                                <button type="button" class="btn btn-primary waves-effect waves-light" id="update_btn" onclick="edit_init()">저장</button>#}
                                 <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">돌아가기</button>
                             </div>
                         </div>
@@ -237,11 +245,21 @@
         </div><!-- /.modal-content -->
     </div>
 </div>
+<script src="{% static 'js/common.js' %}"></script>
 <script>
     
     $(document).ready(function () {
         let itemData = null;
 
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip();
+          
+          $('#current_quan').on('click', function(e) {
+            e.preventDefault();
+            $(this).tooltip('show');
+          });
+        });
+        
         // itemData ajax 요청
         function fetchItemData() {
             
@@ -362,7 +380,7 @@
         
             // 받은 데이터로 옵션 추가
             $.each(data, function (index, item) {
-                var optionText = item.item_name + ' (' + item.item_code + ')';
+                var optionText = item.item_name;
                 var option = new Option(optionText, item.id, false, false);
                 $(option).data('item', item);
                 $select.append(option);
@@ -483,6 +501,8 @@
      function add_init() {
         var tableData = [];
         var formData = new FormData();
+        var item_id = $("#ItemInHidden").val()
+         console.log('item_idid', item_id)
 
         // 테이블 데이터 수집
         $('#tableBody tr').each(function (index) {
@@ -508,6 +528,10 @@
 
         // 테이블 데이터를 JSON 문자열로 변환하여 FormData에 추가
         formData.append('tableData', JSON.stringify(tableData));
+        
+        if (item_id) {
+            formData.append('item_in_id', item_id);    
+        }
 
         // 다른 input 요소 데이터 수집 (예시)
         formData.append('location_select', $('#location_select').val());
@@ -516,8 +540,7 @@
         formData.append('due_date', $('#due_date').val());
         formData.append('immediately_check', $('#immediately_check').val());
         formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
-
-
+         
         $.ajax({
             url: "{% url 'InputCreate' %}",
             type: "POST",
@@ -525,7 +548,11 @@
             processData: false,
             contentType: false,
             success: function (res) {
-                console.log(res);
+                alert(res.message)
+                updateSelect2('location_select', '', '');
+                updateSelect2('init_place_select', '' , '');
+                updateSelect2('item_select', '', '');
+                $("#in_status, #current_quan, #unit_price, #in_quan, #in_type, #memo, #ItemInHidden, #due_date").val('');
             },
             error: function (xhr, status, error) {
                 alert("오류가 발생했습니다: " + xhr.responseJSON.error);
@@ -533,4 +560,5 @@
         })
     }
    
+    
 </script>

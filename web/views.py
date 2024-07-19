@@ -5,7 +5,7 @@ from django.shortcuts import render
 
 from api.Item.common import get_item_data
 from api.base.base_form import enterprise_fm
-from api.models import MenuMaster, ItemMaster, UnitPrice
+from api.models import MenuMaster, ItemMaster, UnitPrice, ItemIn, Warehouse
 from dve_config import settings
 
 
@@ -77,7 +77,21 @@ def CompanyMgmt(request):
 
 
 def Material_input(request):
-    context = {}
+    enterprise = request.user.enterprise_id
+    item_in = ItemIn.objects.filter(
+        created_by__enterprise_id=enterprise,
+        del_flag='N'
+    ).select_related('in_custom', 'in_item', 'uprice', 'wh', 'wr')
+
+    # 필터용
+    wh_filter = Warehouse.objects.filter(created_by__enterprise_id=enterprise, del_flag='N')
+
+    context = {
+        'result': item_in,
+        'wh_filter': wh_filter,
+        'item_in_filter': ItemIn.IN_STATUS_CHOICES,
+        'item_type_choices': ItemMaster.ITEM_TYPE_CHOICES
+    }
     return render(request, 'Material/init_mgmt/material_input.html', context)
 
 

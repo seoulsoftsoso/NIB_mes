@@ -371,7 +371,7 @@ class ItemIn(models.Model):
     uprice = models.ForeignKey('UnitPrice', on_delete=models.DO_NOTHING, null=False, verbose_name='단가 정보',
                                 related_name='item_in_price')
     in_custom = models.ForeignKey('CustomerMaster', on_delete=models.DO_NOTHING, default=1, null=False, verbose_name='입고처 정보',
-                                   related_name='unit_prise_custom')  # 구매처(공급사), 판매처(고객사)
+                                   related_name='item_in_custom')  # 구매처(공급사), 판매처(고객사)
     del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
     created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='최초작성자',
                                    related_name='item_in_created_by')

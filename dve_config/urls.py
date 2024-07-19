@@ -113,7 +113,10 @@ urlpatterns = [
                 path('material/output/', Material_output, name='Material_output'),  # 출고
 
                 # 입고
+                path('material/input/get', InputGet.as_view(), name='InputGet'),
                 path('material/input/create', InputCreate.as_view(), name='InputCreate'),
+                path('material/input/update', InputUpdate.as_view(), name='InputUpdate'),
+                path('material/input/filtering', ItemInFilter.as_view(), name='ItemInFilter'),
 
                 # 거래처
                 path('customer/get', GetCustomer.as_view(), name='GetCustomer'),
