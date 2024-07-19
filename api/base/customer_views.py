@@ -1,27 +1,36 @@
 import traceback
 
+from django.db.models import Q
 from django.views import View
 from django.http import JsonResponse
 from api.models import CustomerMaster
 
 
-def get_customer_master(enterprise):
-    query = CustomerMaster.objects.filter(enterprise=enterprise, del_flag='N').values(
+def get_customer_master(enterprise, search_term=''):
+    query = CustomerMaster.objects.filter(enterprise=enterprise, del_flag='N')
+
+    if search_term:
+        query = query.filter(
+            Q(c_name__icontains=search_term) |
+            Q(business_num__icontains=search_term) |
+            Q(owner_name__icontains=search_term)
+        )
+
+    query = query.values(
         'id', 'c_name', 'business_num', 'business_type', 'business_sort', 'postal_code', 'address', 'sign', 'logo',
-        'owner_name',
-        'official_tel', 'official_fax', 'official_email', 'manager_tel', 'manager_email', 'memo', 'created_by_id',
-        'enterprise_id'
+        'owner_name', 'official_tel', 'official_fax', 'official_email', 'manager_tel', 'manager_email', 'memo',
+        'created_by_id', 'enterprise_id'
     )
 
     result = list(query)
-
     return result
 
 
 class GetCustomer(View):
     def get(self, request, *args, **kwargs):
         enterprise = request.user.enterprise_id
-        customer = get_customer_master(enterprise=enterprise)
+        search_term = request.GET.get('search', '')
+        customer = get_customer_master(enterprise=enterprise, search_term=search_term)
         context = {'result': customer}
         return JsonResponse(context)
 

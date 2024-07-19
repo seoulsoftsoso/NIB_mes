@@ -433,9 +433,17 @@
     $('#location_select').select2({
         placeholder: '위치를 선택해주세요',
         allowClear: true,
+        minimumInputLength: 0,
+        dropdownParent: $('#exampleModalFullscreen'),
         ajax: {
             url: "{% url 'GetWarehouse' %}",
             dataType: 'json',
+            data: function (params) {
+                return {
+                    search: params.term,
+                    page: params.page
+                };
+            },
             processResults: function (data) {
                 var processedData = data.result.map(function (location) {
                     return {
@@ -451,8 +459,8 @@
                 return {
                     results: processedData
                 };
-            }
-        },
+            },
+        }
     });
    
     // select option '위치 추가' 클릭 시 모달창 팝업
@@ -467,9 +475,17 @@
     $('#init_place_select').select2({
         placeholder: '입고처를 선택해주세요',
         allowClear: true,
+        minimumInputLength: 0,
+        dropdownParent: $('#exampleModalFullscreen'),
         ajax: {
             url: "{% url 'GetCustomer' %}",
             dataType: 'json',
+            data: function (params) {
+                return {
+                    search: params.term,
+                    page: params.page
+                };
+            },
             processResults: function (data) {
                 var processedData = data.result.map(function (customer) {
                     return {
