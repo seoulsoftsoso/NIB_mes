@@ -23,50 +23,51 @@
 
     });
 
-function getMenuList() {
+    function getMenuList() {
 
-    api_gp(`/getMenulist/`, "GET", {}, (done) => {
-          menuDraw(done);
+        api_gp(`/getMenulist/`, "GET", {}, (done) => {
+            menuDraw(done);
 
-                })
+        })
 
     }
 
-function menuDraw(menuData) {
-    let row = '';
-    let rows = '';
+    function menuDraw(menuData) {
+        let row = '';
+        let rows = '';
 
-    row += "<li class='menu-title'>WMS</li>";
+        row += "<li class='menu-title'>WMS</li>";
 
-    for (let i = 0; i < menuData.length; i++) {
-        let unit = menuData[i];
+        for (let i = 0; i < menuData.length; i++) {
+            let unit = menuData[i];
 
-        if(unit.type === "L"){
+            if (unit.type === "L") {
 
-            if(i > 0){
-                row += "</ul></li>"
+                if (i > 0) {
+                    row += "</ul></li>"
+                }
+
+                row += '<li><a href="javascript:void(0)" class="has-arrow waves-effect"><i class="' + unit.i_class + '"> </i><span>' + unit.name + '</span></a>';
+                row += "<ul class='sub-menu' aria-expanded='false'>";
+
+            } else {
+
+                row += "<li><a href='#' onclick='url_click(\"" + unit.path + "\", \"" + unit.code + "\", \"" + unit.name + "\");'>" + unit.name + "</a></li>";
+
             }
-
-            row += '<li><a href="javascript:void(0)" class="has-arrow waves-effect"><i class="' + unit.i_class + '"> </i><span>'+unit.name +'</span></a>';
-            row += "<ul class='sub-menu' aria-expanded='false'>";
-
-        }else{
-
-            row += "<li><a href='#' onclick='url_click(\"" + unit.path + "\", \"" + unit.code + "\", \"" + unit.name + "\");'>" + unit.name + "</a></li>";
-
+            //row += "</ul></li>";
         }
-        //row += "</ul></li>";
-    };
+        ;
 
-    rows += row;
-    rows += "</ul></li>";
-    $("#side-menu").html(rows);
+        rows += row;
+        rows += "</ul></li>";
+        $("#side-menu").html(rows);
 
-    $('.has-arrow').on('click', function() {
-        $(this).next('.sub-menu').slideToggle();
-    });
+        $('.has-arrow').on('click', function () {
+            $(this).next('.sub-menu').slideToggle();
+        });
 
-}
+    }
 
 
 </script>
