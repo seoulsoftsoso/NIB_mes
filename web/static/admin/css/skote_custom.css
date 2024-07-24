@@ -22,3 +22,8 @@ button {
 .select2-selection__arrow {
     margin-top: 1%;
 }
+
+.menu-active {
+    color: white !important;
+    background-color: #284e74; /* 선택된 메뉴의 배경색 */
+}
