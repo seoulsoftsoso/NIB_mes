@@ -159,6 +159,15 @@
                             <option>${item.item_name}</option>
                         </select>
                     </td>
+                    <td>
+                        <select class="form-control" name="out_status" id="out_status">
+                              <option disabled selected>출고상태를 선택 해주세요</option>
+                              <option value="F">출고 완료</option>
+                              <option value="P">부분 출고</option>
+                              <option value="W">출고 대기</option>
+                              <option value="C">출고 취소</option>
+                        </select>
+                    </td>
                     <td data-field="name2">${item.current_quan || ''}</td>
                     <td data-field="name3">${item.unit_price || ''}</td>
                     <td><input type="number" class="form-control" id="in_quan" placeholder="입고수량"/></td>

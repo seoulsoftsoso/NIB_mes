@@ -260,7 +260,7 @@ class ItemMaster(models.Model):
         ('O', '기타'),
     ]
 
-    item_code = models.CharField(max_length=255, null=True, verbose_name='품번')
+    item_code = models.CharField(max_length=255, unique=True, null=True, verbose_name='품번')
     item_name = models.CharField(max_length=255, null=True, verbose_name='품명')
     item_detail = models.CharField(max_length=255, null=True, verbose_name='품명상세')
     standard = models.CharField(max_length=255, null=True, verbose_name='규격')
@@ -270,7 +270,7 @@ class ItemMaster(models.Model):
     color = models.CharField(max_length=255, null=True, verbose_name='색상')
     item_type = models.CharField(max_length=1, null=True, choices=ITEM_TYPE_CHOICES, verbose_name='품목 유형')  # ITEM_TYPE_CHOICES
     item_category = models.CharField(max_length=255, null=True, verbose_name='카테고리')
-    current_quan = models.FloatField(null=True, verbose_name='현 재고')
+    current_quan = models.FloatField(null=True, default=0, verbose_name='현 재고')
     safe_quan = models.FloatField(null=True, verbose_name='안전 재고')
     qr_code = models.CharField(max_length=255, null=True, verbose_name='QR 코드')
     item_image = models.FileField(upload_to=item_master_img_upload_path, default=None, null=True, verbose_name='품목 이미지')
@@ -478,3 +478,26 @@ class CustomerMaster(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
 
+
+class StockStatus(models.Model):
+    item = models.ForeignKey('ItemMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='품목 정보',
+                                related_name='stock_item')
+    io_status = models.CharField(max_length=1, null=False, default='N', verbose_name='입출고 구분')  # I: 입고 O: 출고 N: 오류
+    wh = models.ForeignKey('Warehouse', on_delete=models.DO_NOTHING, null=False, verbose_name='창고 정보',
+                                related_name='stock_warehouse')
+    wr = models.ForeignKey('WarehouseRack', on_delete=models.DO_NOTHING, null=False, verbose_name='위치 정보',
+                               related_name='stock_rack')
+    input = models.ForeignKey('ItemIn', on_delete=models.DO_NOTHING, null=True, verbose_name='입고서 정보',
+                               related_name='stock_in')
+    output = models.ForeignKey('ItemOut', on_delete=models.DO_NOTHING, null=True, verbose_name='출고서 정보',
+                               related_name='stock_out')
+    quantity = models.FloatField(null=True, verbose_name='수량')
+    del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
+    enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, default=1, related_name='stock_enterprise',
+                                   verbose_name='업체', null=False)
+    created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='최초작성자',
+                                   related_name='stock_created_by')
+    updated_by = models.ForeignKey('UserMaster', on_delete=models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='stock_updated_by')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')

@@ -23,7 +23,9 @@ from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 
 from api.Item.common import *
+from api.Item.item_adjustment import *
 from api.Item.item_input import *
+from api.Item.item_output import *
 from api.auto_complete import enterprise_name_ac, client_name_ac
 from api.base.codemaster_views import CodeMasterViewSet, CodeMasterSelectView
 from api.base.customer_views import *
@@ -96,6 +98,7 @@ urlpatterns = [
 
                 path('dashboard/', dashboard_page, name="dashboard_page"),
 
+                # 기준 정보
                 path('basic_information/codemaster/', codemaster),
                 path('basic_information/enterprise/', new_enterprise),
                 path('basic_information/menumaster/', Menumaster),
@@ -106,25 +109,36 @@ urlpatterns = [
                 path('basic_information/dept_mgmt/', DeptMgmt, name='DeptMgmt'),
                 path('basic_information/company_mgmt/', CompanyMgmt, name='CompanyMgmt'),
                 path('basic_information/item/', item_info, name='item_info'),
+                # 거래처
+                path('customer/get', GetCustomer.as_view(), name='GetCustomer'),
+                path('customer/create', CustomerCreate.as_view(), name='CustomerCreate'),
+                # 창고
+                path('warehouse/get', GetWarehouse.as_view(), name='GetWarehouse'),
+                path('warehouse/create', WarehouseCreate.as_view(), name='WarehouseCreate'),
 
                 # 재고 관리 페이지
                 path('material/status/', Material_status, name='Material_status'),  # 재고 목록
                 path('material/input/', Material_input, name='Material_input'),  # 입고
                 path('material/output/', Material_output, name='Material_output'),  # 출고
 
-                # 입고
+                # 재고 입고
                 path('material/input/get', InputGet.as_view(), name='InputGet'),
                 path('material/input/create', InputCreate.as_view(), name='InputCreate'),
                 path('material/input/update', InputUpdate.as_view(), name='InputUpdate'),
                 path('material/input/filtering', ItemInFilter.as_view(), name='ItemInFilter'),
 
-                # 거래처
-                path('customer/get', GetCustomer.as_view(), name='GetCustomer'),
-                path('customer/create', CustomerCreate.as_view(), name='CustomerCreate'),
+                # 재고 출고
+                path('material/output/get', OutputGet.as_view(), name='OutputGet'),
+                path('material/output/create', OutputCreate.as_view(), name='OutputCreate'),
+                path('material/output/update', OutputUpdate.as_view(), name='OutputUpdate'),
+                path('material/output/filtering', ItemOutFilter.as_view(), name='ItemOutFilter'),
 
-                # 창고
-                path('warehouse/get', GetWarehouse.as_view(), name='GetWarehouse'),
-                path('warehouse/create', WarehouseCreate.as_view(), name='WarehouseCreate'),
+                # 재고 조정
+                path('material/get_material/', get_material_data, name='get_material_data'),
+                path('material/adjust/', Material_Adjustment, name='Material_Adjustment'),
+
+                # 재고 현황
+                path('material/stock_get/', GetStock.as_view(), name='GetStock'),
 
                 # Item
                 path('item/get/', get_item_masters.as_view(), name='get_item_masters'),  # 품목 전체

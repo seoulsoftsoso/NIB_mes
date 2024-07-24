@@ -145,10 +145,10 @@
                                                     </td>
                                                     <td>
                                                       <input type="text" class="form-control" name="current_quan" id="current_quan" readonly 
-                                                             data-toggle="tooltip" data-placement="top" title="현재 재고는 '재고 조정' 메뉴에서만 수정이 가능합니다.">
+                                                             data-toggle="tooltip" data-placement="top" title="현재 재고는 '재고조정' 메뉴에서만 수정이 가능합니다.">
                                                     </td>
-                                                    <td><input type="text" class="form-control" name="unit_price" id="unit_price"></td>
-                                                    <td><input type="text" class="form-control" name="in_quan" id="in_quan"></td>
+                                                    <td><input type="number" class="form-control" name="unit_price" id="unit_price"></td>
+                                                    <td><input type="number" class="form-control" name="in_quan" id="in_quan"></td>
                                                     <td>
                                                         <select class="form-control status_select" id="in_type" name="in_type">
                                                             <option disabled selected>속성을 선택 해주세요</option>
@@ -565,10 +565,12 @@
             contentType: false,
             success: function (res) {
                 alert(res.message)
-                updateSelect2('location_select', '', '');
-                updateSelect2('init_place_select', '' , '');
-                updateSelect2('item_select', '', '');
-                $("#in_status, #current_quan, #unit_price, #in_quan, #in_type, #memo, #ItemInHidden, #due_date").val('');
+                //updateSelect2('location_select', '', '');
+                //updateSelect2('init_place_select', '' , '');
+                //updateSelect2('item_select', '', '');
+                //$("#in_status, #current_quan, #unit_price, #in_quan, #in_type, #memo, #ItemInHidden, #due_date").val('');
+                //send_filter()
+                location.reload()
             },
             error: function (xhr, status, error) {
                 alert("오류가 발생했습니다: " + xhr.responseJSON.error);

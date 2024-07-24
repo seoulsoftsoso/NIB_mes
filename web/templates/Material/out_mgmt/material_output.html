@@ -61,7 +61,7 @@
                                         <div class="col-xxl-3 col-lg-4">
                                             <div class="position-relative">
                                                 <input type="text" class="form-control" id="locationInput"
-                                                       autocomplete="off" placeholder="출고번호 또는 출고처명으로 검색">
+                                                       autocomplete="off" placeholder="입고번호 또는 입고처명으로 검색">
                                             </div>
                                         </div>
                                         <!--end col-->
@@ -87,8 +87,8 @@
                                         
                                         <div class="col-xxl-3 col-lg-6">
                                             <div class="position-relative h-100 hstack gap-3 d-flex justify-content-end">
-                                                <button type="submit" class="btn btn-primary h-100 w-40" 
-                                                        data-bs-toggle="modal" data-bs-target="#exampleModalFullscreen">
+                                                <button type="submit" class="btn btn-primary h-100 w-40"
+                                                        data-bs-toggle="modal" data-bs-target="#exampleModalFullscreen" onclick="form_reset()">
                                                     <i class="dripicons-plus pt-5"></i> 출고서 작성
                                                 </button>
                                             </div>
@@ -103,88 +103,38 @@
                                                             <label for="experience"
                                                                    class="form-label">상태</label>
                                                         </div>
+                                                        {% for value, name in item_out_filter %}
                                                         <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                   id="init_stand_by" value="입고 대기">
+                                                            <input class="form-check-input item-in-checkbox" type="checkbox"
+                                                                   id="item_out_{{ value }}" value="{{ value }}">
                                                             <label class="form-check-label"
-                                                                   for="init_stand_by">출고 대기</label>
+                                                                   for="item_out_{{ value }}">{{ name }}</label>
                                                         </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                   id="init_part" value="부분 입고">
-                                                            <label class="form-check-label" for="init_part">부분 출고</label>
-                                                        </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                   id="init_complete" value="입고 완료">
-                                                            <label class="form-check-label"
-                                                                   for="init_complete">출고 완료</label>
-                                                        </div>
+                                                        {% endfor %}
                                                     </div>
                                                     <div class="col-xxl-4 col-lg-6">
                                                         <div>
                                                             <label for="jobType" class="form-label">유형</label>
                                                         </div>
+                                                        {% for value, name in item_type_choices %}
                                                         <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                   id="complete_product" value="cp">
-                                                            <label class="form-check-label" for="complete_product">제품</label>
+                                                            <input class="form-check-input item-type-checkbox" type="checkbox"
+                                                                   id="item_type_{{ value }}" value="{{ value }}" name="item_type">
+                                                            <label class="form-check-label" for="item_type_{{ value }}">{{ name }}</label>
                                                         </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                   id="half_product" value="hp">
-                                                            <label class="form-check-label" for="half_product">반제품</label>
-                                                        </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                   id="raw_material" value="rm">
-                                                            <label class="form-check-label" for="raw_material">원재료</label>
-                                                        </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                   id="subsidiary_material" value="sm">
-                                                            <label class="form-check-label" for="subsidiary_material">부재료</label>
-                                                        </div>
+                                                        {% endfor %}
                                                     </div>
                                                     <div class="col-xxl-4 col-lg-6">
                                                         <div>
                                                             <label for="jobType" class="form-label">위치</label>
                                                         </div>
+                                                        {% for obj in wh_filter %}
                                                         <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                   id="warehouse1" value="option3">
-                                                            <label class="form-check-label" for="warehouse1">창고A</label>
+                                                            <input class="form-check-input warehouse-checkbox" type="checkbox"
+                                                                   id="{{ obj.id }}" value="{{ obj.id }}">
+                                                            <label class="form-check-label" for="warehouse1">{{ obj.name }}</label>
                                                         </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                   id="warehouse2" value="option3">
-                                                            <label class="form-check-label" for="warehouse2">창고B</label>
-                                                        </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                   id="warehouse3" value="option3">
-                                                            <label class="form-check-label" for="warehouse3">창고C</label>
-                                                        </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                   id="warehouse4" value="option3">
-                                                            <label class="form-check-label" for="warehouse4">창고D</label>
-                                                        </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                   id="seoul" value="option3">
-                                                            <label class="form-check-label" for="seoul">서울</label>
-                                                        </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                   id="office" value="option3">
-                                                            <label class="form-check-label" for="office">사무실</label>
-                                                        </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                   id="chung_ju" value="option3">
-                                                            <label class="form-check-label" for="chung_ju">충주</label>
-                                                        </div>
+                                                        {% endfor %}
                                                     </div>
                                                 </div>
                                             </div>
@@ -216,141 +166,31 @@
                                 <th>단위</th>
                                 <th>출고현황</th>
                                 <th>단가</th>
-                                <th>속성</th>
                                 <th>위치</th>
+                                <th>ID</th>
                             </tr>
                             </thead>
-
-
+                        
                             <tbody>
+                                {% load humanize %}
+                                {% for obj in result %}
                                 <tr>
                                     <td></td>
-                                    <td>1</td>
-                                    <td>
-                                        <button type="button" class="btn btn-outline-secondary disabled" style="color: red !important;">
-                                            <b>출고 대기</b>
-                                        </button>
-                                    </td>
-                                    <td>2024-07-01</td>
-                                    <td>AA-BB104CC</td>
-                                    <td>테헤란</td>
-                                    <td>A1001</td>
-                                    <td>버섯가루</td>
-                                    <td>원재료</td>
-                                    <td>kg</td>
-                                    <td>(0/3)</td>
-                                    <td>100,000</td>
-                                    <td>-</td>
-                                    <td>서울</td>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td><b>{{ obj.get_out_status_display }}</b></td>
+                                    <td>{{ obj.out_date|date:"Y-m-d" }}</td>
+                                    <td>{{ obj.out_no }}</td>
+                                    <td>{{ obj.out_custom.c_name }}</td>
+                                    <td>{{ obj.out_item.item_code }}</td>
+                                    <td>{{ obj.out_item.item_name }}</td>
+                                    <td>{{ obj.out_item.get_item_type_display }}</td>
+                                    <td>{{ obj.out_item.unitname }}</td>
+                                    <td>{{ obj.out_quan }}</td>
+                                    <td>{{ obj.out_uprice.unit_price|intcomma }}원</td>
+                                    <td>{{ obj.out_wh.name }}</td>
+                                    <td>{{ obj.id }}</td>
                                 </tr>
-                            
-                            <tr>
-                                    <td></td>
-                                    <td>2</td>
-                                    <td>
-                                        <button type="button" class="btn btn-outline-secondary disabled" style="color: darkorange !important;">
-                                            <b>부분 출고</b>
-                                        </button>
-                                    </td>
-                                    <td>2024-06-30</td>
-                                    <td>AA-ZBS534</td>
-                                    <td>솔릭</td>
-                                    <td>A1023</td>
-                                    <td>마늘가루</td>
-                                    <td>원재료</td>
-                                    <td>kg</td>
-                                    <td>(1/4)</td>
-                                    <td>100,000</td>
-                                    <td>-</td>
-                                    <td>창고A</td>
-                                </tr>
-                            
-                            <tr>
-                                    <td></td>
-                                    <td>3</td>
-                                    <td>
-                                        <button type="button" class="btn btn-outline-secondary disabled" style="color: #4cae4c !important;">
-                                            <b>출고 완료</b>
-                                        </button>
-                                    </td>
-                                    <td>2024-06-29</td>
-                                    <td>AA-HQT325</td>
-                                    <td>테헤란</td>
-                                    <td>C1021</td>
-                                    <td>포장지</td>
-                                    <td>부재료</td>
-                                    <td>ea</td>
-                                    <td>(100/100)</td>
-                                    <td>200,000</td>
-                                    <td>-</td>
-                                    <td>창고B</td>
-                                </tr>
-                            
-                            <tr>
-                                    <td></td>
-                                    <td>4</td>
-                                    <td>
-                                        <button type="button" class="btn btn-outline-secondary disabled" style="color: red !important;">
-                                            <b>출고 대기</b>
-                                        </button>
-                                    </td>
-                                    <td>2024-06-04</td>
-                                    <td>TZ-AWBX32</td>
-                                    <td>테헤란</td>
-                                    <td>T23122</td>
-                                    <td>포장상자</td>
-                                    <td>부재료</td>
-                                    <td>ea</td>
-                                    <td>(0/50)</td>
-                                    <td>200,000</td>
-                                    <td>-</td>
-                                    <td>창고C</td>
-                                </tr>
-                            
-                            <tr>
-                                    <td></td>
-                                    <td>5</td>
-                                    <td>
-                                        <button type="button" class="btn btn-outline-secondary disabled" style="color: red !important;">
-                                            <b>출고 대기</b>
-                                        </button>
-                                    </td>
-                                    <td>2024-05-23</td>
-                                    <td>QA-GSE784</td>
-                                    <td>테헤란</td>
-                                    <td>N12125</td>
-                                    <td>건조파</td>
-                                    <td>반제품</td>
-                                    <td>kg</td>
-                                    <td>(0/4)</td>
-                                    <td>50,000</td>
-                                    <td>-</td>
-                                    <td>창고D</td>
-                                </tr>
-                            
-                            <tr>
-                                    <td></td>
-                                    <td>6</td>
-                                    <td>
-                                        <button type="button" class="btn btn-outline-secondary disabled" style="color: #4cae4c !important;">
-                                            <b>출고 완료</b>
-                                        </button>
-                                    </td>
-                                    <td>2024-04-15</td>
-                                    <td>YJ-JRSF154</td>
-                                    <td>테헤란</td>
-                                    <td>L1587</td>
-                                    <td>건조파</td>
-                                    <td>제품</td>
-                                    <td>kg</td>
-                                    <td>(0/4)</td>
-                                    <td>50,000</td>
-                                    <td>-</td>
-                                    <td>서울</td>
-                                </tr>
-                            
-                            
-
+                                {% endfor %}
                             </tbody>
                         </table>
                         {% include 'Material/out_mgmt/fullscreen_modal.html' %}
@@ -369,7 +209,7 @@
     let material_table = null;
 
     $(document).ready(function () {
-        
+
         $(function () {
             $('#daterange').daterangepicker({
                 locale: {
@@ -378,12 +218,12 @@
                 autoUpdateInput: false
             }, function (start, end, label) {
                 $('#daterange').val(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
-                filterTable()
+                send_filter(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
             });
         });
-        
+
         // DataTable 초기화
-        var material_table = $('#material_datatable').DataTable({
+        material_table = $('#material_datatable').DataTable({
             lengthChange: false,
             searching: false,
             columnDefs: [
@@ -392,67 +232,184 @@
                     orderable: false,
                     className: 'table-active dt-body-center',
                     render: function (data, type, full, meta) {
-                        return '<input type="checkbox" name="id[]" value="">';
+                        return '<input type="checkbox" name="id[]" value="' + full[13] + '">';
                     }
+                },
+                {
+                    targets: 2,
+                    render: function (data, type, full, meta) {
+                        return type === 'display' ? '<b>' + data + '</b>' : data;
+                    }
+                },
+                {
+                    targets: 13,  
+                    visible: false, 
+                    searchable: false
                 }
             ],
-            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 text-end"B>>' +
+            dom: '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6 text-end"E>>' +
                 '<"row"<"col-sm-12"tr>>' +
                 '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            buttons: [
+                {
+                    text: '수정',
+                    className: 'btn btn-secondary btn-soft-primary waves-effect waves-light me-1 edit_btn',
+                    action: function (e, dt, node, config) {
+                        let selectedData = [];
+                        dt.rows().every(function (rowIdx, tableLoop, rowLoop) {
+                            var $row = $(this.node());
+                            var $checkbox = $row.find('input[type="checkbox"]');
+                            if ($checkbox.prop('checked')) {
+                                selectedData.push(this.data()[13]);
+                            }
+                        });
+
+                        $.ajax({
+                            url: "{% url 'OutputGet' %}",
+                            type: "GET",
+                            data: {item_id: selectedData[0]},
+                            success: function (res) {
+                                let data = res.result[0]
+                                console.log('data', data)
+                                
+                                updateSelect2('location_select', data.out_wh_id, data.out_wh__name);
+                                updateSelect2('init_place_select', data.out_custom_id, data.out_custom__c_name);
+                                updateSelect2('item_select', data.out_item_id, data.out_item__item_name);
+                                $("#out_status").val(data.out_status);
+                                $("#current_quan").val(data.out_item__current_quan);
+                                $("#unit_price").val(data.out_uprice__unit_price);
+                                $("#out_quan").val(data.out_quan);
+                                $("#out_type").val(data.out_type);
+                                $("#memo").val(data.out_note);
+                                $("#ItemInHidden").val(data.id);
+                                
+                                moment.locale('ko');
+                                let out_date = moment(data.out_date).format('YYYY-MM-DD');
+                                $("#out_date").val(out_date)
+
+                                $("#exampleModalFullscreen").modal('show');
+                            },
+                            error: function (xhr, status, error) {
+                                alert("오류가 발생했습니다: " + xhr.responseJSON.error);
+                            }
+                        });
+                    },
+                    enabled: false
+                },
+                {
+                    text: '삭제',
+                    className: 'btn btn-secondary btn-soft-primary waves-effect waves-light me-1',
+                    action: function (e, dt, node, config) {
+                        if (confirm("정말 삭제하시겠습니까??") === true) {
+                            var selectedData = [];
+                            dt.rows().every(function (rowIdx, tableLoop, rowLoop) {
+                                var data = this.data();
+                                var $row = $(this.node());
+                                var $checkbox = $row.find('input[type="checkbox"]');
+
+                                if ($checkbox.prop('checked')) {
+                                    selectedData.push(data[13]);
+                                }
+                            });
+                            console.log('selectedData', selectedData)
+
+                            $.ajax({
+                                url: "{% url 'OutputUpdate' %}",
+                                type: "POST",
+                                data: {
+                                    item_id: selectedData,
+                                    type: "D",
+                                },
+                                headers: {"X-CSRFToken": '{{ csrf_token }}'},
+                                success: function (res) {
+                                    console.log(res)
+                                    alert(res.message)
+                                    send_filter()
+                                },
+                                error: function (xhr, status, error) {
+                                    alert("오류가 발생했습니다: " + xhr.responseJSON.error);
+                                }
+                            })
+                        } else {
+                            return false
+                        }
+                    },
+                    enabled: false
+                }
+            ],
+            language: {
+                emptyTable: "등록된 데이터가 없습니다."
+            },
+            drawCallback: function () {
+                $('#material_datatable th:first-child').removeClass('sorting sorting_asc sorting_desc');
+            }
+        });
+
+        new $.fn.dataTable.Buttons(material_table, {
             buttons: [
                 {
                     extend: 'excel',
                     text: '엑셀 내보내기',
                     className: 'btn btn-success',
                 }
-            ],
-            drawCallback: function () {
-                $('#material_datatable th:first-child').removeClass('sorting sorting_asc sorting_desc');
-            }
+            ]
         });
+
+        material_table.buttons(1, null).container().appendTo($('.col-md-6.text-end:eq(0)'));
 
         // 필터 입력 이벤트 리스너
         $('#product_name_num, #locationInput').on('keyup change', function () {
-            console.log('wnbpsbz')
             filterTable();
         });
+        
+        $('.item-in-checkbox, .item-type-checkbox, .warehouse-checkbox').change(function() {
+            send_filter();
+        });
+        
+        // 기간 선택 필터링
 
-        // 체크박스 이벤트 리스너
-        $('input[type="checkbox"]').on('change', function () {
-            filterTable();
-        });
+        function send_filter(start_date, end_date) {
+            var itemInFilter = [];
+            var itemTypeFilter = [];
+            var warehouseFilter = [];
+
+            // 각 체크박스 그룹의 선택된 값들을 수집
+            $('.item-in-checkbox:checked').each(function () {
+                itemInFilter.push($(this).val());
+            });
+            $('.item-type-checkbox:checked').each(function () {
+                itemTypeFilter.push($(this).val());
+            });
+            $('.warehouse-checkbox:checked').each(function () {
+                warehouseFilter.push($(this).val());
+            });
+
+            $.ajax({
+                url: "{% url 'ItemOutFilter' %}",
+                type: 'GET',
+                data: {
+                    'item_in_filter': itemInFilter.join(','),
+                    'item_type_filter': itemTypeFilter.join(','),
+                    'warehouse_filter': warehouseFilter.join(','),
+                    'start_date': start_date,
+                    'end_date': end_date
+                },
+                success: function (response) {
+                    console.log(response);
+                    let drawData = formatData(response.result)
+                    material_table.rows().remove().draw();
+                    material_table.rows.add(drawData).draw();
+                },
+                error: function (xhr, status, error) {
+                    alert("오류가 발생했습니다: " + xhr.responseJSON.error);
+                }
+            });
+            
+        }
 
         function filterTable() {
             var product_name_num = $('#product_name_num').val().toLowerCase();
             var locationInput = $('#locationInput').val().toLowerCase();
-            var dateRange = $('#daterange').val().toLowerCase();
-            var startDate = null;
-            var endDate = null;
-            var init_stand_by = $('#init_stand_by').is(':checked');
-            var init_part = $('#init_part').is(':checked');
-            var init_complete = $('#init_complete').is(':checked');
-            var completeProductChecked = $('#complete_product').is(':checked');
-            var halfProductChecked = $('#half_product').is(':checked');
-            var raw_material = $('#raw_material').is(':checked');
-            var subsidiary_material = $('#subsidiary_material').is(':checked');
-            var warehouse1 = $('#warehouse1').is(':checked');
-            var warehouse2 = $('#warehouse2').is(':checked');
-            var warehouse3 = $('#warehouse3').is(':checked');
-            var warehouse4 = $('#warehouse4').is(':checked');
-            var seoul = $('#seoul').is(':checked');
-            var office = $('#office').is(':checked');
-            var chung_ju = $('#chung_ju').is(':checked');
-
-            if (dateRange) {
-                var dates = dateRange.split(' - ');
-                startDate = moment(dates[0], 'YYYY-MM-DD');
-                endDate = moment(dates[1], 'YYYY-MM-DD');
-            }
-
-            var statusFilters = [];
-            if (init_stand_by) statusFilters.push('출고 대기');
-            if (init_part) statusFilters.push('부분 출고');
-            if (init_complete) statusFilters.push('출고 완료');
 
             // DataTable 필터링
             material_table.rows().every(function () {
@@ -468,62 +425,6 @@
                     showRow = false;
                 }
 
-                if (dateRange) {
-                    var rowDate = moment(data[3], 'YYYY-MM-DD');
-                    if (!rowDate.isBetween(startDate, endDate, undefined, '[]')) { // []는 경계값 포함
-                        showRow = false;
-                    }
-                }
-
-                // 체크박스 필터링
-                if (statusFilters.length > 0 && !statusFilters.some(status => $(data[2]).text().trim().includes(status))) {
-                    showRow = false;
-                }
-
-                if (completeProductChecked && data[8].toLowerCase() !== '제품') {
-                    showRow = false;
-                }
-
-                if (halfProductChecked && data[8].toLowerCase() !== '반제품') {
-                    showRow = false;
-                }
-
-                if (raw_material && data[8].toLowerCase() !== '원재료') {
-                    showRow = false;
-                }
-
-                if (subsidiary_material && data[8].toLowerCase() !== '부재료') {
-                    showRow = false;
-                }
-
-                if (warehouse1 && data[13].toLowerCase() !== '창고a') {
-                    showRow = false;
-                }
-
-                if (warehouse2 && data[13].toLowerCase() !== '창고b') {
-                    showRow = false;
-                }
-
-                if (warehouse3 && data[13].toLowerCase() !== '창고c') {
-                    showRow = false;
-                }
-
-                if (warehouse4 && data[13].toLowerCase() !== '창고d') {
-                    showRow = false;
-                }
-
-                if (seoul && data[13].toLowerCase() !== '서울') {
-                    showRow = false;
-                }
-
-                if (office && data[13].toLowerCase() !== '사무실') {
-                    showRow = false;
-                }
-
-                if (chung_ju && data[13].toLowerCase() !== '충주') {
-                    showRow = false;
-                }
-
                 // 행 표시 여부 결정
                 if (showRow) {
                     this.node().style.display = '';
@@ -535,6 +436,12 @@
             // DataTable 다시 그리기
             material_table.draw();
         }
+        
+        material_table.on('change', 'input[type="checkbox"]', function() {
+            let selectedRows = $('#material_datatable input[type="checkbox"]:checked').length;
+            material_table.button(0).enable(selectedRows === 1);
+            material_table.button(1).enable(selectedRows >= 1);
+        });
     });
 
     // "select_all" 체크박스 전체 선택
@@ -557,10 +464,57 @@
             }
         }
     });
+
+    function formatData(results) {
+        return results.map((result, index) => {
+            // 날짜 형식 변경
+            let out_date = result.out_date ? new Date(result.out_date).toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            }).replace(/\. /g, '-').replace('.', '') : '';
+
+            return [
+                null,
+                index + 1,
+                result.out_status_display,
+                out_date, // 형식 변경
+                result.out_no,
+                result.out_custom__c_name,
+                result.out_item__item_code,
+                result.out_item__item_name,
+                result.out_item__item_type,
+                result.out_item__unitname,
+                result.out_quan,
+                result.out_uprice__unit_price,
+                result.out_wh__name,
+                result.id,
+            ];
+        });
+    }
     
-    
-    
-    
+    function updateSelect2(selectId, value, text) {
+        if (value && text) {
+            var $select = $('#' + selectId);
+            var newOption = new Option(text, value, true, true);
+            $select.append(newOption).trigger('change');
+        }
+    }
+
+    function form_reset() {
+        if ($('#location_select').select2) {
+            $('#location_select').val(null).trigger('change');
+        }
+
+        if ($('#init_place_select').select2) {
+            $('#init_place_select').val(null).trigger('change');
+        }
+
+        if ($('#item_select').select2) {
+            $('#item_select').val(null).trigger('change');
+        }
+        $("#in_status, #current_quan, #unit_price, #in_quan, #in_type, #memo, #ItemInHidden, #out_date").val('');
+    }
     
 </script>
 </body>

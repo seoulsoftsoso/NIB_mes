@@ -5,7 +5,7 @@ from django.shortcuts import render
 
 from api.Item.common import get_item_data
 from api.base.base_form import enterprise_fm
-from api.models import MenuMaster, ItemMaster, UnitPrice, ItemIn, Warehouse
+from api.models import MenuMaster, ItemMaster, UnitPrice, ItemIn, Warehouse, ItemOut
 from dve_config import settings
 
 
@@ -81,7 +81,7 @@ def Material_input(request):
     item_in = ItemIn.objects.filter(
         created_by__enterprise_id=enterprise,
         del_flag='N'
-    ).select_related('in_custom', 'in_item', 'uprice', 'wh', 'wr')
+    ).select_related('in_custom', 'in_item', 'uprice', 'wh', 'wr').order_by('-id')
 
     # 필터용
     wh_filter = Warehouse.objects.filter(created_by__enterprise_id=enterprise, del_flag='N')
@@ -96,7 +96,21 @@ def Material_input(request):
 
 
 def Material_output(request):
-    context = {}
+    enterprise = request.user.enterprise_id
+    item_out = ItemOut.objects.filter(
+        created_by__enterprise_id=enterprise,
+        del_flag='N'
+    ).select_related('out_custom', 'out_item', 'out_uprice', 'out_wh', 'out_wr').order_by('-id')
+
+    # 필터용
+    wh_filter = Warehouse.objects.filter(created_by__enterprise_id=enterprise, del_flag='N')
+
+    context = {
+        'result': item_out,
+        'wh_filter': wh_filter,
+        'item_out_filter': ItemIn.IN_STATUS_CHOICES,
+        'item_type_choices': ItemMaster.ITEM_TYPE_CHOICES
+    }
     return render(request, 'Material/out_mgmt/material_output.html', context)
 
 
@@ -113,7 +127,7 @@ def Material_status(request):
         'result': items,
         'MEDIA_URL': settings.MEDIA_URL,
     }
-    return render(request, 'Material/material_list/material_list.html', context)
+    return render(request, 'Material/material_list/main.html', context)
 
 
 def item_info(request):
@@ -130,5 +144,10 @@ def item_info(request):
 
     return render(request, 'basic_information/Item/item_info.html', context)
 
+
+def Material_Adjustment(request):
+
+    context = {}
+    return render(request, 'Material/adjustment/main.html', context)
 
 

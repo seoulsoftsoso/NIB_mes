@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    {% include "header.html" %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+</head>
+<style>
+    th:first-child .sorting,
+    th:first-child .sorting_asc,
+    th:first-child .sorting_desc {
+        display: none !important;
+    }
+
+    #material_datatable th, tbody {
+        text-align: center;
+        vertical-align: middle !important;
+    }
+    
+    .dataTables_filter {
+        display: flex;
+    }
+    
+    .dataTables_filter input {
+        height: 35px;
+        width: 260px !important;
+        margin-left: 0 !important;
+    }
+    
+    #material_datatable tbody tr {
+        cursor: pointer;
+    }
+</style>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="row mt-2">
+        <!-- 마스터 레이아웃 (왼쪽 테이블) -->
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h4 class="card-title mb-5">재고 조정</h4>
+                    <table id="material_datatable" class="table align-middle mb-0 table-nowrap nowrap w-100 mt-5 dt-responsive">
+                            <thead class="table-light">
+                            <tr>
+                                <th style="width: 3%;">순번</th>
+                                <th>품번</th>
+                                <th>품목</th>
+                                <th>유형</th>
+                                <th>단위</th>
+                                <th>수량</th>
+                                <th>속성</th>
+                                <th>위치</th>
+                            </tr>
+                            </thead>
+                            <tbody id="material-table-body">
+                                
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 디테일 레이아웃 (오른쪽 상세 정보) -->
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h4 class="card-title mb-5">상세 정보</h4>
+                        <div class="dropdown mb-0" id="detail_dropdown" style="display: none">
+                            <a class="btn btn-link text-muted mt-n2" role="button" data-bs-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">
+                                <i class="mdi mdi-dots-vertical font-size-20"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end" style="">
+                                <a class="dropdown-item" onclick="edit_item()">조정</a>
+                                <a class="dropdown-item" onclick="move_item()">이동</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% csrf_token %}
+                    <div id="item-detail">
+                        <p>왼쪽 테이블에서 항목을 선택하세요.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'footer.html' %}
+{#<script src="{% static 'skote/assets/js/pages/job-grid-list.init.js' %}"></script>#}
+<script>
+
+    let material_table = null;
+
+    $(document).ready(function () {
+        material_table = $('#material_datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{% url 'GetStock' %}",
+                type: "POST",
+                headers: {"X-CSRFToken": '{{ csrf_token }}'},
+            },
+            lengthChange: false,
+            searching: true,
+            dom: '<"row"<"col-sm-12 d-flex justify-content-start"lfB>>' +
+                '<"row"<"col-sm-12"tr>>' +
+                '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            buttons: [
+                {
+                    text: '보유 중',
+                    className: 'btn btn-soft-info waves-effect waves-light ms-2 me-2 possess-check-button',
+                    action: function (e, dt, node, config) {
+                        var $checkbox = $('.possess-check-button input[type="checkbox"]');
+                        $checkbox.prop('checked', !$checkbox.prop('checked'));
+                    }
+                },
+            ],
+            columns: [
+                {   // 순번
+                    data: null, orderable: false, searchable: false, render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {data: "item_code", name: "item_code"},
+                {data: "item_name", name: "item_name"},
+                {data: "item_type", name: "item_type"},
+                {data: "unitname", name: "unitname"},
+                {data: "quantity", name: "quantity"},
+                {data: "in_type", name: "in_type"},
+                {data: "wh_name", name: "wh_name"},
+            ],
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "품목형, 유형, 속성 검색",
+                emptyTable: "입고서를 먼저 작성해주세요."
+            },
+            drawCallback: function () {
+                $('#material_datatable th:first-child').removeClass('sorting sorting_asc sorting_desc');
+            },
+            initComplete: function () {
+                $('.dataTables_filter input').addClass('form-control');
+                // 사용자 정의 HTML을 버튼에 추가
+                $('.possess-check-button').html('<input type="checkbox" id="possess_check"> 보유 중');
+
+                // 체크박스 클릭 이벤트 처리
+                $('.possess-check-button input[type="checkbox"]').on('click', function (e) {
+                    e.stopPropagation();  // 버튼 클릭 이벤트 전파 중지
+                });
+
+                // 테이블 행 클릭 이벤트 추가
+                $('#material_datatable tbody').on('click', 'tr', function () {
+                    var data = material_table.row(this).data();
+                    console.log('Row clicked:', data);
+                    read_full_modal(data)
+                });
+            }
+        });
+    });
+    
+    // 디테일 레이아웃 데이터 랜더링
+    function read_full_modal(data) {
+        $("#detail_dropdown").show()
+
+        const detailHtml = `
+    <div class="table-responsive" id="item_detail_table">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th scope="row">품목명</th>
+                    <td>${data.item_name}</td>
+                </tr>
+                <tr>
+                    <th scope="row">품목코드</th>
+                    <td>${data.item_code}</td>
+                </tr>
+                <tr>
+                    <th scope="row">품목유형</th>
+                    <td>${data.item_type}</td>
+                </tr>
+                <tr>
+                    <th scope="row">현재수량</th>
+                    <td>${data.quantity}</td>
+                </tr>
+                <tr>
+                    <th scope="row">위치</th>
+                    <td>${data.wh_name}</td>
+                </tr>
+                <tr>
+                    <th scope="row">규격</th>
+                    <td>${data.standard}</td>
+                </tr>
+                <tr>
+                    <th scope="row">모델</th>
+                    <td>${data.current_quan}</td>
+                </tr>
+                <tr>
+                    <th scope="row">카테고리</th>
+                    <td>${data.category}</td>
+                </tr>
+                <tr>
+                    <th scope="row">속성</th>
+                    <td>${data.uprice_type}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    `;
+        $('#item-detail').html(detailHtml);
+    }
+
+    // 수정 버튼 누를 시 상세 정보 테이블 렌더링
+    function edit_item(id) {
+        
+    }
+    
+    // Item 삭제
+    function move_item(id) {
+        
+    }
+
+    // DataTable 렌더링
+    function drawData() {
+        
+        $.ajax({
+            url: "",
+            type: "GET",
+            success: function (res) {
+                console.log('res', res)
+                let drawData = formatData(res.result);
+                material_table.rows().remove().draw();
+                material_table.rows.add(drawData).draw();
+            }
+        })
+
+    }
+    function formatData(results) {
+
+        return results.map(result => [
+            null,
+            result.in_item__item_code,
+            result.in_item__item_name,
+            result.in_item__item_type,
+            result.in_item__mass,
+            result.in_item__current_quan,
+            result.in_type,
+            result.wh__name,
+        ]);
+    }
+    
+</script>
+</body>
+</html>

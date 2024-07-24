@@ -1,14 +1,14 @@
 import traceback
 
 from django.contrib.messages import success
-from django.db.models import Prefetch, F
+from django.db.models import Prefetch, F, Max, Q
 from django.db.models.functions import TruncDate
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
 from django.db import models
-from api.models import ItemMaster, UnitPrice
+from api.models import ItemMaster, UnitPrice, StockStatus
 
 
 def get_item_data(item_id=None, enterprise_id=None):
@@ -60,6 +60,111 @@ class get_one_item_masters(View):
         one_item = get_item_data(item_id=item_id, enterprise_id=enterprise)
         context = {'results': one_item}
         return JsonResponse(context, safe=False)
+
+
+class GetStock(View):
+    def post(self, request, *args, **kwargs):
+        enterprise = request.user.enterprise_id
+        draw = int(request.POST.get('draw', 1))
+        start = int(request.POST.get('start', 0))
+        length = int(request.POST.get('length', 10))
+
+        # 최신 데이터를 가져오기 위해 서브쿼리 사용
+        latest_stock = StockStatus.objects.filter(
+            del_flag="N",
+            enterprise_id=enterprise
+        ).values('item', 'wh').annotate(
+            latest_id=Max('id')
+        ).values('latest_id')
+
+        # 기본 쿼리셋
+        queryset = StockStatus.objects.filter(
+            id__in=latest_stock
+        ).select_related('item', 'wh', 'wr', 'input').order_by('-id')
+
+        # 검색 기능 구현
+        search_value = request.POST.get('search[value]', '')
+        if search_value:
+            queryset = queryset.filter(
+                Q(item__item_code__icontains=search_value) |
+                Q(item__item_name__icontains=search_value) |
+                Q(wh__name__icontains=search_value)
+            )
+
+        # 정렬 기능 구현
+        order_column_index = request.POST.get('order[0][column]', '')
+        order_dir = request.POST.get('order[0][dir]', 'asc')
+        if order_column_index:
+            order_column = request.POST.get(f'columns[{order_column_index}][data]', '')
+            # DataTables 열 이름을 Django 모델 필드 이름으로 매핑
+            column_map = {
+                'item_code': 'item__item_code',
+                'item_name': 'item__item_name',
+                'item_type': 'item__item_type',
+                'item_img': 'item__item_image',
+                'unitname': 'item__unitname',
+                'quantity': 'quantity',
+                'in_type': 'input__in_type',
+                'unit_price': 'input__uprice__unit_price',
+                'wh_name': 'wh__name',
+                'created_at': 'item__created_at',
+            }
+            order_column = column_map.get(order_column, order_column)
+            if order_column:
+                if order_dir == 'desc':
+                    order_column = f'-{order_column}'
+                queryset = queryset.order_by(order_column)
+
+        total = queryset.count()
+
+        # 페이징
+        data = queryset[start:start + length]
+
+        result = []
+        for item in data:
+            in_type = item.input.get_in_type_display() if item.input else ''
+            out_type = item.output.get_out_type_display() if item.output else ''
+
+            # uprice_type 및 unit_price 처리
+            if item.input and item.input.uprice:
+                uprice_type = item.input.uprice.get_unit_type_display()
+                unit_price = item.input.uprice.unit_price
+            elif item.output and item.output.out_uprice:
+                uprice_type = item.output.out_uprice.get_unit_type_display()
+                unit_price = item.output.out_uprice.unit_price
+            else:
+                uprice_type = ''
+                unit_price = None
+
+            # item_img 처리
+            item_img = item.item.item_image.url if item.item.item_image else ''
+
+            result.append({
+                'id': item.id,
+                'item_code': item.item.item_code,
+                'item_name': item.item.item_name,
+                'item_type': item.item.get_item_type_display(),
+                'unitname': item.item.unitname,
+                'current_quan': item.item.current_quan,
+                'quantity': item.quantity,
+                'wh_name': item.wh.name,
+                'in_type': in_type,
+                'out_type': out_type,
+                'unit_price': unit_price,
+                'standard': item.item.standard,
+                'model': item.item.model,
+                'category': item.item.item_category,
+                'uprice_type': uprice_type,
+                'item_img': item_img,
+                'created_at': item.item.created_at.strftime('%Y-%m-%d') if item.item.created_at else ''
+            })
+
+        return JsonResponse({
+            'draw': draw,
+            'recordsTotal': total,
+            'recordsFiltered': total,
+            'data': result,
+        })
 
 
 class ItemAdd(View):

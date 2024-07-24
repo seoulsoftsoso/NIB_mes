@@ -172,6 +172,7 @@
                             </thead>
                         
                             <tbody>
+                                {% load humanize %}
                                 {% for obj in result %}
                                 <tr>
                                     <td></td>
@@ -185,7 +186,7 @@
                                     <td>{{ obj.in_item.get_item_type_display }}</td>
                                     <td>{{ obj.in_item.unitname }}</td>
                                     <td>{{ obj.in_quan }}</td>
-                                    <td>{{ obj.uprice.unit_price }}원</td>
+                                    <td>{{ obj.uprice.unit_price|intcomma }}원</td>
                                     <td>{{ obj.wh.name }}</td>
                                     <td>{{ obj.id }}</td>
                                 </tr>
@@ -259,6 +260,7 @@
                             var $row = $(this.node());
                             var $checkbox = $row.find('input[type="checkbox"]');
                             if ($checkbox.prop('checked')) {
+                                console.log(this.data())
                                 selectedData.push(this.data()[13]);
                             }
                         });
@@ -366,7 +368,6 @@
         });
         
         // 기간 선택 필터링
-
         function send_filter(start_date, end_date) {
             var itemInFilter = [];
             var itemTypeFilter = [];
@@ -441,6 +442,9 @@
             material_table.button(0).enable(selectedRows === 1);
             material_table.button(1).enable(selectedRows >= 1);
         });
+        
+        // 글로벌 스코프에 send_filter 함수 정의
+        window.send_filter = send_filter;
     });
 
     // "select_all" 체크박스 전체 선택
