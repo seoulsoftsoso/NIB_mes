@@ -72,16 +72,22 @@ class MenuHandler(viewsets.ModelViewSet):
 
 
 def getLmenuList(request):
-    user_id = request.GET.get('user_id')
+    user_id = request.user.id
+    print('user_id', user_id)
     client = request.GET.get('client')
-    qs = MenuMaster.objects.filter(del_flag="N", menuauth__user=user_id).values(
+    qs = MenuMaster.objects.filter(del_flag="N").values(
         'id', 'code', 'name', 'type', 'i_class', 'menuauth__id', 'menuauth__alias', 'menuauth__order',
-        'menuauth__parent', 'menuauth__menu', 'menuauth__del_flag'
+        'menuauth__parent', 'menuauth__menu', 'menuauth__del_flag', 'menuauth__user', 'menuauth__user_id',
     ).order_by('type').distinct()
 
-    # qs_used = qs.filter(menuauth__user=user_id).order_by('menuauth__order')
+    #  values() 메서드를 사용한 후 필터링을 수행하기 때문에 쿼리셋을 딕셔너리로 변환하여 필터링 조건이 제대로 적용되지 않을 수 있음
+    qs_used = MenuMaster.objects.filter(menuauth__user_id=user_id,menuauth__del_flag="N").values(
+        'id', 'code', 'name', 'type', 'i_class', 'menuauth__id', 'menuauth__alias', 'menuauth__order',
+        'menuauth__parent', 'menuauth__menu', 'menuauth__del_flag', 'menuauth__user', 'menuauth__user_id',
+    )
 
-    qs_used_json = list(qs)
+    qs_used_json = list(qs_used)
+    print('qs_used_json', qs_used_json)
 
     context = {}
     context['useablemenu'] = list(qs)
