@@ -136,6 +136,9 @@ urlpatterns = [
                 # 재고 조정
                 path('material/get_material/', get_material_data, name='get_material_data'),
                 path('material/adjust/', Material_Adjustment, name='Material_Adjustment'),
+                path('material/adjust/count', AdjustCount.as_view(), name='AdjustCount'),
+                path('material/adjust/location', AdjustLocation.as_view(), name='AdjustLocation'),
+
 
                 # 재고 현황
                 path('material/stock_get/', GetStock.as_view(), name='GetStock'),

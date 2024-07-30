@@ -1,0 +1,71 @@
+{% load static %}
+<!-- sample modal content -->
+<div id="edit_location_modal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalFullscreenLabel">재고 이동</h5>
+            </div>
+
+            <div class="modal-body">
+                <form id="location_form">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div>
+                                <label class="form-label">현재 위치</label>
+                                <input class="form-control" type="text" id="current_location" name="current_location" readonly/>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div>
+                                <label class="form-label">이동 위치 <span class="red_font">*</span></label>
+                                <select class="form-control" id="move_location" name="move_location"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-lg-12">
+                            <div>
+                                <label class="form-label">메모</label>
+                                <textarea class="form-control" id="memo" name="memo" type="text" placeholder="메모를 입력해주세요."
+                                          rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-soft-primary waves-effect waves-light" onclick="update_btn()">저장</button>
+                <button type="button" class="btn btn-soft-secondary waves-effect waves-light" data-bs-dismiss="modal">취소</button>
+            </div>
+            
+        </div><!-- /.modal-content -->
+    </div>
+</div>
+
+<script>
+    function update_btn() {
+        var formData = $("#location_form").serializeArray()
+        formData.push({name:'row_id', value: detail_item_data.id})
+        formData.push({name: 'item_id', value: detail_item_data.item_id})
+        
+        $.ajax({
+            url: "{% url 'AdjustLocation' %}",
+            type: "POST",
+            data: formData,
+            success: function (res) {
+                alert(res.message)
+                location.reload()
+            },
+            error: function (res) {
+                alert(res.message)
+            }
+        })
+    }
+</script>
+

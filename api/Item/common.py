@@ -141,6 +141,7 @@ class GetStock(View):
 
             result.append({
                 'id': item.id,
+                'item_id': item.item.id,
                 'item_code': item.item.item_code,
                 'item_name': item.item.item_name,
                 'item_type': item.item.get_item_type_display(),
@@ -148,6 +149,7 @@ class GetStock(View):
                 'current_quan': item.item.current_quan,
                 'quantity': item.quantity,
                 'wh_name': item.wh.name,
+                'wh': item.wh.id,
                 'in_type': in_type,
                 'out_type': out_type,
                 'unit_price': unit_price,

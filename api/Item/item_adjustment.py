@@ -1,8 +1,10 @@
+import traceback
+
 from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-
-from api.models import ItemIn
+from django.views import View
+from api.models import ItemIn, StockAdjustment, ItemMaster, StockStatus
 
 
 @csrf_exempt
@@ -73,3 +75,59 @@ def get_material_data(request):
         'recordsFiltered': total,
         'data': result,
     })
+
+
+class AdjustCount(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            formdata = request.POST
+            print('formdata', formdata)
+            enterprise = request.user.enterprise_id
+
+            StockAdjustment.objects.create(
+                adjustment_quan=formdata.get('adjust_quan'),
+                adjustment_memo=formdata.get('memo'),
+                item_id=formdata.get('hidden_item_id'),
+                enterprise_id=enterprise,
+                created_by_id=request.user.id,
+            )
+
+            item = ItemMaster.objects.get(id=formdata.get('hidden_item_id'))
+            item.current_quan += float(formdata.get('adjust_quan'))
+            item.save()
+
+            stock = StockStatus.objects.get(id=formdata.get('row_id'))
+            stock.quantity += float(formdata.get('adjust_quan'))
+            stock.save()
+
+            return JsonResponse({'success': True, 'message': '변경되었습니다.'})
+
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({'error': str(e)}, status=400)
+
+
+class AdjustLocation(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            formdata = request.POST
+            print('formdata', formdata)
+
+            StockAdjustment.objects.create(
+                adjustment_memo=formdata.get('memo'),
+                item_id=formdata.get('item_id'),
+                enterprise_id=request.user.enterprise_id,
+                created_by_id=request.user.id,
+            )
+
+            stock = StockStatus.objects.get(id=formdata.get('row_id'))
+            stock.wh_id = formdata.get('move_location')
+            stock.save()
+
+            return JsonResponse({'success': True, 'message': '변경되었습니다.'})
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({'error': str(e)}, status=400)
+

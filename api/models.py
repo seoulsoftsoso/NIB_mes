@@ -501,3 +501,19 @@ class StockStatus(models.Model):
                                    related_name='stock_updated_by')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
+
+
+class StockAdjustment(models.Model):
+    adjustment_quan = models.FloatField(null=False, default=0, verbose_name="조정 수량")
+    adjustment_memo = models.CharField(max_length=255, null=False, verbose_name="조정 사유")
+    item = models.ForeignKey('ItemMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='품목 정보',
+                                related_name='adjust_item')
+    del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
+    enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, default=1, related_name='adjust_enterprise',
+                                   verbose_name='업체', null=False)
+    created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='최초작성자',
+                                   related_name='adjust_created_by')
+    updated_by = models.ForeignKey('UserMaster', on_delete=models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='adjust_updated_by')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')

@@ -1,0 +1,72 @@
+{% load static %}
+<!-- sample modal content -->
+<div id="adjust_modal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalFullscreenLabel">재고 조정</h5>
+            </div>
+
+            <div class="modal-body">
+                <form id="adjust_form">
+                    {% csrf_token %}
+                    <input type="hidden" id="hidden_item_id" name="hidden_item_id"/>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div>
+                                <label class="form-label">현재 수량</label>
+                                <input class="form-control" type="number" placeholder="Default input" id="current_quan" name="current_quan"
+                                       readonly>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div>
+                                <label class="form-label">조정 수량 <span class="red_font">*</span></label>
+                                <input class="form-control" type="number" id="adjust_quan" name="adjust_quan" placeholder="조정수량을 입력해주세요"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-lg-12">
+                            <div>
+                                <label class="form-label">메모</label>
+                                <textarea class="form-control" id="memo" name="memo" type="text" placeholder="메모를 입력해주세요."
+                                          rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-soft-primary waves-effect waves-light" onclick="adjust_btn()">저장</button>
+                <button type="button" class="btn btn-soft-secondary waves-effect waves-light" data-bs-dismiss="modal">취소</button>
+            </div>
+            
+        </div><!-- /.modal-content -->
+    </div>
+</div>
+
+<script>
+    function adjust_btn() {
+        var formData = $("#adjust_form").serializeArray()
+        formData.push({name:'row_id', value: detail_item_data.id})
+        
+        $.ajax({
+            url: "{% url 'AdjustCount' %}",
+            type: "POST",
+            data: formData,
+            success: function (res) {
+                alert(res.message)
+                location.reload()
+            },
+            error: function (res) {
+                alert(res.message)
+            }
+        })
+    }
+</script>
+
