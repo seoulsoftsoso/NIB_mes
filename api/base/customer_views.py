@@ -39,6 +39,7 @@ class CustomerCreate(View):
     def post(self, request, *args, **kwargs):
         try:
             formdata = request.POST
+            print('formdata', formdata)
             customer = CustomerMaster(
                 c_name=formdata.get('c_name'),
                 business_num=formdata.get('business_num'),
@@ -57,10 +58,47 @@ class CustomerCreate(View):
 
             customer.save()
 
-            return JsonResponse({'success': True})
+            return JsonResponse({'success': True, 'message': '등록되었습니다.'})
 
         except Exception as e:
             print(f"Error: {str(e)}")
             print(traceback.format_exc())
             return JsonResponse({'error': str(e)}, status=400)
 
+
+class CustomerUpdate(View):
+    def post(self, request, *args, **kwargs):
+        type = request.POST.get('type')
+        formdata = request.POST
+        customer = CustomerMaster.objects.get(id=formdata.get('c_id'))
+        try:
+            if type == "E":
+
+                customer.c_name = formdata.get('c_name')
+                customer.business_num = formdata.get('business_num')
+                customer.business_type = formdata.get('business_type')
+                customer.business_sort = formdata.get('business_sort')
+                customer.address = formdata.get('address')
+                customer.owner_name = formdata.get('owner_name')
+                customer.official_tel = formdata.get('official_tel')
+                customer.official_email = formdata.get('official_email')
+                customer.manager_tel = formdata.get('manager_tel')
+                customer.manager_email = formdata.get('manager_email')
+                customer.save()
+
+                return JsonResponse({'success': True, 'message': '변경 되었습니다.'})
+
+            elif type == "D":
+
+                customer.del_flag = "Y"
+                customer.save()
+
+                return JsonResponse({'success': True, 'message': '삭제 되었습니다.'})
+
+            else:
+                return JsonResponse({'error': str(e)}, status=400)
+
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({'error': str(e)}, status=400)

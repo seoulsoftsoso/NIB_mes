@@ -5,7 +5,7 @@ from django.shortcuts import render
 
 from api.Item.common import get_item_data
 from api.base.base_form import enterprise_fm
-from api.models import MenuMaster, ItemMaster, UnitPrice, ItemIn, Warehouse, ItemOut
+from api.models import MenuMaster, ItemMaster, UnitPrice, ItemIn, Warehouse, ItemOut, CustomerMaster
 from dve_config import settings
 
 
@@ -71,9 +71,18 @@ def DeptMgmt(request):
     return render(request, 'basic_information/dept_mgmt.html', context)
 
 
-def CompanyMgmt(request):
-    context = {}
-    return render(request, 'basic_information/company_mgmt.html', context)
+def customer_info(request):
+    enterprise = request.user.enterprise_id
+
+    qs = CustomerMaster.objects.filter(del_flag='N', enterprise_id=enterprise).values(
+        'id', 'c_name', 'business_num', 'business_type', 'business_sort', 'postal_code', 'address', 'owner_name',
+        'official_tel', 'official_fax', 'official_email', 'manager_tel', 'manager_email', 'memo'
+    ).order_by('-id')
+
+    context = {
+        'result': qs
+    }
+    return render(request, 'basic_information/Customer/company_mgmt.html', context)
 
 
 def Material_input(request):

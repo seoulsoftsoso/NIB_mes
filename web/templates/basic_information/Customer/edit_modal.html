@@ -1,0 +1,135 @@
+{% load static %}
+<div id="edit_modal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">거래처 추가</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <form id="edit_form">
+                <input type="hidden" id="c_id" name="c_id">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="col-xxl-12">
+                            <label class="form-label">거래처명 <span class="red_font">*</span></label>
+                            <input class="form-control" type="text" id="c_name" name="c_name" placeholder="거래처 이름을 입력해주세요" required/>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-xxl-6">
+                                <label class="form-label">사업자 번호 <span class="red_font">*</span></label>
+                                <input class="form-control" type="text" id="business_num" name="business_num" placeholder="사업자 번호를 입력해주세요" required/>
+                            </div>
+                            
+                            <div class="col-xxl-3">
+                                <label class="form-label">업태</label>
+                                <input class="form-control" type="text" id="business_type" name="business_type" placeholder="업태" required/>
+                            </div>
+                            
+                            <div class="col-xxl-3">
+                                <label class="form-label">종목</label>
+                                <input class="form-control" type="text" id="business_sort" name="business_sort" placeholder="종목" required/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-xxl-6">
+                                <label class="form-label">주소</label>
+                                <input class="form-control" type="text" id="address" name="address" placeholder="주소를 입력해주세요" required/>
+                            </div>
+                            
+                            <div class="col-xxl-6">
+                                <label class="form-label">대표자명 <span class="red_font">*</span></label>
+                                <input class="form-control" type="text" id="owner_name" name="owner_name" placeholder="대표자 이름을 입력해주세요" required/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-xxl-6">
+                                <label class="form-label">대표 전화번호</label>
+                                <input class="form-control" type="text" id="official_tel" name="official_tel" placeholder="번호를 입력해주세요" required/>
+                            </div>
+                            
+                            <div class="col-xxl-6">
+                                <label class="form-label">대표 이메일</label>
+                                <input class="form-control" type="text" id="official_email" name="official_email" placeholder="이메일을 입력해주세요" required/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-xxl-6">
+                                <label class="form-label">담당자 전화번호</label>
+                                <input class="form-control" type="text" id="manager_tel" name="manager_tel" placeholder="번호를 입력해주세요" required/>
+                            </div>
+                            
+                            <div class="col-xxl-6">
+                                <label class="form-label">담당자 이메일</label>
+                                <input class="form-control" type="text" id="manager_email" name="manager_email" placeholder="이메일을 입력해주세요" required/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="col-xxl-12">
+                            <label class="form-label">메모</label>
+                            <textarea class="form-control" type="text" id="memo" name="memo" placeholder="메모를 입력해주세요"></textarea>
+                        </div>
+                    </div>
+                </div>
+            
+            
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">취소</button>
+                    <button type="submit" class="btn btn-primary waves-effect waves-light">저장</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script>
+    $(document).ready(function () {
+        $('#edit_form').on('submit', function (event) {
+            event.preventDefault();
+
+            // 유효성 검사
+            let isValid = true;
+            $(this).find('.form-control').each(function () {
+                if ($(this).val() === '') {
+                    $(this).addClass('is-invalid'); // invalid-feedback 적용
+                    isValid = false;
+                } else {
+                    $(this).removeClass('is-invalid').addClass('is-valid'); // valid-feedback 적용
+                }
+            });
+
+            if (isValid) {
+                let formData = $(this).serializeArray();
+                formData.push({name: 'csrfmiddlewaretoken', value: $('input[name=csrfmiddlewaretoken]').val()});
+                formData.push({name: 'type', value: 'E'});
+
+                $.ajax({
+                    url: "{% url 'CustomerUpdate' %}", 
+                    type: 'POST',
+                    data: formData,
+                    success: function (res) {
+                        alert(res.message);
+                        location.reload()
+                    },
+                    error: function (xhr, status, error) {
+                        alert('오류가 발생했습니다: ' + error);
+                    }
+                });
+            }
+        });
+    });
+</script>

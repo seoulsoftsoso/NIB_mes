@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    {% include "header.html" %}
+</head>
+<style>
+    #customer_datatable {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .sorting {
+        text-align: center !important;
+    }
+    
+    .p-tag {
+        text-align: center;
+        margin: auto;
+    }
+
+    .star-icon {
+        cursor: pointer;
+        font-size: 1.2em;
+    }
+
+    .star-icon.fas {
+        color: gold;
+    }
+    
+    .dataTables_filter input {
+        height: 35px;
+        width: 260px !important;
+        margin-left: 0 !important;
+    }
+    
+    .dataTables_filter {
+        text-align: start !important;
+    }
+</style>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title mb-5">거래처 정보</h4>
+            
+                {% csrf_token %}
+                <table id="customer_datatable" class="table table-bordered dt-responsive nowrap w-100 mt-2">
+                    <thead>
+                    <tr>
+                        <th><i class="bx bx-error-circle"></i></th>
+                        <th>거래처명</th>
+                        <th>사업자등록번호</th>
+                        <th>대표자명</th>
+                        <th>전화번호</th>
+                        <th>주소</th>
+                        <th>대표 이메일</th>
+                        <th>비고</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for obj in result %}
+                        <tr>
+                            <td class="text-center"><i class="far fa-star star-icon" data-filled="false"></i></td>
+                            <td>{{ obj.c_name }}</td>
+                            <td>{{ obj.business_num }}</td>
+                            <td>{{ obj.owner_name }}</td>
+                            <td>{{ obj.official_tel }}</td>
+                            <td>{{ obj.address }}</td>
+                            <td>{{ obj.official_email }}</td>
+                            <td>
+                                <button type="button" class="btn btn-soft-primary waves-effect waves-light"
+                                        onclick="edit_btn('{{ obj.id }}', '{{ obj.c_name }}', '{{ obj.business_num }}', '{{ obj.business_type }}', '{{ obj.business_sort }}',
+                                        '{{ obj.address }}', '{{ obj.owner_name }}', '{{ obj.official_tel }}', '{{ obj.official_email }}', '{{ obj.manager_tel }}',
+                                        '{{ obj.manager_email }}', '{{ obj.memo }}'
+                                        )">
+                                    <i class="bx bx-pencil"></i>
+                                </button>
+                                <button type="button" class="btn btn-soft-danger waves-effect waves-light" onclick="delete_btn('{{ obj.id }}')">
+                                    <i class="bx bxs-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% include 'basic_information/Customer/edit_modal.html' %}
+                {% include 'basic_information/Customer/create_modal.html' %}
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+{% include 'footer.html' %}
+<script src="{% static 'skote/assets/libs/parsleyjs/parsley.min.js' %}"></script>
+<script src="{% static 'skote/assets/js/pages/form-validation.init.js' %}"></script>
+<script>
+    let customer_table = null;
+    
+    $(document).ready(function () {
+        $('#customer_datatable').on('click', '.star-icon', function () {
+            var $star = $(this);
+            if ($star.hasClass('far')) {
+                $star.removeClass('far').addClass('fas');
+                $star.attr('data-filled', 'true');
+            } else {
+                $star.removeClass('fas').addClass('far');
+                $star.attr('data-filled', 'false');
+            }
+        });
+        
+        customer_table = $('#customer_datatable').DataTable({
+            lengthChange: false,
+            searching: true,
+            dom: '<"row"<"col-sm-12 col-md-6"f><"col-sm-12 col-md-6 text-end"B>>' + // 'f'를 추가하여 검색란 표시
+                '<"row"<"col-sm-12"tr>>' +
+                '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            buttons: [
+                {
+                    extend: 'excel',
+                    text: '엑셀 내보내기',
+                    className: 'btn btn-success me-3',
+                },
+                {
+                    text: '+ 거래처 추가',
+                    className: 'btn btn-info waves-effect waves-light',
+                    attr: {
+                        'data-bs-toggle': 'modal',
+                        'data-bs-target': '#create_modal'
+                    }
+                }
+            ],
+            // rowId: select_item,
+            language: {
+                search: "_INPUT_",  // search 문구를 입력 필드로 대체
+                searchPlaceholder: "검색어를 입력해주세요", // placeholder 추가
+                emptyTable: "등록된 데이터가 없습니다."
+            },
+        });
+    });
+    
+    function delete_btn(id) {
+        console.log('id', id)
+        const formData = new FormData();
+        formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
+        formData.append('type', 'D');
+        formData.append('c_id', id);
+        
+        if (confirm("정말 삭제하시겠습니까?") === true) {    //확인
+
+            $.ajax({
+                url: "{% url 'CustomerUpdate' %}",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    alert(res.message)
+                    location.reload()
+                },
+            })
+        } else {   //취소
+            return false;
+        }
+    }
+
+    function edit_btn(id, c_name, business_num, business_type, business_sort, address, owner_name, official_tel, official_email, manager_tel, manager_email, memo) {
+        var location_form = $("#edit_form");
+        location_form.find("#c_id").val(id);
+        location_form.find("#c_name").val(c_name);
+        location_form.find("#business_num").val(business_num);
+        location_form.find("#business_type").val(business_type);
+        location_form.find("#business_sort").val(business_sort);
+        location_form.find("#address").val(address);
+        location_form.find("#owner_name").val(owner_name);
+        location_form.find("#official_tel").val(official_tel);
+        location_form.find("#official_email").val(official_email);
+        location_form.find("#manager_tel").val(manager_tel);
+        location_form.find("#manager_email").val(manager_email);
+        location_form.find("#memo").val(memo);
+        $("#edit_modal").modal('show')
+    }
+</script>
+</body>
+</html>

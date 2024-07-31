@@ -107,12 +107,13 @@ urlpatterns = [
                 #path('getMenulist/', MenuHandler)
                 path('basic_information/user/', UserBasedInfo, name='UserBasedInfo'),
                 path('basic_information/dept_mgmt/', DeptMgmt, name='DeptMgmt'),
-                path('basic_information/company_mgmt/', CompanyMgmt, name='CompanyMgmt'),
+                path('basic_information/customer/', customer_info, name='customer_info'),
                 path('basic_information/item/', item_info, name='item_info'),
                 path('basic_information/wh_info/', warehouse_info, name='warehouse_info'),
                 # 거래처
                 path('customer/get', GetCustomer.as_view(), name='GetCustomer'),
                 path('customer/create', CustomerCreate.as_view(), name='CustomerCreate'),
+                path('customer/update', CustomerUpdate.as_view(), name='CustomerUpdate'),
                 # 창고
                 path('warehouse/get', GetWarehouse.as_view(), name='GetWarehouse'),
                 path('warehouse/create', WarehouseCreate.as_view(), name='WarehouseCreate'),
