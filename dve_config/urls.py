@@ -109,12 +109,14 @@ urlpatterns = [
                 path('basic_information/dept_mgmt/', DeptMgmt, name='DeptMgmt'),
                 path('basic_information/company_mgmt/', CompanyMgmt, name='CompanyMgmt'),
                 path('basic_information/item/', item_info, name='item_info'),
+                path('basic_information/wh_info/', warehouse_info, name='warehouse_info'),
                 # 거래처
                 path('customer/get', GetCustomer.as_view(), name='GetCustomer'),
                 path('customer/create', CustomerCreate.as_view(), name='CustomerCreate'),
                 # 창고
                 path('warehouse/get', GetWarehouse.as_view(), name='GetWarehouse'),
                 path('warehouse/create', WarehouseCreate.as_view(), name='WarehouseCreate'),
+                path('warehouse/update', WarehouseUpdate.as_view(), name='WarehouseUpdate'),
 
                 # 재고 관리 페이지
                 path('material/status/', Material_status, name='Material_status'),  # 재고 목록

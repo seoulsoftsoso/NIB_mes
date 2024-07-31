@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Sum
 from django.db.models.functions import Coalesce
 from django.shortcuts import render
 
@@ -149,5 +149,20 @@ def Material_Adjustment(request):
 
     context = {}
     return render(request, 'Material/adjustment/main.html', context)
+
+
+def warehouse_info(request):
+    enterprise = request.user.enterprise_id
+    result = Warehouse.objects.filter(del_flag='N', enterprise_id=enterprise).annotate(
+        total_quantity=Coalesce(Sum('stock_warehouse__quantity'), 0)
+    ).values(
+        'id', 'code', 'name', 'region', 'enterprise', 'del_flag', 'updated_at', 'created_by', 'total_quantity',
+        'warehouse_rack__rack_name', 'warehouse_rack__rack_row', 'warehouse_rack__rack_line', 'warehouse_rack__wr_etc'
+    )
+
+    context = {
+        'result': result
+    }
+    return render(request, 'basic_information/Warehouse/main.html', context)
 
 

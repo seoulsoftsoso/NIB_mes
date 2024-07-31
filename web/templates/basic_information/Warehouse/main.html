@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    {% include "header.html" %}
+</head>
+<style>
+    #user_datatable {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .sorting {
+        text-align: center !important;
+    }
+    
+    
+    .p-tag {
+        text-align: center;
+        margin: auto;
+    }
+
+    .star-icon {
+        cursor: pointer;
+        font-size: 1.2em;
+    }
+
+    .star-icon.fas {
+        color: gold;
+    }
+</style>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title mb-5">위치 정보</h4>
+            
+                {% csrf_token %}
+                <div class="col-xl-4">
+                    <div class="bg-info-subtle" style="height: 30px; border: 1px solid gray; border-radius: 5px; padding-top: 0.4%">
+                        <span class="p-tag font-size-16 ps-2"><i class="bx bx-error-circle"></i> 위치를 삭제하시면 해당 위치에 포함된 재고가 모두 삭제됩니다</span>
+                    </div>
+                </div>
+                <table id="user_datatable" class="table table-bordered dt-responsive nowrap w-100 mt-2">
+                    <thead>
+                    <tr>
+                        <th><i class="bx bx-error-circle"></i></th>
+                        <th>창고명</th>
+                        <th>위치</th>
+                        <th>재고수량</th>
+                        <th>최근 수정일</th>
+                        <th>비고</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for obj in result %}
+                        <tr>
+                            <td class="text-center"><i class="far fa-star star-icon" data-filled="false"></i></td>
+                            <td>{{ obj.name }}</td>
+                            <td>{{ obj.region }}</td>
+                            <td>{{ obj.total_quantity }}</td>
+                            <td>{{ obj.updated_at|date:"Y-m-d a g:i" }}</td>
+                            <td>
+                                <button type="button" class="btn btn-soft-primary waves-effect waves-light"
+                                        onclick="edit_btn(
+                                        '{{ obj.id }}', '{{ obj.name }}', '{{ obj.region }}', '{{ obj.warehouse_rack__rack_name }}',
+                                        '{{ obj.warehouse_rack__rack_row }}', '{{ obj.warehouse_rack__rack_line }}',
+                                        '{{ obj.warehouse_rack__wr_etc }}', 
+                                        )">
+                                    <i class="bx bx-pencil"></i>
+                                </button>
+                                <button type="button" class="btn btn-soft-danger waves-effect waves-light" onclick="delete_btn('{{ obj.id }}')">
+                                    <i class="bx bxs-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% include 'basic_information/Warehouse/edit_modal.html' %}
+                {% include 'basic_information/Warehouse/create_modal.html' %}
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+{% include 'footer.html' %}
+<script src="{% static 'skote/assets/libs/parsleyjs/parsley.min.js' %}"></script>
+<script src="{% static 'skote/assets/js/pages/form-validation.init.js' %}"></script>
+<script>
+    let user_table = null;
+    
+    $(document).ready(function () {
+        $('#user_datatable').on('click', '.star-icon', function () {
+            var $star = $(this);
+            if ($star.hasClass('far')) {
+                $star.removeClass('far').addClass('fas');
+                $star.attr('data-filled', 'true');
+            } else {
+                $star.removeClass('fas').addClass('far');
+                $star.attr('data-filled', 'false');
+            }
+        });
+        
+        user_table = $("#user_datatable").DataTable({
+            lengthChange: false,
+            searching: false,
+
+            dom: '<"row"<"col-sm-12 col-md-6"><"col-sm-12 col-md-6 text-end"B>>' +
+                '<"row"<"col-sm-12"tr>>' +
+                '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            buttons: [
+                {
+                    extend: 'excel',
+                    text: '엑셀 내보내기',
+                    className: 'btn btn-success me-3',
+                },
+                {
+                    text: '+ 위치 추가',
+                    className: 'btn btn-info waves-effect waves-light',
+                    attr: {
+                        'data-bs-toggle': 'modal',
+                        'data-bs-target': '#create_modal'
+                    }
+                }
+            ],
+            language: {
+                emptyTable: "등록된 데이터가 없습니다."
+            },
+        })
+    });
+    
+    function delete_btn(id) {
+        console.log('id', id)
+        const formData = new FormData();
+        formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
+        formData.append('type', 'D');
+        formData.append('wh_id', id);
+        
+        if (confirm(`위치를 삭제하시면 해당 위치에 포함된 재고가 모두 삭제됩니다\n 정말 삭제하시겠습니까?`) === true) {    //확인
+
+            $.ajax({
+                url: "{% url 'WarehouseUpdate' %}",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    alert(res.message)
+                    location.reload()
+                },
+            })
+        } else {   //취소
+            return false;
+        }
+    }
+
+    function edit_btn(id, name, region, rack_name, row, col, memo) {
+        var location_form = $("#location_form");
+        location_form.find("#wh_id").val(id);
+        location_form.find("#name").val(name);
+        location_form.find("#region").val(region);
+        location_form.find("#rack_name").val(rack_name);
+        location_form.find("#row").val(row);
+        location_form.find("#col").val(col);
+        location_form.find("#memo").val(memo);
+        
+        $("#edit_modal").modal('show')
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+{% load static %}
+<!-- sample modal content -->
+<div id="create_modal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalFullscreenLabel">위치 추가</h5>
+            </div>
+
+            <form id="create_form" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="col-xxl-12">
+                            <label class="form-label">창고명 <span class="red_font">*</span></label>
+                            <input class="form-control" type="text" id="name" name="name" placeholder="창고 이름을 입력해주세요" required/>
+                        </div>
+                       
+                    </div>
+
+                    <div class="card">
+                        <div class="col-xxl-12">
+                            <label class="form-label">위치</label>
+                            <input class="form-control" type="text" id="region" name="region" placeholder="위치를 입력해주세요" required/>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-xxl-6">
+                                <label class="form-label">RACK 명</label>
+                                <input class="form-control" type="text" id="rack_name" name="rack_name" placeholder="RACK 이름을 입력해주세요" required/>
+                            </div>
+
+                            <div class="col-xxl-3">
+                                <label class="form-label">행</label>
+                                <input class="form-control" type="text" id="col" name="col" placeholder="행" required/>
+                            </div>
+
+                            <div class="col-xxl-3">
+                                <label class="form-label">열</label>
+                                <input class="form-control" type="text" id="row" name="row" placeholder="열" required/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="col-xxl-12">
+                            <label class="form-label">메모</label>
+                            <textarea class="form-control" type="text" id="memo" name="memo" placeholder="메모를 입력해주세요"></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-soft-primary waves-effect waves-light">저장</button>
+                    <button type="button" class="btn btn-soft-secondary waves-effect waves-light" data-bs-dismiss="modal">취소</button>
+                </div>
+            </form>
+            
+        </div><!-- /.modal-content -->
+    </div>
+</div>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#create_form').on('submit', function (event) {
+            event.preventDefault();
+
+            // 유효성 검사
+            let isValid = true;
+             $(this).find('.form-control').each(function () {
+                if ($(this).val() === '') {
+                    $(this).addClass('is-invalid'); // invalid-feedback 적용
+                    isValid = false;
+                } else {
+                    $(this).removeClass('is-invalid').addClass('is-valid'); // valid-feedback 적용
+                }
+            });
+
+            if (isValid) {
+                $.ajax({
+                    url: "{% url 'WarehouseCreate' %}", 
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (res) {
+                        alert(res.message);
+                        location.reload()
+                    },
+                    error: function (xhr, status, error) {
+                        alert('오류가 발생했습니다: ' + error);
+                    }
+                });
+            }
+        });
+    });
+</script>

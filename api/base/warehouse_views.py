@@ -3,7 +3,9 @@ import traceback
 from django.db.models import Q
 from django.views import View
 from django.http import JsonResponse
-from api.models import CustomerMaster, Warehouse
+from django.views.decorators.csrf import csrf_exempt
+
+from api.models import CustomerMaster, Warehouse, WarehouseRack, ItemIn, ItemOut, StockStatus
 
 """
 창고 views
@@ -59,7 +61,50 @@ class WarehouseCreate(View):
 
             rack.save()
 
-            return JsonResponse({'success': True})
+            return JsonResponse({'success': True, 'message': '등록 되었습니다.'})
+
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({'error': str(e)}, status=400)
+
+
+class WarehouseUpdate(View):
+    def post(self, request, *args, **kwargs):
+        type = request.POST.get('type')
+        try:
+            if type == 'E':
+                formdata = request.POST
+
+                wh = Warehouse.objects.get(id=formdata.get('wh_id'))
+                wh.name = formdata.get('name')
+                wh.region = formdata.get('region')
+                wh.save()
+
+                wr = WarehouseRack.objects.get(warehouse_id=formdata.get('wh_id'))
+                wr.rack_name = formdata.get('rack_name')
+                wr.rack_row = formdata.get('row')
+                wr.rack_line = formdata.get('col')
+                wr.wr_etc = formdata.get('memo')
+                wr.save()
+
+                return JsonResponse({'success': True, 'message': '변경 되었습니다.'})
+
+            elif type == 'D':
+                formdata = request.POST
+                wh = Warehouse.objects.get(id=formdata.get('wh_id'))
+                wh.del_flag = "Y"
+                wh.save()
+
+                WarehouseRack.objects.filter(warehouse=wh).update(del_flag="Y")
+                ItemIn.objects.filter(wh=wh).update(del_flag="Y")
+                ItemOut.objects.filter(out_wh=wh).update(del_flag="Y")
+                StockStatus.objects.filter(wh=wh).update(del_flag="Y")
+
+                return JsonResponse({'success': True, 'message': '삭제 되었습니다.'})
+
+            else:
+                return JsonResponse({'error': 'Invalid type provided.'}, status=400)
 
         except Exception as e:
             print(f"Error: {str(e)}")
