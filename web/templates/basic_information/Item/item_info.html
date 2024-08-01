@@ -23,11 +23,6 @@
         display: flex;
     }
     
-    .dataTables_filter input {
-        height: 35px;
-        width: 260px !important;
-        margin-left: 0 !important;
-    }
 </style>
 <body>
 
@@ -147,8 +142,11 @@
                 $('#material_datatable th:first-child').removeClass('sorting sorting_asc sorting_desc');
             },
             initComplete: function() {
-                $('.dataTables_filter input').addClass('form-control');
-            }
+                $('.dataTables_filter input').removeClass('form-control-sm');
+                $('.dataTables_filter label').addClass('col-lg-10');
+                $('.dataTables_filter input').css('width', '100%');
+            },
+            
         });
 
     });

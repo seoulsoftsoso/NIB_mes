@@ -87,7 +87,6 @@ def getLmenuList(request):
     )
 
     qs_used_json = list(qs_used)
-    print('qs_used_json', qs_used_json)
 
     context = {}
     context['useablemenu'] = list(qs)
@@ -103,7 +102,6 @@ class setMenuByUser(View):
 
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        print('post', request.POST)
         menulist = request.POST.getlist('menulist[]', '')
         aliaslist = request.POST.getlist('menunamelist[]', '')
         parentId = request.POST.getlist('parentlist[]', '')

@@ -34,6 +34,7 @@ from api.base.enterprise_views import EnterpriseMasterViewSet
 
 
 from api.base.groupcodemaster_views import GroupCodeMasterViewSet, GenerateCodeMaster
+from api.base.member_views import *
 from api.base.warehouse_views import *
 from api.base.menu_config import MenuHandler, getLmenuList, setMenuByUser
 
@@ -98,22 +99,29 @@ urlpatterns = [
 
                 path('dashboard/', dashboard_page, name="dashboard_page"),
 
+                # 설정
+                path('settings/menumaster/', Menumaster),
+                path('settings/member/', UserBasedInfo, name='UserBasedInfo'),
+
                 # 기준 정보
                 path('basic_information/codemaster/', codemaster),
                 path('basic_information/enterprise/', new_enterprise),
-                path('basic_information/menumaster/', Menumaster),
                 path('basic_information/getlmenulist/', getLmenuList),
                 path('basic_information/setmenubyuser/', setMenuByUser.as_view(), name='setmenubyuser'),
                 #path('getMenulist/', MenuHandler)
-                path('basic_information/user/', UserBasedInfo, name='UserBasedInfo'),
                 path('basic_information/dept_mgmt/', DeptMgmt, name='DeptMgmt'),
                 path('basic_information/customer/', customer_info, name='customer_info'),
                 path('basic_information/item/', item_info, name='item_info'),
                 path('basic_information/wh_info/', warehouse_info, name='warehouse_info'),
+                # 멤버
+                path('member/update/', MemberUpdate.as_view(), name='MemberUpdate'),
+                path('get_department', GetDepartments.as_view(), name='GetDepartments'),
+
                 # 거래처
                 path('customer/get', GetCustomer.as_view(), name='GetCustomer'),
                 path('customer/create', CustomerCreate.as_view(), name='CustomerCreate'),
                 path('customer/update', CustomerUpdate.as_view(), name='CustomerUpdate'),
+
                 # 창고
                 path('warehouse/get', GetWarehouse.as_view(), name='GetWarehouse'),
                 path('warehouse/create', WarehouseCreate.as_view(), name='WarehouseCreate'),
@@ -154,7 +162,8 @@ urlpatterns = [
 
 
 
-
+                # 에러
+                path('error/404', error_page, name="error_page"),
 
                 path('', include(router.urls)),
                 #autocomplete

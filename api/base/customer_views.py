@@ -4,6 +4,7 @@ from django.db.models import Q
 from django.views import View
 from django.http import JsonResponse
 from api.models import CustomerMaster
+from msgs import *
 
 
 def get_customer_master(enterprise, search_term=''):
@@ -58,7 +59,7 @@ class CustomerCreate(View):
 
             customer.save()
 
-            return JsonResponse({'success': True, 'message': '등록되었습니다.'})
+            return JsonResponse({'success': True, 'message': msg_cre_ok})
 
         except Exception as e:
             print(f"Error: {str(e)}")
@@ -86,17 +87,17 @@ class CustomerUpdate(View):
                 customer.manager_email = formdata.get('manager_email')
                 customer.save()
 
-                return JsonResponse({'success': True, 'message': '변경 되었습니다.'})
+                return JsonResponse({'success': True, 'message': msg_edit_ok})
 
             elif type == "D":
 
                 customer.del_flag = "Y"
                 customer.save()
 
-                return JsonResponse({'success': True, 'message': '삭제 되었습니다.'})
+                return JsonResponse({'success': True, 'message': msg_del_ok})
 
             else:
-                return JsonResponse({'error': str(e)}, status=400)
+                return JsonResponse({'error': 'Invalid type provided.'}, status=400)
 
         except Exception as e:
             print(f"Error: {str(e)}")

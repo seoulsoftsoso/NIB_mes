@@ -146,6 +146,12 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     objects = UserMasterManager()
     USERNAME_FIELD = 'user_id'
 
+    USER_TYPE_CHOICES = (
+        ('Admin', '관리자'),
+        ('Member', '멤버'),
+        ('Viewer', '뷰어'),
+    )
+
     user_id = models.CharField(max_length=32, unique=True, verbose_name='유저 ID')
     code = models.CharField(max_length=8, null=True, verbose_name='사번')  # 사번
     username = models.CharField(max_length=26, null=True, verbose_name='유저 이름')
@@ -184,6 +190,8 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')  # 최초작성일
     enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, default=1, related_name='user_master_enterprise',
                                    verbose_name='업체', null=False)
+    auth = models.CharField(max_length=10, null=False, default="Viewer", choices=USER_TYPE_CHOICES, verbose_name="권한")
+    del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
 
     def __str__(self):
         return self.name

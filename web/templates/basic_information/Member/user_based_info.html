@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    {% include "header.html" %}
+
+</head>
+<style>
+    #user_datatable {
+        text-align: center;
+        vertical-align: middle;
+    }
+    
+    .sorting {
+        text-align: center !important;
+    }
+    
+    .dataTables_filter {
+        text-align: start !important;
+    }
+    
+    .dataTables_filter {
+        text-align: start !important;
+    }
+</style>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title mb-5">멤버설정</h4>
+
+                {% csrf_token %}
+                <table id="user_datatable" class="table table-bordered dt-responsive  nowrap w-100 mt-5">
+                    <thead>
+                    <tr>
+                        <th>이름</th>
+                        <th>소속</th>
+                        <th>이메일</th>
+                        <th>전화번호</th>
+                        <th>권한</th>
+                        <th>생성일</th>
+                        <th>비고</th>
+                    </tr>
+                    </thead>
+                    
+                    <tbody>
+                    {% for obj in result %}
+                    <tr>
+                        <td>{{ obj.username }}</td>
+                        <td>{{ obj.department_position }}</td>
+                        <td>{{ obj.email }}</td>
+                        <td>{{ obj.tel }}</td>
+                        <td>{{ obj.auth }}</td>
+                        <td>{{ obj.employment_date }}</td>
+                        <td>
+                            <button type="button" class="btn btn-soft-primary waves-effect waves-light"
+                                    onclick="edit_btn('{{ obj.id }}', '{{ obj.username }}', '{{ obj.department_position_id }}',
+                                        '{{ obj.auth }}', '{{ obj.email }}', '{{ obj.tel }}', '{{ obj.etc }}'
+                                    )">
+                                <i class="bx bx-pencil"></i>
+                            </button>
+                            <button type="button" class="btn btn-soft-danger waves-effect waves-light"
+                                    onclick="delete_btn('{{ obj.id }}')">
+                                <i class="bx bxs-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% include 'basic_information/Member/edit_modal.html' %}
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+{% include 'footer.html' %}
+<script>
+    let user_table = null;
+
+    $(document).ready(function () {
+        user_table = $('#user_datatable').DataTable({
+            lengthChange: false,
+            searching: true,
+            dom: '<"row"<"col-sm-12 col-md-6"f><"col-sm-12 col-md-6 text-end"B>>' + // 'f'를 추가하여 검색란 표시
+                '<"row"<"col-sm-12"tr>>' +
+                '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            buttons: [
+                {
+                    extend: 'excel',
+                    text: '엑셀 내보내기',
+                    className: 'btn btn-success me-3',
+                },
+                {
+                    text: '+ 멤버 추가',
+                    className: 'btn btn-info waves-effect waves-light',
+                    attr: {
+                        'data-bs-toggle': 'modal',
+                        'data-bs-target': '#create_modal'
+                    }
+                }
+            ],
+            // rowId: select_item,
+            language: {
+                search: "_INPUT_",  // search 문구를 입력 필드로 대체
+                searchPlaceholder: "검색어를 입력해주세요", // placeholder 추가
+                emptyTable: "등록된 데이터가 없습니다."
+            },
+            initComplete: function (settings, json) {
+                $('.dataTables_filter input').removeClass('form-control-sm');
+                $('.dataTables_filter label').addClass('col-lg-6');;
+                $('.dataTables_filter input').css('width', '100%');
+            }
+        });
+    });
+    
+    function edit_btn(id, username, department_position_id, auth, email, tel, etc) {
+        console.log(department_position_id)
+        $.ajax({
+            url: "{% url 'GetDepartments' %}",
+            type: "GET",
+            success: function (res) {
+                var form = $("#user_form");
+                var select = form.find("#department_position");
+                select.empty();
+                res.result.forEach(function (department) {
+                    var option = $('<option></option>')
+                        .attr('value', department.id)
+                        .text(department.name);
+                    select.append(option);
+                });
+                select.val(department_position_id);
+                form.find("#user_id").val(id);
+                form.find("#username").val(username);
+                form.find("#auth").val(auth);
+                form.find("#email").val(email);
+                form.find("#tel").val(tel);
+                form.find("#memo").val(etc);
+                $("#edit_modal").modal('show')
+            },
+            error: function (xhr, status, error) {
+                alert('오류가 발생했습니다: ' + error);
+            }
+        })
+      
+        
+
+    }
+    
+    function delete_btn(id) {
+        const formData = new FormData();
+        formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
+        formData.append('type', 'D');
+        formData.append('user_id', id);
+        
+        if (confirm("정말 삭제하시겠습니까?") === true) {    //확인
+
+            $.ajax({
+                url: "{% url 'MemberUpdate' %}",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    alert(res.message)
+                    location.reload()
+                },
+            })
+        } else {   //취소
+            return false;
+        }
+    }
+</script>
+</body>
+</html>

@@ -30,12 +30,6 @@
         color: gold;
     }
     
-    .dataTables_filter input {
-        height: 35px;
-        width: 260px !important;
-        margin-left: 0 !important;
-    }
-    
     .dataTables_filter {
         text-align: start !important;
     }
@@ -140,6 +134,11 @@
                 searchPlaceholder: "검색어를 입력해주세요", // placeholder 추가
                 emptyTable: "등록된 데이터가 없습니다."
             },
+            initComplete: function (settings, json) {
+                $('.dataTables_filter input').removeClass('form-control-sm');
+                $('.dataTables_filter label').addClass('col-lg-6');;
+                $('.dataTables_filter input').css('width', '100%');
+            }
         });
     });
     

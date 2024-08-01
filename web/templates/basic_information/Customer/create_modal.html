@@ -100,7 +100,6 @@
     $(document).ready(function () {
         $('#customer_form').on('submit', function (event) {
             event.preventDefault();
-            console.log('hi')
 
             // 유효성 검사
             let isValid = true;
@@ -114,7 +113,6 @@
             });
 
             if (isValid) {
-                console.log('통과')
                 $.ajax({
                     url: "{% url 'CustomerCreate' %}",
                     type: "POST",

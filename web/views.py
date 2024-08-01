@@ -5,7 +5,7 @@ from django.shortcuts import render
 
 from api.Item.common import get_item_data
 from api.base.base_form import enterprise_fm
-from api.models import MenuMaster, ItemMaster, UnitPrice, ItemIn, Warehouse, ItemOut, CustomerMaster
+from api.models import MenuMaster, ItemMaster, UnitPrice, ItemIn, Warehouse, ItemOut, CustomerMaster, UserMaster
 from dve_config import settings
 
 
@@ -62,8 +62,14 @@ def Menumaster(request):
 
 
 def UserBasedInfo(request):
-    context = {}
-    return render(request, 'basic_information/user_based_info.html', context)
+    enterprise = request.user.enterprise_id
+
+    qs = UserMaster.objects.filter(enterprise_id=enterprise, del_flag="N", is_superuser=False)
+
+    context = {
+        'result': qs
+    }
+    return render(request, 'basic_information/Member/user_based_info.html', context)
 
 
 def DeptMgmt(request):
@@ -174,4 +180,8 @@ def warehouse_info(request):
     }
     return render(request, 'basic_information/Warehouse/main.html', context)
 
+
+def error_page(request):
+    context ={}
+    return render(request, 'error_404.html', context)
 

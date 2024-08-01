@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from api.models import CustomerMaster, Warehouse, WarehouseRack, ItemIn, ItemOut, StockStatus
+from msgs import *
 
 """
 창고 views
@@ -61,7 +62,7 @@ class WarehouseCreate(View):
 
             rack.save()
 
-            return JsonResponse({'success': True, 'message': '등록 되었습니다.'})
+            return JsonResponse({'success': True, 'message': msg_cre_ok})
 
         except Exception as e:
             print(f"Error: {str(e)}")
@@ -88,7 +89,7 @@ class WarehouseUpdate(View):
                 wr.wr_etc = formdata.get('memo')
                 wr.save()
 
-                return JsonResponse({'success': True, 'message': '변경 되었습니다.'})
+                return JsonResponse({'success': True, 'message': msg_edit_ok})
 
             elif type == 'D':
                 formdata = request.POST
@@ -101,7 +102,7 @@ class WarehouseUpdate(View):
                 ItemOut.objects.filter(out_wh=wh).update(del_flag="Y")
                 StockStatus.objects.filter(wh=wh).update(del_flag="Y")
 
-                return JsonResponse({'success': True, 'message': '삭제 되었습니다.'})
+                return JsonResponse({'success': True, 'message': msg_del_ok})
 
             else:
                 return JsonResponse({'error': 'Invalid type provided.'}, status=400)
