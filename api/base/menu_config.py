@@ -80,16 +80,21 @@ def getLmenuList(request):
         'menuauth__parent', 'menuauth__menu', 'menuauth__del_flag', 'menuauth__user', 'menuauth__user_id',
     ).order_by('type').distinct()
 
+    unique_qs = {item['id']: item for item in qs}.values()
+
     #  values() 메서드를 사용한 후 필터링을 수행하기 때문에 쿼리셋을 딕셔너리로 변환하여 필터링 조건이 제대로 적용되지 않을 수 있음
-    qs_used = MenuMaster.objects.filter(menuauth__user_id=user_id,menuauth__del_flag="N").values(
+    qs_used = MenuMaster.objects.filter(menuauth__user_id=user_id, menuauth__del_flag="N").values(
         'id', 'code', 'name', 'type', 'i_class', 'menuauth__id', 'menuauth__alias', 'menuauth__order',
         'menuauth__parent', 'menuauth__menu', 'menuauth__del_flag', 'menuauth__user', 'menuauth__user_id',
-    )
+    ).distinct()
 
     qs_used_json = list(qs_used)
 
+    print('list', list(unique_qs))
+    print('used', qs_used_json)
+
     context = {}
-    context['useablemenu'] = list(qs)
+    context['useablemenu'] = list(unique_qs)
     context['usedmenu'] = qs_used_json
     context['success'] = 'tru'
 

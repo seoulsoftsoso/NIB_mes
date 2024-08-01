@@ -253,43 +253,56 @@
     }
 
     function makeTreeUI(data) {
-        //console.log(data)
-        let treeData = []
-        data.forEach(function (item) {
-            if (item.menuauth__del_flag === "N") {
-                if (item.type == 'L') {
-                    // 상위 노드 추가
-                    treeData.push({
+    console.log(data);
+    let treeData = [];
+    let lookup = {};
+
+    // 상위 메뉴와 하위 메뉴를 분리하여 저장
+    data.forEach(function (item) {
+        if (item.menuauth__del_flag === "N") {
+            if (item.type === 'L') {
+                // 상위 노드 추가
+                let node = {
+                    id: item.id,
+                    text: item.menuauth__alias,
+                    iconCls: 'icon-menul',
+                    children: []
+                };
+                treeData.push(node);
+                lookup[item.id] = node; // 상위 노드를 lookup에 저장
+            }
+        }
+    });
+
+    // 하위 메뉴를 상위 메뉴의 children 배열에 추가
+    data.forEach(function (item) {
+        if (item.menuauth__del_flag === "N") {
+            if (item.type === 'S') {
+                let parent = lookup[item.menuauth__parent]; // 상위 노드를 lookup에서 찾음
+                if (parent) {
+                    parent.children.push({
                         id: item.id,
                         text: item.menuauth__alias,
-                        iconCls: 'icon-menul',
-                        children: []
+                        iconCls: 'icon-menus'
                     });
-                } else if (item.type == 'S') {
-                    // 하위 노드 추가
-                    let parent = treeData.find(parent => parent.id === item.menuauth__parent);
-                    if (parent) {
-                        parent.children.push({
-                            id: item.id,
-                            text: item.menuauth__alias,
-                            iconCls: 'icon-menus'
-                        });
-                    }
                 }
             }
-        });
-        // EasyUI Tree에 동적으로 생성한 JSON 데이터 로드
-        $('#easytree').tree({
-            data: treeData,
-            animate: true,
-            dnd: true,
-            onDblClick: function (node) {
-                $(this).tree('beginEdit', node.target);
-            }
-        });
-        // drag영역 활성화
-        userDrag();
-    }
+        }
+    });
+
+    // EasyUI Tree에 동적으로 생성한 JSON 데이터 로드
+    $('#easytree').tree({
+        data: treeData,
+        animate: true,
+        dnd: true,
+        onDblClick: function (node) {
+            $(this).tree('beginEdit', node.target);
+        }
+    });
+
+    // drag영역 활성화
+    userDrag();
+}
 
     function selectEvent(){
 
