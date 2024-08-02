@@ -66,6 +66,7 @@
                             <td>{{ obj.total_quantity }}</td>
                             <td>{{ obj.updated_at|date:"Y-m-d a g:i" }}</td>
                             <td>
+                                {% if user_permissions == "Admin" or user_permissions == "Member" %}
                                 <button type="button" class="btn btn-soft-primary waves-effect waves-light"
                                         onclick="edit_btn(
                                         '{{ obj.id }}', '{{ obj.name }}', '{{ obj.region }}', '{{ obj.warehouse_rack__rack_name }}',
@@ -77,6 +78,7 @@
                                 <button type="button" class="btn btn-soft-danger waves-effect waves-light" onclick="delete_btn('{{ obj.id }}')">
                                     <i class="bx bxs-trash"></i>
                                 </button>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
@@ -93,8 +95,30 @@
 <script src="{% static 'skote/assets/js/pages/form-validation.init.js' %}"></script>
 <script>
     let user_table = null;
+    let userPermissions = "{{ user_permissions }}";
     
     $(document).ready(function () {
+        
+        var create_buttons = [
+            {
+                extend: 'excel',
+                text: '엑셀 내보내기',
+                className: 'btn btn-success me-3',
+            }
+        ];
+
+        // 사용자 권한이 Admin 또는 Member인 경우에만 "거래처 추가" 버튼 추가
+        if (userPermissions === "Admin" || userPermissions === "Member") {
+            create_buttons.push({
+                text: '+ 위치 추가',
+                className: 'btn btn-info waves-effect waves-light',
+                attr: {
+                    'data-bs-toggle': 'modal',
+                    'data-bs-target': '#create_modal'
+                }
+            });
+        }
+        
         $('#user_datatable').on('click', '.star-icon', function () {
             var $star = $(this);
             if ($star.hasClass('far')) {
@@ -113,21 +137,7 @@
             dom: '<"row"<"col-sm-12 col-md-6"><"col-sm-12 col-md-6 text-end"B>>' +
                 '<"row"<"col-sm-12"tr>>' +
                 '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
-            buttons: [
-                {
-                    extend: 'excel',
-                    text: '엑셀 내보내기',
-                    className: 'btn btn-success me-3',
-                },
-                {
-                    text: '+ 위치 추가',
-                    className: 'btn btn-info waves-effect waves-light',
-                    attr: {
-                        'data-bs-toggle': 'modal',
-                        'data-bs-target': '#create_modal'
-                    }
-                }
-            ],
+            buttons: create_buttons,
             language: {
                 emptyTable: "등록된 데이터가 없습니다."
             },

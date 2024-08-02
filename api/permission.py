@@ -336,3 +336,9 @@ class MesPermission(BasePermission):
         #     return False
         #
         # return True  # 권한이 없는 경우
+
+
+def user_permissions(request):
+    if request.user.is_authenticated:
+        return {'user_permissions': request.user.auth}
+    return {'user_permissions': None}

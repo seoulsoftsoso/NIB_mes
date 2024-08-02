@@ -66,7 +66,7 @@
                             {% endfor %}
                             </tbody>
                         </table>
-{#                    {% include 'Material/material_list/fullscreen_modal.html' %}#}
+                    {% include 'Material/material_list/fullscreen_modal.html' %}
                     {#{% include 'basic_information/Item/read_FullScreenModal.html' %}#}
                 </div>
             </div>
@@ -78,6 +78,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <h4 class="card-title mb-5">상세 정보</h4>
+                        {% if user_permissions == "Admin" or user_permissions == "Member" %}
                         <div class="dropdown mb-0" id="detail_dropdown" style="display: none">
                             <a class="btn btn-link text-muted mt-n2" role="button" data-bs-toggle="dropdown"
                                aria-haspopup="true" aria-expanded="false">
@@ -88,6 +89,7 @@
                                 <a class="dropdown-item" onclick="delete_item()">삭제</a>
                             </div>
                         </div>
+                        {% endif %}
                     </div>
                     {% csrf_token %}
                     <div id="item-detail">
@@ -107,8 +109,29 @@
     let modal = $('#read_fullscreen_modal');
     let select_item = null;
     let defaultImageUrl = "{% static 'img/no_img.avif' %}";
+    let userPermissions = "{{ user_permissions }}";
 
     $(document).ready(function () {
+        
+        var create_buttons = [
+            {
+                extend: 'excel',
+                text: '엑셀 내보내기',
+                className: 'btn btn-success me-3',
+            }
+        ];
+
+        // 사용자 권한이 Admin 또는 Member인 경우에만 "거래처 추가" 버튼 추가
+        if (userPermissions === "Admin" || userPermissions === "Member") {
+            create_buttons.push({
+                text: '+ 품목 추가',
+                className: 'btn btn-info waves-effect waves-light',
+                attr: {
+                        'data-bs-toggle': 'modal',
+                        'data-bs-target': '#exampleModalFullscreen'
+                    }
+            });
+        }
         
         // DataTable 초기화
         material_table = $('#material_datatable').DataTable({
@@ -117,21 +140,7 @@
             dom: '<"row"<"col-sm-12 col-md-6"f><"col-sm-12 col-md-6 text-end"B>>' + // 'f'를 추가하여 검색란 표시
                 '<"row"<"col-sm-12"tr>>' +
                 '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
-            buttons: [
-                {
-                    extend: 'excel',
-                    text: '엑셀 내보내기',
-                    className: 'btn btn-success me-3',
-                },
-                {
-                    text: '+ 품목 추가',
-                    className: 'btn btn-info waves-effect waves-light',
-                    attr: {
-                        'data-bs-toggle': 'modal',
-                        'data-bs-target': '#exampleModalFullscreen'
-                    }
-                }
-            ],
+            buttons: create_buttons,
             // rowId: select_item,
             language: {
                 search: "_INPUT_",  // search 문구를 입력 필드로 대체

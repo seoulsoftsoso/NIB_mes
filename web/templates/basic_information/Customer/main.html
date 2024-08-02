@@ -68,6 +68,7 @@
                             <td>{{ obj.address }}</td>
                             <td>{{ obj.official_email }}</td>
                             <td>
+                                {% if user_permissions == "Admin" or user_permissions == "Member" %}
                                 <button type="button" class="btn btn-soft-primary waves-effect waves-light"
                                         onclick="edit_btn('{{ obj.id }}', '{{ obj.c_name }}', '{{ obj.business_num }}', '{{ obj.business_type }}', '{{ obj.business_sort }}',
                                         '{{ obj.address }}', '{{ obj.owner_name }}', '{{ obj.official_tel }}', '{{ obj.official_email }}', '{{ obj.manager_tel }}',
@@ -78,6 +79,7 @@
                                 <button type="button" class="btn btn-soft-danger waves-effect waves-light" onclick="delete_btn('{{ obj.id }}')">
                                     <i class="bx bxs-trash"></i>
                                 </button>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
@@ -94,6 +96,7 @@
 <script src="{% static 'skote/assets/js/pages/form-validation.init.js' %}"></script>
 <script>
     let customer_table = null;
+    let userPermissions = "{{ user_permissions }}";
     
     $(document).ready(function () {
         $('#customer_datatable').on('click', '.star-icon', function () {
@@ -106,6 +109,26 @@
                 $star.attr('data-filled', 'false');
             }
         });
+
+        var create_buttons = [
+            {
+                extend: 'excel',
+                text: '엑셀 내보내기',
+                className: 'btn btn-success me-3',
+            }
+        ];
+
+        // 사용자 권한이 Admin 또는 Member인 경우에만 "거래처 추가" 버튼 추가
+        if (userPermissions === "Admin" || userPermissions === "Member") {
+            create_buttons.push({
+                text: '+ 거래처 추가',
+                className: 'btn btn-info waves-effect waves-light',
+                attr: {
+                    'data-bs-toggle': 'modal',
+                    'data-bs-target': '#create_modal'
+                }
+            });
+        }
         
         customer_table = $('#customer_datatable').DataTable({
             lengthChange: false,
@@ -113,22 +136,7 @@
             dom: '<"row"<"col-sm-12 col-md-6"f><"col-sm-12 col-md-6 text-end"B>>' + // 'f'를 추가하여 검색란 표시
                 '<"row"<"col-sm-12"tr>>' +
                 '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
-            buttons: [
-                {
-                    extend: 'excel',
-                    text: '엑셀 내보내기',
-                    className: 'btn btn-success me-3',
-                },
-                {
-                    text: '+ 거래처 추가',
-                    className: 'btn btn-info waves-effect waves-light',
-                    attr: {
-                        'data-bs-toggle': 'modal',
-                        'data-bs-target': '#create_modal'
-                    }
-                }
-            ],
-            // rowId: select_item,
+            buttons: create_buttons,
             language: {
                 search: "_INPUT_",  // search 문구를 입력 필드로 대체
                 searchPlaceholder: "검색어를 입력해주세요", // placeholder 추가

@@ -42,23 +42,9 @@ def new_enterprise(request):
 
 def Menumaster(request):
     context = {}
-    # allMenu = MenuMaster.objects.filter(type='L').order_by('id')
-    # useMenu = MenuMaster.objects.filter(menuauth__enterprise=request.COOKIES.get("enterprise_id")
-    #                                     , menuauth__user=request.COOKIES.get('user_id')
-    #                                     , menuauth__use_flag='Y'
-    #                                     , menuauth__del_flag='N'
-    #                                     , menuauth__parent_id=0
-    #                                     ).annotate(alias=Coalesce('menuauth__alias', F('name'))
-    #                                                ).values('id', 'code', 'alias', 'path', 'type', 'comment', 'i_class'
-    #                                                         , 'created_by_id', 'created_at', 'updated_by_id',
-    #                                                         'updated_at'
-    #                                                         , 'del_flag').order_by('menuauth__order')
-    #
     enter = enterprise_fm(request.GET, request.COOKIES['enterprise_name'])
-    # context['allMenu'] = allMenu
-    # context['useMenu'] = useMenu
     context['ep'] = enter
-    return render(request, 'basic_information/menumaster.html', context)
+    return render(request, 'Setting/Menu/menumaster.html', context)
 
 
 def UserBasedInfo(request):
@@ -69,7 +55,7 @@ def UserBasedInfo(request):
     context = {
         'result': qs
     }
-    return render(request, 'basic_information/Member/user_based_info.html', context)
+    return render(request, 'Setting/Member/user_based_info.html', context)
 
 
 def DeptMgmt(request):
@@ -88,7 +74,7 @@ def customer_info(request):
     context = {
         'result': qs
     }
-    return render(request, 'basic_information/Customer/company_mgmt.html', context)
+    return render(request, 'basic_information/Customer/main.html', context)
 
 
 def Material_input(request):

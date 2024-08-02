@@ -85,6 +85,7 @@
                                             </div>
                                         </div>
                                         
+                                        {% if user_permissions == "Admin" or user_permissions == "Member" %}
                                         <div class="col-xxl-3 col-lg-6">
                                             <div class="position-relative h-100 hstack gap-3 d-flex justify-content-end">
                                                 <button type="submit" class="btn btn-primary h-100 w-40"
@@ -93,6 +94,7 @@
                                                 </button>
                                             </div>
                                         </div>
+                                        {% endif %}
                                         
                                         <!--end col-->
                                         <div class="collapse" id="collapseExample">
@@ -207,6 +209,7 @@
 <script>
 
     let material_table = null;
+    let userPermissions = "{{ user_permissions }}";
 
     $(document).ready(function () {
 
@@ -298,7 +301,7 @@
                 },
                 {
                     text: '삭제',
-                    className: 'btn btn-secondary btn-soft-primary waves-effect waves-light me-1',
+                    className: 'btn btn-secondary btn-soft-primary waves-effect waves-light me-1 delete_btn',
                     action: function (e, dt, node, config) {
                         if (confirm("정말 삭제하시겠습니까??") === true) {
                             var selectedData = [];
@@ -342,6 +345,12 @@
             },
             drawCallback: function () {
                 $('#material_datatable th:first-child').removeClass('sorting sorting_asc sorting_desc');
+            },
+            initComplete: function(settings, json) {
+                if (userPermissions !== "Admin" && userPermissions !== "Member") {
+                    $(".edit_btn").hide();
+                    $(".delete_btn").hide();
+                }
             }
         });
 

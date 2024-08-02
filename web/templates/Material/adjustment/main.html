@@ -69,6 +69,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <h4 class="card-title mb-5">상세 정보</h4>
+                        {% if user_permissions == "Admin" or user_permissions == "Member" %}
                         <div class="dropdown mb-0" id="detail_dropdown" style="display: none">
                             <a class="btn btn-link text-muted mt-n2" role="button" data-bs-toggle="dropdown"
                                aria-haspopup="true" aria-expanded="false">
@@ -79,6 +80,7 @@
                                 <a class="dropdown-item" onclick="move_item()">이동</a>
                             </div>
                         </div>
+                        {% endif %}
                     </div>
                     {% csrf_token %}
                     <div id="item-detail">
