@@ -26,8 +26,12 @@
         font-size: 1.2em;
     }
 
-    .star-icon.fas {
-        color: gold;
+    .wish_flag_true {
+        color: gold; /* 노란색으로 설정 */
+    }
+
+    .wish_flag_false {
+        color: grey; /* 채워지지 않은 색상으로 설정 */
     }
     
     .dataTables_filter {
@@ -60,7 +64,13 @@
                     <tbody>
                     {% for obj in result %}
                         <tr>
-                            <td class="text-center"><i class="far fa-star star-icon" data-filled="false"></i></td>
+                            <td class="text-center">
+                                {% if obj.wish_flag %}
+                                    <i class="fas fa-star star-icon wish_flag_true" data-filled="true" onclick="wish_update('{{ obj.id }}')"></i>
+                                {% else %}
+                                    <i class="far fa-star star-icon wish_flag_false" data-filled="false" onclick="wish_update('{{ obj.id }}')"></i>
+                                {% endif %}
+                            </td>
                             <td>{{ obj.c_name }}</td>
                             <td>{{ obj.business_num }}</td>
                             <td>{{ obj.owner_name }}</td>
@@ -99,17 +109,6 @@
     let userPermissions = "{{ user_permissions }}";
     
     $(document).ready(function () {
-        $('#customer_datatable').on('click', '.star-icon', function () {
-            var $star = $(this);
-            if ($star.hasClass('far')) {
-                $star.removeClass('far').addClass('fas');
-                $star.attr('data-filled', 'true');
-            } else {
-                $star.removeClass('fas').addClass('far');
-                $star.attr('data-filled', 'false');
-            }
-        });
-
         var create_buttons = [
             {
                 extend: 'excel',
@@ -190,6 +189,25 @@
         location_form.find("#manager_email").val(manager_email);
         location_form.find("#memo").val(memo);
         $("#edit_modal").modal('show')
+    }
+    
+    function wish_update(id) {
+        console.log('id', id)
+        
+        var formData = {
+            'id': id,
+            'model': 'CustomerMaster'
+        };
+        
+        $.ajax({
+            url: "{% url 'WishUpdate' %}",
+            type: "GET",
+            data: formData,
+            success: function (res) {
+                alert(res.message)
+                location.reload()
+            }
+        })
     }
 </script>
 </body>

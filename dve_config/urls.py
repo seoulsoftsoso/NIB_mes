@@ -36,6 +36,7 @@ from api.base.enterprise_views import EnterpriseMasterViewSet
 from api.base.groupcodemaster_views import GroupCodeMasterViewSet, GenerateCodeMaster
 from api.base.member_views import *
 from api.base.warehouse_views import *
+from api.base.common import *
 from api.base.menu_config import MenuHandler, getLmenuList, setMenuByUser
 
 from api.base.user_views import UserMasterViewSet, UserMasterSelectViewSet
@@ -121,6 +122,9 @@ urlpatterns = [
                 path('customer/get', GetCustomer.as_view(), name='GetCustomer'),
                 path('customer/create', CustomerCreate.as_view(), name='CustomerCreate'),
                 path('customer/update', CustomerUpdate.as_view(), name='CustomerUpdate'),
+
+                # 즐겨찾기
+                path('wish/update', WishUpdate.as_view(), name='WishUpdate'),
 
                 # 창고
                 path('warehouse/get', GetWarehouse.as_view(), name='GetWarehouse'),

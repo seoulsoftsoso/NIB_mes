@@ -68,8 +68,8 @@ def customer_info(request):
 
     qs = CustomerMaster.objects.filter(del_flag='N', enterprise_id=enterprise).values(
         'id', 'c_name', 'business_num', 'business_type', 'business_sort', 'postal_code', 'address', 'owner_name',
-        'official_tel', 'official_fax', 'official_email', 'manager_tel', 'manager_email', 'memo'
-    ).order_by('-id')
+        'official_tel', 'official_fax', 'official_email', 'manager_tel', 'manager_email', 'memo', 'wish_flag'
+    ).order_by('-wish_flag', '-id')
 
     context = {
         'result': qs
@@ -158,8 +158,9 @@ def warehouse_info(request):
         total_quantity=Coalesce(Sum('stock_warehouse__quantity'), 0)
     ).values(
         'id', 'code', 'name', 'region', 'enterprise', 'del_flag', 'updated_at', 'created_by', 'total_quantity',
-        'warehouse_rack__rack_name', 'warehouse_rack__rack_row', 'warehouse_rack__rack_line', 'warehouse_rack__wr_etc'
-    )
+        'warehouse_rack__rack_name', 'warehouse_rack__rack_row', 'warehouse_rack__rack_line', 'warehouse_rack__wr_etc',
+        'wish_flag'
+    ).order_by('-wish_flag', '-id')
 
     context = {
         'result': result

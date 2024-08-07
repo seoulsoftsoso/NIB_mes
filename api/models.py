@@ -297,6 +297,7 @@ class Warehouse(models.Model):
     code = models.CharField(max_length=255, null=True, verbose_name='창고 코드')
     name = models.CharField(max_length=255, null=True, verbose_name='창고 이름')
     region = models.CharField(max_length=64, null=True, verbose_name='창고 지역')
+    wish_flag = models.BooleanField(null=False, default=False, verbose_name='즐겨찾기')
     enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, default=1, related_name='warehouse_enterprise',
                                    verbose_name='업체', null=False)
     del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
@@ -476,6 +477,7 @@ class CustomerMaster(models.Model):
     manager_tel = models.CharField(max_length=20, null=True, verbose_name='담당자 전화번호')
     manager_email = models.CharField(max_length=36, null=True, verbose_name='담당자 이메일')
     memo = models.CharField(max_length=255, null=True, verbose_name='메모')
+    wish_flag = models.BooleanField(null=False, default=False, verbose_name='즐겨찾기')
     del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
     enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, default=1, related_name='customer_enterprise',
                                    verbose_name='업체', null=False)

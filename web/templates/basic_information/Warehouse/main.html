@@ -27,8 +27,12 @@
         font-size: 1.2em;
     }
 
-    .star-icon.fas {
-        color: gold;
+    .wish_flag_true {
+        color: gold; /* 노란색으로 설정 */
+    }
+
+    .wish_flag_false {
+        color: grey; /* 채워지지 않은 색상으로 설정 */
     }
 </style>
 <body>
@@ -60,7 +64,13 @@
                     <tbody>
                     {% for obj in result %}
                         <tr>
-                            <td class="text-center"><i class="far fa-star star-icon" data-filled="false"></i></td>
+                            <td class="text-center">
+                                {% if obj.wish_flag %}
+                                    <i class="fas fa-star star-icon wish_flag_true" data-filled="true" onclick="wish_update('{{ obj.id }}')"></i>
+                                {% else %}
+                                    <i class="far fa-star star-icon wish_flag_false" data-filled="false" onclick="wish_update('{{ obj.id }}')"></i>
+                                {% endif %}
+                            </td>
                             <td>{{ obj.name }}</td>
                             <td>{{ obj.region }}</td>
                             <td>{{ obj.total_quantity }}</td>
@@ -180,6 +190,25 @@
         location_form.find("#memo").val(memo);
         
         $("#edit_modal").modal('show')
+    }
+    
+    function wish_update(id) {
+        console.log('id', id)
+        
+        var formData = {
+            'id': id,
+            'model': 'Warehouse'
+        };
+        
+        $.ajax({
+            url: "{% url 'WishUpdate' %}",
+            type: "GET",
+            data: formData,
+            success: function (res) {
+                alert(res.message)
+                location.reload()
+            }
+        })
     }
 </script>
 </body>
