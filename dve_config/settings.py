@@ -138,9 +138,9 @@ WSGI_APPLICATION = 'dve_config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'wms',
-        'USER': 'groupmaster',
-        'PASSWORD': 'qing1105!@',
+        'NAME': 'cube',
+        'USER': 'root',
+        'PASSWORD': 'hong11',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
@@ -242,8 +242,8 @@ CELERY_ENABLE_UTC = False
 # url
 # MEDIA_URL = 'http://175.212.116.77:8238/data/'  # For debug
 # MEDIA_URL = 'http://mes.seoulsoft.kr/data/'  # For debug
-MEDIA_URL = 'http://127.0.0.1:8000/data/'  # For debug
-# MEDIA_URL = 'http://192.168.0.122:8270/data/'  # For debug
+# MEDIA_URL = 'http://127.0.0.1:8000/data/'  # For debug
+MEDIA_URL = 'http://118.44.218.236:8001/data/'  # For debug
 MEDIA_ROOT = os.path.join(BASE_DIR, 'data')
 
 
