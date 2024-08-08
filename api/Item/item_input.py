@@ -1,5 +1,7 @@
 import traceback
 import json
+
+from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.views import View
@@ -247,6 +249,22 @@ class ItemInFilter(View):
         elif end_date:
             end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
             qs = qs.filter(in_at__date__lte=end_date)
+
+        # 품목번호 또는 품목명 필터
+        product_name_num = request.GET.get('product_name_num')
+        if product_name_num:
+            qs = qs.filter(
+                Q(in_item__item_code__icontains=product_name_num) |
+                Q(in_item__item_name__icontains=product_name_num)
+            )
+
+        # 입고번호 또는 입고처명 필터
+        location_input = request.GET.get('location_input')
+        if location_input:
+            qs = qs.filter(
+                Q(in_no__icontains=location_input) |
+                Q(in_custom__c_name__icontains=location_input)
+            )
 
         qs = qs.select_related('in_item', 'in_custom', 'uprice', 'wh')
 

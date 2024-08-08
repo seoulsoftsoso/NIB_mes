@@ -273,7 +273,7 @@
                             data: {item_id: selectedData[0]},
                             success: function (res) {
                                 let data = res.result[0]
-                                console.log('data', data)
+                                //console.log('data', data)
                                 
                                 updateSelect2('location_select', data.out_wh_id, data.out_wh__name);
                                 updateSelect2('init_place_select', data.out_custom_id, data.out_custom__c_name);
@@ -314,7 +314,7 @@
                                     selectedData.push(data[13]);
                                 }
                             });
-                            console.log('selectedData', selectedData)
+                            //console.log('selectedData', selectedData)
 
                             $.ajax({
                                 url: "{% url 'OutputUpdate' %}",
@@ -325,7 +325,7 @@
                                 },
                                 headers: {"X-CSRFToken": '{{ csrf_token }}'},
                                 success: function (res) {
-                                    console.log(res)
+                                    //console.log(res)
                                     alert(res.message)
                                     send_filter()
                                 },
@@ -368,7 +368,7 @@
 
         // 필터 입력 이벤트 리스너
         $('#product_name_num, #locationInput').on('keyup change', function () {
-            filterTable();
+            send_filter();
         });
         
         $('.item-in-checkbox, .item-type-checkbox, .warehouse-checkbox').change(function() {
@@ -381,6 +381,8 @@
             var itemInFilter = [];
             var itemTypeFilter = [];
             var warehouseFilter = [];
+            var product_name_num = $('#product_name_num').val().toLowerCase();
+            var locationInput = $('#locationInput').val().toLowerCase();
 
             // 각 체크박스 그룹의 선택된 값들을 수집
             $('.item-in-checkbox:checked').each(function () {
@@ -401,49 +403,19 @@
                     'item_type_filter': itemTypeFilter.join(','),
                     'warehouse_filter': warehouseFilter.join(','),
                     'start_date': start_date,
-                    'end_date': end_date
+                    'end_date': end_date,
+                    'product_name_num': product_name_num,
+                    'location_input': locationInput
                 },
                 success: function (response) {
-                    console.log(response);
-                    let drawData = formatData(response.result)
-                    material_table.rows().remove().draw();
-                    material_table.rows.add(drawData).draw();
+                    let drawData = formatData(response.result);
+                    material_table.clear().rows.add(drawData).draw();
                 },
                 error: function (xhr, status, error) {
                     alert("오류가 발생했습니다: " + xhr.responseJSON.error);
                 }
             });
             
-        }
-
-        function filterTable() {
-            var product_name_num = $('#product_name_num').val().toLowerCase();
-            var locationInput = $('#locationInput').val().toLowerCase();
-
-            // DataTable 필터링
-            material_table.rows().every(function () {
-                var data = this.data();
-                var showRow = true;
-
-                // 검색어 필터링
-                if (product_name_num && data[6].toLowerCase().indexOf(product_name_num) === -1 && data[7].toLowerCase().indexOf(product_name_num) === -1) {
-                    showRow = false;
-                }
-
-                if (locationInput && data[4].toLowerCase().indexOf(locationInput) === -1 && data[5].toLowerCase().indexOf(locationInput) === -1) {
-                    showRow = false;
-                }
-
-                // 행 표시 여부 결정
-                if (showRow) {
-                    this.node().style.display = '';
-                } else {
-                    this.node().style.display = 'none';
-                }
-            });
-
-            // DataTable 다시 그리기
-            material_table.draw();
         }
         
         material_table.on('change', 'input[type="checkbox"]', function() {
