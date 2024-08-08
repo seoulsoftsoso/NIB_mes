@@ -155,28 +155,12 @@
     });
     
     function delete_btn(id) {
-        console.log('id', id)
         const formData = new FormData();
         formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
         formData.append('type', 'D');
         formData.append('wh_id', id);
         
-        if (confirm(`위치를 삭제하시면 해당 위치에 포함된 재고가 모두 삭제됩니다\n 정말 삭제하시겠습니까?`) === true) {    //확인
-
-            $.ajax({
-                url: "{% url 'WarehouseUpdate' %}",
-                type: "POST",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (res) {
-                    alert(res.message)
-                    location.reload()
-                },
-            })
-        } else {   //취소
-            return false;
-        }
+        SweetConfirmDelete("{% url 'WarehouseUpdate' %}", "POST", formData)
     }
 
     function edit_btn(id, name, region, rack_name, row, col, memo) {
@@ -193,7 +177,7 @@
     }
     
     function wish_update(id) {
-        console.log('id', id)
+        //console.log('id', id)
         
         var formData = {
             'id': id,

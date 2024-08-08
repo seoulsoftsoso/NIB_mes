@@ -17,14 +17,14 @@ class WishUpdate(View):
                 customer.wish_flag = not customer.wish_flag
                 customer.save()
 
-                return JsonResponse({'success': True, 'message': msg_edit_ok})
+                return JsonResponse({'success': True, 'message': msg_cre_ok})
 
             elif model_type == 'Warehouse':
                 warehouse = Warehouse.objects.get(id=request.GET.get('id'))
                 warehouse.wish_flag = not warehouse.wish_flag
                 warehouse.save()
 
-                return JsonResponse({'success': True, 'message': msg_edit_ok})
+                return JsonResponse({'success': True, 'message': msg_cre_ok})
 
             else:
                 return JsonResponse({'error': 'Invalid type provided.'}, status=400)

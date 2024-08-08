@@ -157,22 +157,7 @@
         formData.append('type', 'D');
         formData.append('user_id', id);
         
-        if (confirm("정말 삭제하시겠습니까?") === true) {    //확인
-
-            $.ajax({
-                url: "{% url 'MemberUpdate' %}",
-                type: "POST",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (res) {
-                    alert(res.message)
-                    location.reload()
-                },
-            })
-        } else {   //취소
-            return false;
-        }
+        SweetConfirmDelete("{% url 'MemberUpdate' %}", "POST", formData)
     }
 </script>
 </body>

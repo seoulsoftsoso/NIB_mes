@@ -264,30 +264,13 @@
     
     // Item 삭제
     function delete_item() {
+        const formData = new FormData();
 
-        if (confirm("정말 삭제하시겠습니까??") === true) {    //확인
-            const formData = new FormData();
-
-            formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
-            formData.append('type', 'D');
-            formData.append('item_id', select_item);
-
-            console.log('formData', formData)
-
-            $.ajax({
-                url: "{% url 'update_item' %}",
-                type: "POST",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function () {
-                    alert('삭제 되었습니다.')
-                    drawData()
-                },
-            })
-        } else {   //취소
-            return false;
-        }
+        formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
+        formData.append('type', 'D');
+        formData.append('item_id', select_item);
+        
+        SweetConfirmDelete("{% url 'update_item' %}", "POST", formData,)
     }
 
     // Item 업데이트

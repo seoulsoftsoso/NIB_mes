@@ -27,3 +27,7 @@ button {
     color: white !important;
     background-color: #284e74; /* 선택된 메뉴의 배경색 */
 }
+
+.swal2-modal {
+    grid-row: 1 !important;
+}

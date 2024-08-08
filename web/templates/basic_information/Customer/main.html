@@ -150,28 +150,12 @@
     });
     
     function delete_btn(id) {
-        console.log('id', id)
         const formData = new FormData();
         formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
         formData.append('type', 'D');
         formData.append('c_id', id);
         
-        if (confirm("정말 삭제하시겠습니까?") === true) {    //확인
-
-            $.ajax({
-                url: "{% url 'CustomerUpdate' %}",
-                type: "POST",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (res) {
-                    alert(res.message)
-                    location.reload()
-                },
-            })
-        } else {   //취소
-            return false;
-        }
+        SweetConfirmDelete("{% url 'CustomerUpdate' %}", "POST", formData)
     }
 
     function edit_btn(id, c_name, business_num, business_type, business_sort, address, owner_name, official_tel, official_email, manager_tel, manager_email, memo) {
@@ -192,7 +176,7 @@
     }
     
     function wish_update(id) {
-        console.log('id', id)
+        //console.log('id', id)
         
         var formData = {
             'id': id,
