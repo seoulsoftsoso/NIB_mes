@@ -69,18 +69,6 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <h4 class="card-title mb-5">상세 정보</h4>
-                        {% if user_permissions == "Admin" or user_permissions == "Member" %}
-                        <div class="dropdown mb-0" id="detail_dropdown" style="display: none">
-                            <a class="btn btn-link text-muted mt-n2" role="button" data-bs-toggle="dropdown"
-                               aria-haspopup="true" aria-expanded="false">
-                                <i class="mdi mdi-dots-vertical font-size-20"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end" style="">
-                                <a class="dropdown-item" onclick="edit_item()">조정</a>
-                                <a class="dropdown-item" onclick="move_item()">이동</a>
-                            </div>
-                        </div>
-                        {% endif %}
                     </div>
                     {% csrf_token %}
                     <div id="item-detail">
@@ -213,6 +201,12 @@
                 </tr>
             </tbody>
         </table>
+        {% if user_permissions == "Admin" or user_permissions == "Member" %}
+        <div class="d-flex justify-content-center pt-5">
+            <button type="button" class="btn btn-success waves-effect waves-light me-3" style="width: 15%" onclick="edit_item()">조정</button>
+            <button type="button" class="btn btn-info waves-effect waves-light ms-3" style="width: 15%" onclick="move_item()">이동</button>
+        </div>
+        {% endif %}
     </div>
     `;
         $('#item-detail').html(detailHtml);
@@ -227,7 +221,7 @@
     
     // 이동 버튼
     function move_item() {
-        console.log('detail_item_data', detail_item_data)
+        // console.log('detail_item_data', detail_item_data)
         $.ajax({
             url: "{% url 'GetWarehouse' %}",
             type: "GET",

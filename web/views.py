@@ -3,6 +3,7 @@ from django.db.models import Prefetch, Sum
 from django.db.models.functions import Coalesce
 from django.shortcuts import render
 
+from api.Delivery.delivery_api import *
 from api.Item.common import get_item_data
 from api.base.base_form import enterprise_fm
 from api.models import MenuMaster, ItemMaster, UnitPrice, ItemIn, Warehouse, ItemOut, CustomerMaster, UserMaster
@@ -169,6 +170,14 @@ def warehouse_info(request):
 
 
 def error_page(request):
-    context ={}
+    context = {}
     return render(request, 'error_404.html', context)
 
+
+def delivery_page(request):
+    result = DeliveryList()
+    DeliveryTrack()
+    context = {
+        'result': result
+    }
+    return render(request, 'delivery/main.html', context)

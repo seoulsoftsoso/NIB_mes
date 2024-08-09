@@ -164,6 +164,8 @@ urlpatterns = [
                 path('item/add/', ItemAdd.as_view(), name='ItemAdd'),  # 품목 추가
                 path('item/update/', Update_Item.as_view(), name='update_item'),
 
+                # 출하 관리
+                path('ordering_ex/ordering_export_status/', delivery_page, name='delivery_page'),
 
 
                 # 에러
