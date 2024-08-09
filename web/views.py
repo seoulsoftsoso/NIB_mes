@@ -180,4 +180,4 @@ def delivery_page(request):
     context = {
         'result': result
     }
-    return render(request, 'delivery/main.html', context)
+    return render(request, 'Delivery/main.html', context)
