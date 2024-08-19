@@ -56,7 +56,7 @@ def UserBasedInfo(request):
     context = {
         'result': qs
     }
-    return render(request, 'Setting/Member/user_based_info.html', context)
+    return render(request, 'Setting/Member/main.html', context)
 
 
 def DeptMgmt(request):

@@ -44,6 +44,7 @@
             </div>
 
             <div class="modal-body">
+                <form id="init_form" class="needs-validation" novalidate>
                 {% csrf_token %}
                     <div class="row justify-content-center">
                         <div class="row">
@@ -51,8 +52,8 @@
                                 <div class="form-group row align-items-center">
                                     <label for="location_select select2" class="col-sm-2 col-form-label">위치 <span class="red_font">*</span></label>
                                     <div class="col-sm-6">
-                                        <select class="form-control" id="location_select" name="location_select">
-                                            
+                                        <select class="form-control" id="location_select" name="location_select" required>
+                                            <option value="" disabled selected hidden>위치를 선택해주세요</option>
                                         </select>
                                     </div>
                                 </div>
@@ -75,7 +76,7 @@
                                 <div class="form-group row align-items-center">
                                     <label for="location_select" class="col-sm-2 col-form-label">입고처 <span class="red_font">*</span></label>
                                     <div class="col-sm-6">
-                                        <select class="form-control" name="init_place_select" id="init_place_select">
+                                        <select class="form-control" name="init_place_select" id="init_place_select" required>
                                             
                                         </select>
                                     </div>
@@ -90,7 +91,7 @@
                                         <div class="input-group" id="modal_datepicker2">
                                             <input type="text" class="form-control" placeholder="입고(예정)일"
                                                    data-date-format="yyyy-mm-dd" data-date-container='#modal_datepicker2'
-                                                   data-provide="datepicker" id="due_date" name="due_date"/>
+                                                   data-provide="datepicker" id="due_date" name="due_date" required/>
     
                                             <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
                                         </div><!-- input-group -->
@@ -130,13 +131,13 @@
                                                 <tbody id="tableBody">
                                                 <tr data-id="1">
                                                     <td>
-                                                        <select class="form-control item_select" name="item_select" id="item_select">
+                                                        <select class="form-control item_select" name="item_select" id="item_select" required>
                                                             
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <select class="form-control" name="in_status" id="in_status">
-                                                            <option disabled selected>입고상태를 선택 해주세요</option>
+                                                        <select class="form-control" name="in_status" id="in_status" required>
+                                                            <option value="" disabled selected hidden>입고상태를 선택 해주세요</option>
                                                             <option value="F">입고 완료</option>
                                                             <option value="P">부분 입고</option>
                                                             <option value="W">입고 대기</option>
@@ -147,11 +148,11 @@
                                                       <input type="text" class="form-control" name="current_quan" id="current_quan" readonly 
                                                              data-toggle="tooltip" data-placement="top" title="현재 재고는 '재고조정' 메뉴에서만 수정이 가능합니다.">
                                                     </td>
-                                                    <td><input type="number" class="form-control" name="unit_price" id="unit_price"></td>
-                                                    <td><input type="number" class="form-control" name="in_quan" id="in_quan"></td>
+                                                    <td><input type="number" class="form-control" name="unit_price" id="unit_price" required></td>
+                                                    <td><input type="number" class="form-control" name="in_quan" id="in_quan" required></td>
                                                     <td>
-                                                        <select class="form-control status_select" id="in_type" name="in_type">
-                                                            <option disabled selected>속성을 선택 해주세요</option>
+                                                        <select class="form-control status_select" id="in_type" name="in_type" required>
+                                                            <option value="" disabled selected hidden>속성을 선택 해주세요</option>
                                                             <option value="P">구매 입고</option>
                                                             <option value="M">생산 입고</option>
                                                             <option value="C">재고 조정</option>
@@ -177,13 +178,13 @@
                                             <template id="newRowTemplate">
                                                 <tr data-id="1">
                                                     <td>
-                                                        <select class="form-control item_select" name="item_select" id="item_select">
+                                                        <select class="form-control item_select" name="item_select" id="item_select" required>
                                                             
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <select class="form-control" name="in_status" id="in_status">
-                                                            <option disabled selected>입고상태를 선택 해주세요</option>
+                                                        <select class="form-control" name="in_status" id="in_status" required>
+                                                            <option value="" disabled selected hidden>입고상태를 선택 해주세요</option>
                                                             <option value="F">입고 완료</option>
                                                             <option value="P">부분 입고</option>
                                                             <option value="W">입고 대기</option>
@@ -194,11 +195,11 @@
                                                       <input type="text" class="form-control" name="current_quan" id="current_quan" readonly 
                                                              data-toggle="tooltip" data-placement="top" title="현재 재고는 '재고 조정' 메뉴에서만 수정이 가능합니다.">
                                                     </td>
-                                                    <td><input type="text" class="form-control" name="unit_price" id="unit_price"></td>
-                                                    <td><input type="text" class="form-control" name="in_quan" id="in_quan"></td>
+                                                    <td><input type="text" class="form-control" name="unit_price" id="unit_price" required></td>
+                                                    <td><input type="text" class="form-control" name="in_quan" id="in_quan" required></td>
                                                     <td>
-                                                        <select class="form-control status_select" id="in_type" name="in_type">
-                                                            <option disabled selected>속성을 선택 해주세요</option>
+                                                        <select class="form-control status_select" id="in_type" name="in_type" required>
+                                                            <option value="" disabled selected hidden>속성을 선택 해주세요</option>
                                                             <option value="P">구매 입고</option>
                                                             <option value="M">생산 입고</option>
                                                             <option value="C">재고 조정</option>
@@ -237,6 +238,7 @@
                             </div>
                         </div>
                     </div>
+                </form>
             </div>
             {% include 'Material/init_mgmt/plus_location_modal.html' %}
             {% include 'Material/init_mgmt/plus_customer_modal.html' %}
@@ -271,7 +273,7 @@
 
         // item_select 초기화
         function initSelect2(element) {
-            $(element).select2({
+            $(element).select({
                 dropdownParent: $('#exampleModalFullscreen'),
                 data: function () {
                     return itemData || [];
@@ -283,11 +285,11 @@
         function loadAndUpdateSelect2(element) {
             if (itemData) {
                 console.log('item', itemData)
-                updateSelect2WithData(element, itemData);
+                updateSelectWithData(element, itemData);
             } else {
                 fetchItemData().done(function (res) {
                     itemData = res.results;
-                    updateSelect2WithData(element, itemData);
+                    updateSelectWithData(element, itemData);
                 }).fail(function (xhr, status, error) {
                     console.error("Error fetching items:", error);
                 });
@@ -341,7 +343,8 @@
         });
 
         // 행 추가 클릭 시 테이블 행 추가
-        $('#addRowBtn').click(function () {
+        $('#addRowBtn').click(function (e) {
+            e.preventDefault()
             var template = $('#newRowTemplate').html();
             var $newRow = $(template);
 
@@ -357,61 +360,41 @@
             initSelect2($newSelect);
             loadAndUpdateSelect2($newSelect);
         });
-        
-        
-        // select option '품목 추가' 클릭 시 모달창 팝업
-        $('.item_select').change(function () {
-            if ($(this).val() === 'add_item') {
-                $('#item_modal').modal('show')
-                $(this).val('Select');
-            }
-        });
+
 
         // select2 데이터 업데이트 함수
-        function updateSelect2WithData(element, data) {
+        function updateSelectWithData(element, data) {
             var $select = $(element);
             // 기존 옵션 제거
             $select.empty();
-        
+
             // "품목을 선택해주세요" 옵션 추가
             var $defaultOption = new Option("품목을 선택해주세요", "", true, true);
             $defaultOption.disabled = true;
             $select.append($defaultOption);
-        
+
             // 받은 데이터로 옵션 추가
             $.each(data, function (index, item) {
                 var optionText = item.item_name;
-                var option = new Option(optionText, item.id, false, false);
+                var option = new Option(optionText + ' (' + item.item_code + ')', item.id, false, false);
                 $(option).data('item', item);
                 $select.append(option);
             });
-        
+
             // "품목 추가" 옵션 그룹 추가
             var $optgroup = $('<optgroup label="-------------------------"></optgroup>');
             var $addItemOption = $('<option value="add_item">+ 품목 추가</option>');
             $optgroup.append($addItemOption);
             $select.append($optgroup);
-        
-            // Select2에 변경사항 알림
-            $select.trigger('change');
         }
         
         // item_select2 선택 이벤트 처리
-        $(document).on('select2:select', '.item_select', function (e) {
-            var data = e.params.data;
+        $(document).on('change', '.item_select', function (e) {
             var $row = $(this).closest('tr');
-            
-            if (data.id === 'add_item') {
-                console.log("품목 추가 옵션 선택됨");
-                // 품목 추가 모달 열기 등의 로직
-                $(this).val(null).trigger('change');
-            } else {
-                var item = $(e.params.data.element).data('item');
-                if (item) {
-                    $row.find('[name="current_quan"]').val(item.current_quan);
-                    $row.find('[name="unit_price"]').val(item.unit_prise_item__unit_price);
-                    // 다른 필드들도 필요에 따라 추가
-                }
+            var item = $(this).find('option:selected').data('item');
+            if (item) {
+                $row.find('[name="current_quan"]').val(item.current_quan);
+                $row.find('[name="unit_price"]').val(item.unit_prise_item__unit_price);
             }
         });
 
@@ -425,13 +408,61 @@
             initSelect2(this);
             loadAndUpdateSelect2(this);
         });
+        
+        // 위치 select
+        $.ajax({
+            url: "{% url 'GetWarehouse' %}",
+            dataType: 'json',
+            success: function (data) {
+                var $locationSelect = $('#location_select');
+                $locationSelect.empty();
+                $locationSelect.append('<option value="" disabled selected hidden>위치를 선택해주세요</option>');
 
+                // 옵션 생성
+                data.result.forEach(function (location) {
+                    $locationSelect.append(new Option(location.name, location.id));
+                });
 
+                var $boundaryGroup = $('<optgroup label="----------------"></optgroup>');
+                $locationSelect.append($boundaryGroup);
+
+                // 추가 옵션
+                $locationSelect.append(new Option('+ 위치 추가', 'add_location'));
+            },
+            error: function (xhr, status, error) {
+                console.error("데이터를 가져오는 중 오류가 발생했습니다: ", error);
+            }
+        });
+        
+        // 입고처 select
+        $.ajax({
+            url: "{% url 'GetCustomer' %}",
+            dataType: 'json',
+            success: function (data) {
+                var $CustomerSelect = $('#init_place_select');
+                $CustomerSelect.empty();
+                $CustomerSelect.append('<option value="" disabled selected hidden>입고처를 선택해주세요</option>');
+
+                // 옵션 생성
+                data.result.forEach(function (customer) {
+                    $CustomerSelect.append(new Option(customer.c_name, customer.id));
+                });
+
+                var $boundaryGroup = $('<optgroup label="----------------"></optgroup>');
+                $CustomerSelect.append($boundaryGroup);
+
+                // 추가 옵션
+                $CustomerSelect.append(new Option('+ 거래처 추가', 'add_customer'));
+            },
+            error: function (xhr, status, error) {
+                console.error("데이터를 가져오는 중 오류가 발생했습니다: ", error);
+            }
+        });
     })
     
      // 위치 select2 초기화 및 데이터 생성
+    /*
     $('#location_select').select2({
-        placeholder: '위치를 선택해주세요',
         allowClear: true,
         minimumInputLength: 0,
         dropdownParent: $('#exampleModalFullscreen'),
@@ -462,6 +493,7 @@
             },
         }
     });
+    */
    
     // select option '위치 추가' 클릭 시 모달창 팝업
     $('#location_select').change(function () {
@@ -471,7 +503,9 @@
         }
     });
     
+    
     // 입고처 select2 초기화 및 데이터 생성
+    /*
     $('#init_place_select').select2({
         placeholder: '입고처를 선택해주세요',
         allowClear: true,
@@ -504,6 +538,8 @@
             }
         },
     });
+    */
+    
 
     // select option '거래처 추가' 클릭 시 모달창 팝업
     $('#init_place_select').change(function () {
@@ -513,12 +549,28 @@
         }
     });
 
+    // select option '품목 추가' 클릭 시 모달창 팝업
+    $('.item_select').change(function () {
+        if ($(this).val() === 'add_item') {
+            $('#item_modal').modal('show')
+            $(this).val('Select');
+        }
+    });
 
-     function add_init() {
+
+    function add_init() {
+
+        var form = document.getElementById('init_form');
+
+        if (form.checkValidity() === false) {
+            form.classList.add('was-validated');
+            return false
+        }
+
         var tableData = [];
         var formData = new FormData();
         var item_id = $("#ItemInHidden").val()
-         console.log('item_idid', item_id)
+        console.log('item_idid', item_id)
 
         // 테이블 데이터 수집
         $('#tableBody tr').each(function (index) {
@@ -544,9 +596,9 @@
 
         // 테이블 데이터를 JSON 문자열로 변환하여 FormData에 추가
         formData.append('tableData', JSON.stringify(tableData));
-        
+
         if (item_id) {
-            formData.append('item_in_id', item_id);    
+            formData.append('item_in_id', item_id);
         }
 
         // 다른 input 요소 데이터 수집 (예시)
@@ -556,7 +608,7 @@
         formData.append('due_date', $('#due_date').val());
         formData.append('immediately_check', $('#immediately_check').val());
         formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
-         
+
         $.ajax({
             url: "{% url 'InputCreate' %}",
             type: "POST",

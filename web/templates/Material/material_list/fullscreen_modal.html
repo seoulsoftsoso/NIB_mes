@@ -19,7 +19,7 @@
                     <h6>품목 정보</h6>
                 </div>
                 <hr class="my-3" style="border-color: black">
-                <form id="item_form">
+                <form id="item_form" class="needs-validation" novalidate>
                     {% csrf_token %}
                     <div class="card">
                         <div class="row">
@@ -27,7 +27,7 @@
                             <div class="mb-3 row">
                                 <label for="example-text-input" class="col-md-1 col-form-label">품목명<span class="red_font">*</span></label>
                                 <div class="col-md-4">
-                                    <input class="form-control" type="text" id="item_name" name="item_name" placeholder="품목 이름을 입력해주세요">
+                                    <input class="form-control" type="text" id="item_name" name="item_name" placeholder="품목 이름을 입력해주세요" required>
                                 </div>
                                 
                                 <label for="example-text-input" class="col-md-1 col-form-label ms-3">바코드</label>
@@ -44,7 +44,7 @@
                             <div class="mb-3 row">
                                 <label for="example-text-input" class="col-md-1 col-form-label">품목코드<span class="red_font">*</span></label>
                                 <div class="col-md-4">
-                                    <input class="form-control" type="text" id="item_code" name="item_code" placeholder="품목 코드를 입력해주세요">
+                                    <input class="form-control" type="text" id="item_code" name="item_code" placeholder="품목 코드를 입력해주세요" required>
                                 </div>
                                 
                                 <label for="example-text-input" class="col-md-1 col-form-label ms-3">첨부</label>
@@ -60,8 +60,8 @@
                             <div class="mb-3 row">
                                 <label for="example-text-input" class="col-md-1 col-form-label">품목유형<span class="red_font">*</span></label>
                                 <div class="col-md-4">
-                                    <select class="form-select" id="item_type" name="item_type">
-                                        <option disabled selected>품목 유형을 선택 해주세요.</option>
+                                    <select class="form-select" id="item_type" name="item_type" required>
+                                        <option value="" disabled selected hidden>유형을 선택하세요</option>
                                         <option value="P">제품</option>
                                         <option value="S">반제품</option>
                                         <option value="R">원재료</option>
@@ -84,7 +84,7 @@
                             <div class="mb-3 row">
                                 <label for="example-text-input" class="col-md-1 col-form-label">단가<span class="red_font">*</span></label>
                                 <div class="col-md-4">
-                                    <input class="form-control" type="text" id="item_unit_price" name="item_unit_price" placeholder="구매단가 또는 판매단가를 입력해주세요">
+                                    <input class="form-control" type="text" id="item_unit_price" name="item_unit_price" placeholder="구매단가 또는 판매단가를 입력해주세요" required>
                                 </div>
                             </div>
                             
@@ -103,17 +103,17 @@
                             <div class="mb-3 row">
                                 <label for="example-text-input" class="col-md-1 col-form-label">카테고리<span class="red_font">*</span></label>
                                 <div class="col-md-3">
-                                    <input class="form-control" type="text" id="item_category" name="item_category" placeholder="카테고리">
+                                    <input class="form-control" type="text" id="item_category" name="item_category" placeholder="카테고리" required>
                                 </div>
                                 
                                 <label for="example-text-input" class="col-md-1 col-form-label">모델<span class="red_font">*</span></label>
                                 <div class="col-md-3">
-                                    <input class="form-control" type="text" id="item_model" name="item_model" placeholder="모델">
+                                    <input class="form-control" type="text" id="item_model" name="item_model" placeholder="모델" required>
                                 </div>
                                 
                                 <label for="example-text-input" class="col-md-1 col-form-label">규격<span class="red_font">*</span></label>
                                 <div class="col-md-3">
-                                    <input class="form-control" type="text" id="item_standard" name="item_standard" placeholder="규격">
+                                    <input class="form-control" type="text" id="item_standard" name="item_standard" placeholder="규격" required>
                                 </div>
                             </div>
                             
@@ -130,12 +130,12 @@
                             <div class="mb-3 row">
                                 <label for="example-text-input" class="col-md-1 col-form-label">초기수량<span class="red_font">*</span></label>
                                 <div class="col-md-3">
-                                    <input class="form-control" type="text" id="quan" name="quan" placeholder="초기 수량을 입력해주세요">
+                                    <input class="form-control" type="text" id="quan" name="quan" placeholder="초기 수량을 입력해주세요" required>
                                 </div>
                                 
                                 <label for="example-text-input" class="col-md-1 col-form-label">안전재고<span class="red_font">*</span></label>
                                 <div class="col-md-3">
-                                    <input class="form-control" type="text" id="safe_quan" name="safe_quan" placeholder="안전 재고 수량을 입력해주세요">
+                                    <input class="form-control" type="text" id="safe_quan" name="safe_quan" placeholder="안전 재고 수량을 입력해주세요" required>
                                 </div>
                             </div>
                         </div>
@@ -156,30 +156,38 @@
 </div>
 
 <script>
-$("#item_add_btn").click(function (e) {
-    e.preventDefault();
-    var formData = new FormData($("#item_form")[0]);
-    
-    // 기존 아이템 ID가 있으면 수정, 없으면 생성
-    var itemId = $("#item_id").val();
-    formData.append('action', itemId ? 'update' : 'create');
-    if (itemId) {
-        formData.append('item_id', itemId);
-    }
-
-    $.ajax({
-        url: "{% url 'ItemAdd' %}",
-        type: "post",
-        data: formData,
-        processData: false,
-        contentType: false,  
-        success: function (response) {
-            alert(response.message);
-            location.reload();
-        },
-        error: function(xhr, status, error) {
-            alert("오류가 발생했습니다: " + xhr.responseJSON.error);
+    $("#item_add_btn").click(function (e) {
+        e.preventDefault();
+        
+        var item_form = document.getElementById('item_form');
+        
+        if (item_form.checkValidity() === false) {
+            item_form.classList.add('was-validated');
+            return false
         }
+        
+        var formData = new FormData($("#item_form")[0]);
+
+        // 기존 아이템 ID가 있으면 수정, 없으면 생성
+        var itemId = $("#item_id").val();
+        formData.append('action', itemId ? 'update' : 'create');
+        if (itemId) {
+            formData.append('item_id', itemId);
+        }
+
+        $.ajax({
+            url: "{% url 'ItemAdd' %}",
+            type: "post",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                alert(response.message);
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+                alert("오류가 발생했습니다: " + xhr.responseJSON.error);
+            }
+        });
     });
-});
 </script>
