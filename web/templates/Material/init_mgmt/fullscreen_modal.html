@@ -38,7 +38,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalFullscreenLabel">입고서</h5>
                 <div>
-                    <button class="btn btn-light waves-effect ">초기화</button>
+                    <button class="btn btn-light waves-effect" onclick="reset_form()">초기화</button>
                     <button type="button" class="btn-close ms-5" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
@@ -249,8 +249,16 @@
 </div>
 <script src="{% static 'js/common.js' %}"></script>
 <script>
+    function getTodayDate() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = ('0' + (today.getMonth() + 1)).slice(-2);
+        const day = ('0' + today.getDate()).slice(-2);
+        return year + '-' + month + '-' + day;
+    }
     
     $(document).ready(function () {
+        $('#fixed_date').val(getTodayDate());
         let itemData = null;
 
         $(function () {
@@ -301,17 +309,7 @@
             $('.select2-search__field').focus();
         });
 
-        function getTodayDate() {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = ('0' + (today.getMonth() + 1)).slice(-2);
-            const day = ('0' + today.getDate()).slice(-2);
-            return year + '-' + month + '-' + day;
-        }
-
-        $('#fixed_date').val(getTodayDate());
-
-
+        
         // 첨부파일
         $('#tableBody').on('change', '.file-upload', function (event) {
             const fileInput = $(this);
@@ -629,6 +627,22 @@
             }
         })
     }
-   
+
+    function reset_form() {
+        var form = document.getElementById('init_form');
+        form.reset();
+
+        // 동적으로 추가된 행 제거
+        $('#tableBody').find('tr').not(':first').remove(); // 첫 번째 행을 제외한 나머지 행 제거
+
+        // 업로드 초기화
+        $('.file-upload').each(function () {
+            $(this).val(''); // 파일 입력 필드 값 초기화
+            $(this).siblings('.file-name').text(''); // 파일 이름 초기화
+            $(this).siblings('.bx-upload-label').find('i').attr('class', 'bx bx-upload'); // 아이콘 초기화
+        });
+        
+        $('#fixed_date').val(getTodayDate());
+    }
     
 </script>
