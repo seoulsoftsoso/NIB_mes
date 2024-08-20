@@ -194,7 +194,7 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
 
     def __str__(self):
-        return self.name
+        return self.username
 
 
 class MenuMaster(models.Model):

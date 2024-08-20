@@ -31,7 +31,7 @@ class MenuHandler(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # 해당 유저의 메뉴 정보 가져오기
-        qs = MenuMaster.objects.filter(menuauth__user_id=self.request.user.id,
+        qs = MenuMaster.objects.filter(menuauth__user__enterprise_id=self.request.user.enterprise_id,
                                        menuauth__del_flag='N'
                                        ).annotate(alias=Coalesce('menuauth__alias', F('name'))
                                                   ).values('id', 'code', 'alias', 'path', 'type', 'comment', 'i_class'

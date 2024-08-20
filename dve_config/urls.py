@@ -115,8 +115,10 @@ urlpatterns = [
                 path('basic_information/item/', item_info, name='item_info'),
                 path('basic_information/wh_info/', warehouse_info, name='warehouse_info'),
                 # 멤버
+                path('member/create/', MemberCreate.as_view(), name='MemberCreate'),
                 path('member/update/', MemberUpdate.as_view(), name='MemberUpdate'),
                 path('get_department', GetDepartments.as_view(), name='GetDepartments'),
+                path('get_job_position', GetJobPositions.as_view(), name='GetJobPositions'),
 
                 # 거래처
                 path('customer/get', GetCustomer.as_view(), name='GetCustomer'),

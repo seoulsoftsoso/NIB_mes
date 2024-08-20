@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 
-                
+                <button class="btn btn-light waves-effect" onclick="search_btn()">조회</button>
                 
             </div>
         </div>
@@ -35,7 +35,15 @@
 </div> <!-- end row -->
 {% include 'footer.html' %}
 <script>
-    
+    function search_btn() {
+        $.ajax({
+            url:"http://apis.data.go.kr/1160100/service/GetCorpBasicInfoService_V2/getAffiliate_V2",
+            type:"GET",
+            success: function (res){
+                console.log(res)
+            }
+        })
+    }
 </script>
 </body>
 </html>

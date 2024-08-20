@@ -73,6 +73,7 @@
                     {% endfor %}
                     </tbody>
                 </table>
+                {% include 'Setting/Member/create_modal.html' %}
                 {% include 'Setting/Member/edit_modal.html' %}
             </div>
         </div>
@@ -101,6 +102,10 @@
                     attr: {
                         'data-bs-toggle': 'modal',
                         'data-bs-target': '#create_modal'
+                    },
+                    action: function (e, dt, node, config) {
+                        add_member_click()
+                        $('#create_modal').modal('show');
                     }
                 }
             ],
@@ -117,38 +122,66 @@
             }
         });
     });
-    
-    function edit_btn(id, username, department_position_id, auth, email, tel, etc) {
-        console.log(department_position_id)
+
+    function make_select_department(selectElement, selectedId) {
         $.ajax({
             url: "{% url 'GetDepartments' %}",
             type: "GET",
             success: function (res) {
-                var form = $("#user_form");
-                var select = form.find("#department_position");
-                select.empty();
+                selectElement.empty();
                 res.result.forEach(function (department) {
                     var option = $('<option></option>')
                         .attr('value', department.id)
                         .text(department.name);
-                    select.append(option);
+                    selectElement.append(option);
                 });
-                select.val(department_position_id);
-                form.find("#user_id").val(id);
-                form.find("#username").val(username);
-                form.find("#auth").val(auth);
-                form.find("#email").val(email);
-                form.find("#tel").val(tel);
-                form.find("#memo").val(etc);
-                $("#edit_modal").modal('show')
+                if (selectedId) {
+                    selectElement.val(selectedId);
+                }
             },
             error: function (xhr, status, error) {
                 alert('오류가 발생했습니다: ' + error);
             }
-        })
-      
-        
+        });
+    }
+    
+    function make_job_position_select(selectElement, selectedId) {
+        $.ajax({
+            url: "{% url 'GetJobPositions' %}",
+            type: "GET",
+            success: function (res) {
+                console.log('job', res)
+                selectElement.empty();
+                res.result.forEach(function (job) {
+                    var option = $('<option></option>')
+                        .attr('value', job.id)
+                        .text(job.name);
+                    selectElement.append(option);
+                });
+                if (selectedId) {
+                    selectElement.val(selectedId);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert('오류가 발생했습니다: ' + error);
+            }
+        });
+    }
 
+    function edit_btn(id, username, department_position_id, auth, email, tel, etc) {
+        var form = $("#user_form");
+        var select = form.find("#department_position");
+
+        // 부서
+        make_select_department(select, department_position_id);
+
+        form.find("#user_id").val(id);
+        form.find("#username").val(username);
+        form.find("#auth").val(auth);
+        form.find("#email").val(email);
+        form.find("#tel").val(tel);
+        form.find("#memo").val(etc);
+        $("#edit_modal").modal('show');
     }
     
     function delete_btn(id) {
@@ -158,6 +191,15 @@
         formData.append('user_id', id);
         
         SweetConfirmDelete("{% url 'MemberUpdate' %}", "POST", formData)
+    }
+    
+    function add_member_click() {
+        var form = $("#create_form");
+        var select = form.find("#add_department_position");
+        var job_select = form.find("#add_job_position")
+        make_select_department(select);
+        make_job_position_select(job_select)
+        $("#create_modal").modal('show')
     }
 </script>
 </body>

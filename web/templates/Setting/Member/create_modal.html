@@ -1,0 +1,179 @@
+{% load static %}
+<!-- sample modal content -->
+<div id="create_modal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalFullscreenLabel">위치 수정</h5>
+            </div>
+
+            <form id="create_form" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-xxl-6">
+                                <label class="form-label">이름 <span class="red_font">*</span></label>
+                                <input class="form-control form-required" type="text" id="add_username" name="add_username" placeholder="이름을 입력해주세요" required/>
+                            </div>
+                            
+                            <div class="col-xxl-6">
+                                <label class="form-label">아이디 <span class="red_font">*</span></label>
+                                <input class="form-control form-required" type="text" id="add_user_id" name="add_user_id" placeholder="아이디를 입력해주세요" required/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-xxl-6">
+                                <label class="form-label">비밀번호 <span class="red_font">*</span></label>
+                                <input class="form-control form-required" type="password" id="user_pwd" name="user_pwd" 
+                                       placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" required/>
+                            </div>
+                            
+                            <div class="col-xxl-6">
+                                <label class="form-label">비밀번호 확인 <span class="red_font">*</span></label>
+                                <input class="form-control form-required" type="password" id="check_pwd" name="check_pwd" oninput="checkPasswordMatch()"
+                                       placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" required/>
+                            </div>
+                            <p id="password-match-message" style="color: red;"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-xxl-6">
+                                <label class="form-label">입사일 <span class="red_font">*</span></label>
+                                <div class="input-group" id="employment_div">
+                                    <input type="text" class="form-control" placeholder="입사일"
+                                           data-date-format="yyyy-mm-dd" data-date-container='#employment_div'
+                                           data-provide="datepicker" id="employment_date" name="employment_date" required/>
+    
+                                    <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-xxl-6">
+                                <label class="form-label">직급</label>
+                                <select class="form-control" id="add_job_position" name="add_job_position" required>
+                                    
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-xxl-6">
+                                <label class="form-label">소속</label>
+                                <select class="form-control" id="add_department_position" name="add_department_position" required>
+                                    
+                                </select>
+                            </div>
+
+                            <div class="col-xxl-6">
+                                <label class="form-label">권한</label>
+                                <select class="form-control form-required" id="add_auth" name="add_auth" required>
+                                    <option disabled>유저의 권한을 선택해주세요.</option>
+                                    <option value="Admin">Admin</option>
+                                    <option value="Member">Member</option>
+                                    <option value="Viewer" selected>Viewer</option>
+                                </select>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-xxl-6">
+                                <label class="form-label">이메일</label>
+                                <input class="form-control" type="text" id="add_email" name="add_email" placeholder="이메일을 입력해주세요" required/>
+                            </div>
+                            
+                            <div class="col-xxl-6">
+                                <label class="form-label">전화번호</label>
+                                <input class="form-control" type="text" id="add_tel" name="add_tel" placeholder="전화번호를 입력해주세요" required/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="col-xxl-12">
+                            <label class="form-label">메모</label>
+                            <textarea class="form-control" type="text" id="add_memo" name="add_memo" placeholder="메모를 입력해주세요"></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-soft-primary waves-effect waves-light" id="add_btn">저장</button>
+                    <button type="button" class="btn btn-soft-secondary waves-effect waves-light" data-bs-dismiss="modal">취소</button>
+                </div>
+            </form>
+            
+        </div><!-- /.modal-content -->
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#employment_date").datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true // 선택 후 자동으로 닫히도록 설정
+        });
+    });
+    
+    $(document).ready(function () {
+        $('#create_form').on('submit', function (event) {
+            event.preventDefault();
+
+            // 유효성 검사
+            let isValid = true;
+            $(this).find('.form-control').each(function () {
+                // 메모 필드는 유효성 검사에서 제외
+                if ($(this).attr('id') !== 'add_memo' && $(this).val() === '') {
+                    $(this).addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $(this).removeClass('is-invalid').addClass('is-valid'); // valid-feedback 적용
+                }
+            });
+
+            if (isValid) {
+                let formData = $(this).serializeArray();
+                formData.push({name: 'csrfmiddlewaretoken', value: $('input[name=csrfmiddlewaretoken]').val()});
+                formData.push({name: 'type', value: 'E'});
+
+                $.ajax({
+                    url: "{% url 'MemberCreate' %}", 
+                    type: 'POST',
+                    data: formData,
+                    success: function (res) {
+                        alert(res.message);
+                        location.reload()
+                    },
+                    error: function (xhr, status, error) {
+                        alert('오류가 발생했습니다: ' + error);
+                    }
+                });
+            }
+        });
+    });
+
+    function checkPasswordMatch() {
+        var password1 = $("#user_pwd").val();
+        var password2 = $("#check_pwd").val();
+        var message = $("#password-match-message");
+        var submitButton = $("#add_btn");
+
+        if (password1 !== password2) {
+            message.html("비밀번호가 일치하지 않습니다.");
+            submitButton.disabled = true;
+        } else {
+            message.html("");
+            submitButton.disabled = false;
+        }
+    }
+</script>
