@@ -19,8 +19,9 @@
                             </div>
                             
                             <div class="col-xxl-6">
-                                <label class="form-label">아이디 <span class="red_font">*</span></label>
-                                <input class="form-control form-required" type="text" id="add_user_id" name="add_user_id" placeholder="아이디를 입력해주세요" required/>
+                                <label class="form-label">아이디 (이메일 입력) <span class="red_font">*</span></label>
+                                <input class="form-control form-required" type="email" id="add_user_id" name="add_user_id" placeholder="이메일 형식으로 입력해주세요"
+                                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="올바른 이메일 형식을 입력해주세요" required/>
                             </div>
                         </div>
                     </div>
@@ -89,7 +90,8 @@
                         <div class="row">
                             <div class="col-xxl-6">
                                 <label class="form-label">이메일</label>
-                                <input class="form-control" type="text" id="add_email" name="add_email" placeholder="이메일을 입력해주세요" required/>
+                                <input class="form-control" type="email" id="add_email" name="add_email" placeholder="이메일을 입력해주세요"
+                                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="올바른 이메일 형식을 입력해주세요" required/>
                             </div>
                             
                             <div class="col-xxl-6">
@@ -124,20 +126,51 @@
             autoclose: true // 선택 후 자동으로 닫히도록 설정
         });
     });
-    
+
     $(document).ready(function () {
+        // 이메일 유효성 검사 함수
+        function isValidEmail(email) {
+            var emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+            return emailRegex.test(email);
+        }
+
+        // 이메일 필드 유효성 검사 및 피드백 함수
+        function validateEmailField(field) {
+            if (!isValidEmail(field.val())) {
+                field.addClass('is-invalid');
+                field.removeClass('is-valid');
+                if (field.next('.invalid-feedback').length === 0) {
+                    field.after('<div class="invalid-feedback">올바른 이메일 형식을 입력해주세요.</div>');
+                }
+                return false;
+            } else {
+                field.removeClass('is-invalid');
+                field.addClass('is-valid');
+                field.next('.invalid-feedback').remove();
+                return true;
+            }
+        }
+
         $('#create_form').on('submit', function (event) {
             event.preventDefault();
 
             // 유효성 검사
             let isValid = true;
             $(this).find('.form-control').each(function () {
-                // 메모 필드는 유효성 검사에서 제외
-                if ($(this).attr('id') !== 'add_memo' && $(this).val() === '') {
-                    $(this).addClass('is-invalid');
-                    isValid = false;
-                } else {
-                    $(this).removeClass('is-invalid').addClass('is-valid'); // valid-feedback 적용
+                if ($(this).attr('id') !== 'add_memo') {
+                    if ($(this).val() === '') {
+                        $(this).addClass('is-invalid');
+                        isValid = false;
+                    } else {
+                        // 이메일 필드에 대한 추가 검사
+                        if ($(this).attr('id') === 'add_user_id' || $(this).attr('id') === 'add_email') {
+                            if (!validateEmailField($(this))) {
+                                isValid = false;
+                            }
+                        } else {
+                            $(this).removeClass('is-invalid').addClass('is-valid');
+                        }
+                    }
                 }
             });
 
@@ -146,8 +179,9 @@
                 formData.push({name: 'csrfmiddlewaretoken', value: $('input[name=csrfmiddlewaretoken]').val()});
                 formData.push({name: 'type', value: 'E'});
 
+                /*
                 $.ajax({
-                    url: "{% url 'MemberCreate' %}", 
+                    url: "{% url 'MemberCreate' %}",
                     type: 'POST',
                     data: formData,
                     success: function (res) {
@@ -158,7 +192,13 @@
                         alert('오류가 발생했습니다: ' + error);
                     }
                 });
+                */
             }
+        });
+
+        // 실시간 이메일 유효성 검사
+        $('#add_user_id, #add_email').on('input', function () {
+            validateEmailField($(this));
         });
     });
 
