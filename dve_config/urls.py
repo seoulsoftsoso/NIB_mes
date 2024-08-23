@@ -41,7 +41,7 @@ from api.base.menu_config import MenuHandler, getLmenuList, setMenuByUser
 
 from api.base.user_views import UserMasterViewSet, UserMasterSelectViewSet
 
-from api.user.views import CustomObtainAuthToken
+from api.user.views import CustomObtainAuthToken, UserCreate
 
 from web.views import *
 
@@ -95,6 +95,8 @@ urlpatterns = [
                 path('accounts/login/', login_page),
                 path('login/', login_page),
                 path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+                path('sign-up/', sign_up_page, name='sign_up_page'),
+                path('user-create/', UserCreate.as_view(), name='UserCreate'),
                 path('users/login/', custom_obtain_auth_token),
                 re_path(r'^data/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, }),
 

@@ -179,7 +179,7 @@
                 formData.push({name: 'csrfmiddlewaretoken', value: $('input[name=csrfmiddlewaretoken]').val()});
                 formData.push({name: 'type', value: 'E'});
 
-                /*
+                
                 $.ajax({
                     url: "{% url 'MemberCreate' %}",
                     type: 'POST',
@@ -192,7 +192,7 @@
                         alert('오류가 발생했습니다: ' + error);
                     }
                 });
-                */
+                
             }
         });
 

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+    <style>
+        #container {
+            max-width: 550px;
+        }
+
+        #multi-step-form {
+            overflow-x: hidden;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.step-1 {
+            display: block;
+        }
+        
+        .padding-top-25 {
+            padding-top: 25%;
+        }
+    </style>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Sign Up | Seoulsoft WMS Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Seoulsoft WMS Admin & Dashboard Template" name="description"/>
+    <meta content="Themesbrand" name="author"/>
+    {% load static %}
+    <!-- owl.carousel css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    {% include 'header.html' %}
+</head>
+<body class="bg-white d-flex align-items-center justify-content-center min-vh-100">
+<div class="content w-100">
+
+    <div id="container" class="container">
+        <div class="d-flex justify-content-center mb-5">
+            <img src="{% static 'img/seoul_logo.png' %}" style="width: 30%">
+        </div>
+
+        <form id="multi-step-form">
+            {% csrf_token %}
+            <div class="step step-1">
+                <div class="d-flex justify-content-center mb-5">
+                    <h2 class="text-black"><b>회원가입 약관동의</b></h2>
+                </div>
+                <div class="form-check mb-3 ms-5">
+                    <input class="form-check-input" type="checkbox" id="all_agree">
+                    <h5 class="form-check-label text-black">
+                        <b>모두 동의하기</b>
+                    </h5>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <hr style="border: 1px solid lightgray; width: 80%; transform: scaleY(0.5);">
+                </div>
+
+                {# 체크박스 #}
+                <div class="form-check mb-3 ms-5 mt-5">
+                    <input class="form-check-input" type="checkbox" id="14over_agree">
+                    <h5 class="form-check-label text-black">
+                        [필수] 만 14세 이상입니다.
+                    </h5>
+                </div>
+
+                <div class="form-check mb-3 ms-5 mt-4">
+                    <input class="form-check-input" type="checkbox" id="individual_agree">
+                    <h5 class="form-check-label text-black">
+                        [필수] 개인정보처리방침
+                    </h5>
+                </div>
+
+                <div class="form-check mb-3 ms-5 mt-4">
+                    <input class="form-check-input" type="checkbox" id="service_agree">
+                    <h5 class="form-check-label text-black">
+                        [필수] 서비스 이용 약관
+                    </h5>
+                </div>
+
+                <div class="form-check mb-3 ms-5 mt-4">
+                    <input class="form-check-input" type="checkbox" id="event_agree">
+                    <h5 class="form-check-label text-black">
+                        이벤트 및 할인 혜택 안내 동의
+                    </h5>
+                </div>
+
+                <div class="d-flex justify-content-center mt-5 pt-5">
+                    <p class="red_font">필수 사항을 동의해주셔야 합니다.</p>
+                </div>
+                <div class="d-flex justify-content-center mt-3">
+                    <button type="button" class="btn btn-light waves-effect next-step w-75" id="agreeButton" disabled>동의하고 가입하기</button>
+                </div>
+            </div>
+
+            <div class="step step-2">
+                <!-- Step 1 form fields here -->
+                <div class="d-flex justify-content-center mb-5">
+                    <h2 class="text-black"><b>가입정보입력</b></h2>
+                </div>
+                <div class="mb-5">
+                    <h2 class="text-black"><b>이메일을 입력해주세요</b></h2>
+                    <span>로그인 또는 회원가입에 필요합니다.</span>
+                </div>
+                <div class="mb-5 mt-3">
+                    <input type="email" class="form-control-plaintext border-bottom" id="add_user_id" name="add_user_id"
+                           placeholder="example@example.com" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                           title="올바른 이메일 형식을 입력해주세요" required>
+                </div>
+                <div class="d-flex justify-content-center padding-top-25">
+                    <button type="button" class="btn btn-light waves-effect next-step w-75" id="next_step2_btn" disabled>다음</button>
+                </div>
+            </div>
+
+            <div class="step step-3">
+                <div class="d-flex justify-content-center mb-5">
+                    <h2 class="text-black"><b>가입정보입력</b></h2>
+                </div>
+                <div class="mb-5">
+                    <h2 class="text-black"><b>비밀번호를 입력해주세요</b></h2>
+                    <span>6~15자, 영문+숫자+특수문자 조합으로 입력해주세요.</span>
+                </div>
+                <div class="mb-5 mt-3">
+                    <input type="password" class="form-control-plaintext border-bottom" id="user_pwd" name="user_pwd" required>
+                    <div class="invalid-feedback">6~15자, 영문+숫자+특수문자 조합으로 입력해주세요.</div>
+                </div>
+                <div class="d-flex justify-content-center padding-top-25">
+                    <button type="button" class="btn btn-light waves-effect next-step w-75" id="next_step3_btn" disabled>다음</button>
+                </div>
+            </div>
+
+            <div class="step step-4">
+                <div class="d-flex justify-content-center mb-5">
+                    <h2 class="text-black"><b>가입정보입력</b></h2>
+                </div>
+                <div class="mb-5">
+                    <h2 class="text-black"><b>비밀번호를 확인해주세요</b></h2>
+                    <span>설정한 비밀번호를 한번 더 입력해주세요.</span>
+                </div>
+                <div class="mb-5 mt-3">
+                    <input type="password" class="form-control-plaintext border-bottom" id="check_pwd" name="check_pwd" required>
+                    <div class="invalid-feedback">입력하신 비밀번호가 다릅니다. 다시 한번 확인해주세요.</div>
+                </div>
+                <div class="d-flex justify-content-center padding-top-25">
+                    <button type="button" class="btn btn-light waves-effect next-step w-75" id="next_step4_btn" disabled>다음</button>
+                </div>
+            </div>
+            
+            <div class="step step-5">
+                <div class="d-flex justify-content-center mb-5">
+                    <h2 class="text-black"><b>가입정보입력</b></h2>
+                </div>
+                <div class="mb-5">
+                    <h2 class="text-black"><b>사용자 이름을 입력해주세요</b></h2>
+                    <span>WMS 서비스 사용자의 이름을 입력해주세요.</span>
+                </div>
+                <div class="mb-5 mt-3">
+                    <input type="text" class="form-control-plaintext border-bottom" id="add_username" name="add_username" required>
+                    <div class="invalid-feedback">사용자 이름을 입력해주세요.</div>
+                </div>
+                <div class="d-flex justify-content-center padding-top-25">
+                    <button type="button" class="btn btn-light waves-effect next-step w-75" id="next_step5_btn" disabled onclick="userCreate()">가입완료</button>
+                </div>
+            </div>
+
+            <div class="step step-6">
+                <div class="mb-5 mt-5">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <span class="text-black font-size-22 font-weight-bold" id="success_message"></span><br/>
+                            <span class="text-black font-size-22"><b>쉽고 편리한 재고관리를 시작해보세요.</b></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-center padding-top-25">
+                    <button type="button" class="btn btn-info waves-effect waves-light next-step w-75" id="next_step6_btn">시작하기</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% include 'footer.html' %}
+<script>
+    var currentStep = 1;
+    let firstPassword = '';
+    let message_username = '';
+
+    $(document).ready(function () {
+
+        const allAgreeCheckbox = $('#all_agree');
+        const agreeCheckboxes = $('.form-check-input:not(#all_agree)');
+        const requiredCheckboxes = $('#14over_agree, #individual_agree, #service_agree');
+        const agreeButton = $('#agreeButton');
+
+        // 모두 동의하기 체크박스 이벤트
+        allAgreeCheckbox.change(function () {
+            const isChecked = $(this).prop('checked');
+            agreeCheckboxes.prop('checked', isChecked);
+            updateButtonState();
+        });
+
+        // 개별 체크박스 이벤트
+        agreeCheckboxes.change(function () {
+            updateAllAgreeCheckbox();
+            updateButtonState();
+        });
+
+        // 모두 동의하기 체크박스 상태 업데이트
+        function updateAllAgreeCheckbox() {
+            allAgreeCheckbox.prop('checked', agreeCheckboxes.length === agreeCheckboxes.filter(':checked').length);
+        }
+
+        // 버튼 상태 업데이트
+        function updateButtonState() {
+            const allRequiredChecked = requiredCheckboxes.filter(':checked').length === requiredCheckboxes.length;
+            agreeButton.toggleClass('disabled', !allRequiredChecked);
+            agreeButton.prop('disabled', !allRequiredChecked);
+
+            // 버튼 색상 변경
+            if (allRequiredChecked) {
+                agreeButton.removeClass('btn-light waves-effect')
+                    .addClass('btn-info waves-effect waves-light')
+                    .prop('disabled', false);
+                $(".red_font").hide()
+            } else {
+                agreeButton.removeClass('btn-info waves-effect waves-light')
+                    .addClass('btn-light waves-effect')
+                    .prop('disabled', true);
+                $(".red_font").show()
+            }
+        }
+
+        // 초기 상태 설정
+        updateButtonState();
+
+
+        $('#multi-step-form').find('.step').slice(1).hide();
+
+        // 다음 버튼
+        $(".next-step").click(function () {
+            if (currentStep < 6) {
+                $(".step-" + currentStep).addClass("animate__animated animate__fadeOutLeft");
+                currentStep++;
+                setTimeout(function () {
+                    $(".step").removeClass("animate__animated animate__fadeOutLeft").hide();
+                    $(".step-" + currentStep).show().addClass("animate__animated animate__fadeInRight");
+                }, 500);
+            }
+        });
+
+        // 이전 버튼
+        $(".prev-step").click(function () {
+            if (currentStep > 1) {
+                $(".step-" + currentStep).addClass("animate__animated animate__fadeOutRight");
+                currentStep--;
+                setTimeout(function () {
+                    $(".step").removeClass("animate__animated animate__fadeOutRight").hide();
+                    $(".step-" + currentStep).show().addClass("animate__animated animate__fadeInLeft");
+                }, 500);
+            }
+        });
+
+        // 이메일 유효성 검사 함수
+        function isValidEmail(email) {
+            var emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
+            return emailRegex.test(email);
+        }
+
+        // 이메일 필드 유효성 검사 및 피드백 함수
+        function validateEmailField(field) {
+            if (!isValidEmail(field.val())) {
+                field.addClass('is-invalid');
+                field.removeClass('is-valid');
+                if (field.next('.invalid-feedback').length === 0) {
+                    field.after('<div class="invalid-feedback">올바른 이메일 형식을 입력해주세요.</div>');
+                }
+                $("#next_step2_btn").removeClass('btn-info waves-effect waves-light')
+                    .addClass('btn-light waves-effect')
+                    .prop('disabled', true);
+                return false;
+            } else {
+                field.removeClass('is-invalid');
+                field.addClass('is-valid');
+                field.next('.invalid-feedback').remove();
+                $("#next_step2_btn").removeClass('btn-light waves-effect')
+                    .addClass('btn-info waves-effect waves-light')
+                    .prop('disabled', false);
+                return true;
+            }
+        }
+
+        // 실시간 이메일 유효성 검사
+        $('#add_user_id').on('input', function () {
+            validateEmailField($(this));
+        });
+
+        // 비밀번호 유효성 검사 함수
+        function isValidPassword(password) {
+            // 6~15자, 영문+숫자+특수문자 조합
+            var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,15}$/;
+            return passwordRegex.test(password);
+        }
+
+        // 비밀번호 필드 유효성 검사 및 피드백 함수
+        function validatePasswordField(field) {
+            if (!isValidPassword(field.val())) {
+                field.addClass('is-invalid');
+                field.removeClass('is-valid');
+                $("#next_step3_btn").removeClass('btn-info waves-effect waves-light')
+                    .addClass('btn-light waves-effect')
+                    .prop('disabled', true);
+                return false;
+            } else {
+                field.removeClass('is-invalid');
+                field.addClass('is-valid');
+                $("#next_step3_btn").removeClass('btn-light waves-effect')
+                    .addClass('btn-info waves-effect waves-light')
+                    .prop('disabled', false);
+                return true;
+            }
+        }
+        
+        // 비밀번호 확인 필드 유효성 검사 및 피드백 함수
+        function validatePasswordConfirmField() {
+            var confirmPassword = $('#check_pwd').val();
+            var confirmField = $('#check_pwd');
+
+            if (firstPassword !== confirmPassword) {
+                confirmField.addClass('is-invalid');
+                confirmField.removeClass('is-valid');
+                $("#next_step4_btn").removeClass('btn-info waves-effect waves-light')
+                    .addClass('btn-light waves-effect')
+                    .prop('disabled', true);
+                return false;
+            } else {
+                confirmField.removeClass('is-invalid');
+                confirmField.addClass('is-valid');
+                $("#next_step4_btn").removeClass('btn-light waves-effect')
+                    .addClass('btn-info waves-effect waves-light')
+                    .prop('disabled', false);
+                return true;
+            }
+        }
+        
+        // 첫 번째 비밀번호 입력 필드의 값 변경 감지
+        $('#user_pwd').on('input', function() {
+            firstPassword = $(this).val();
+            validatePasswordField($(this));
+        });
+
+
+        // 실시간 비밀번호 유효성 검사
+        $('#user_pwd').on('input', function () {
+            validatePasswordField($(this));
+        });
+
+        // 실시간 비밀번호 확인 유효성 검사
+        $('#check_pwd').on('input', function() {
+            validatePasswordConfirmField();
+        });
+        
+        // 사용자 이름 유효성 검사 함수
+        function isValidUsername(username) {
+            return username.length >= 2;
+        }
+        
+        // 사용자 이름 필드 유효성 검사 및 피드백 함수
+        function validateUsernameField(field) {
+            if (!isValidUsername(field.val())) {
+                field.addClass('is-invalid');
+                field.removeClass('is-valid');
+                $("#next_step5_btn").removeClass('btn-info waves-effect waves-light')
+                    .addClass('btn-light waves-effect')
+                    .prop('disabled', true);
+                return false;
+            } else {
+                field.removeClass('is-invalid');
+                field.addClass('is-valid');
+                $("#next_step5_btn").removeClass('btn-light waves-effect')
+                    .addClass('btn-info waves-effect waves-light')
+                    .prop('disabled', false);
+                return true;
+            }
+        }
+        
+        // 실시간 사용자 이름 유효성 검사
+        $('#add_username').on('input', function() {
+            validateUsernameField($(this));
+        });
+
+    });
+
+    function userCreate() {
+        message_username = $("#add_username").val()
+        $("#success_message").html(`${message_username}님의 회원가입이 완료되었습니다.`)
+
+        let formData = $("#multi-step-form").serializeArray();
+        formData.push({name: 'csrfmiddlewaretoken', value: $('input[name=csrfmiddlewaretoken]').val()});
+        formData.push({name: 'is_master', value: true});
+
+        console.log('formdata', formData)
+
+        /*
+        $.ajax({
+            url: "{% url 'UserCreate' %}",
+            type: 'POST',
+            data: formData,
+            success: function (res) {
+                console.log(res)
+            },
+            error: function (xhr, status, error) {
+                alert('오류가 발생했습니다: ' + error);
+            }
+        });
+        */
+    }
+</script>
+</body>
+</html>

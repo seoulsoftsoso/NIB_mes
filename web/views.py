@@ -19,6 +19,10 @@ def login_page(request):
     return render(request, 'login.html', {})
 
 
+def sign_up_page(request):
+    return render(request, 'sign-up.html', {})
+
+
 def register_page(request):
     return render(request, 'register.html', {})
 
