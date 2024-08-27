@@ -1,0 +1,318 @@
+{% load static %}
+<div id="enterprise_add_modal" class="modal fade" tabindex="-1" aria-labelledby="#exampleModalFullscreenLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-black" id="exampleModalFullscreenLabel">회사 설정</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="enterprise_form" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    <p class="font-size-17"><b>기본정보</b></p>
+                    <div class="mb-2 row">
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="col-lg-3">
+                                <label for="name" class="col-form-label me-5">회사명 <span class="red_font">*</span></label>
+                            </div>
+                            <div class="col-lg-8">
+                                <input class="form-control" type="text" id="name" name="name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mt-4 d-flex">
+                                <h5 class="font-size-14 mb-4 me-5">사업자 유형 <span class="red_font">*</span></h5>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="business_type" id="individual" value="1" checked>
+                                    <label class="form-check-label" for="individual">
+                                        개인 사업자
+                                    </label>
+                                </div>
+                                <div class="form-check ms-4">
+                                    <input class="form-check-input" type="radio" name="business_type" id="corporation" value="0">
+                                    <label class="form-check-label" for="corporation">
+                                        법인 사업자
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4 row">
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="col-lg-3">
+                                <label for="business_num" class="col-form-label me-5">사업자등록번호 <span class="red_font">*</span></label>
+                            </div>
+                            <div class="col-lg-8">
+                                <input class="form-control" type="text" id="business_num" name="business_num" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center">
+                            <label for="corporation_num" class="col-form-label me-5">법인등록번호</label>
+                            <div class="col-lg-8">
+                                <input class="form-control" type="text" id="corporation_num" name="corporation_num" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4 row">
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="col-lg-3">
+                                <label for="open_date" class="col-form-label me-5">개업일자 <span class="red_font">*</span></label>
+                            </div>
+                            <div class="col-lg-8">
+                                <div class="input-group" id="open_date_div">
+                                    <input type="text" class="form-control" placeholder="창립일"
+                                           data-date-format="yyyy-mm-dd" data-date-container='#open_date_div'
+                                           data-provide="datepicker" id="open_date" name="open_date" required/>
+
+                                    <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
+                                </div><!-- input-group -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4 row">
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="col-lg-3">
+                                <label for="business_num" class="col-form-label me-5">우편번호</label>
+                            </div>
+                            <div class="col-lg-7">
+                                <input class="form-control" type="text" id="postal_code" name="postal_code" placeholder="우편번호" required>
+                            </div>
+                            <button type="button" class="btn btn-light waves-effect" onclick="search_address()">주소검색</button>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4 row">
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="col-lg-3">
+                                <label for="business_num" class="col-form-label me-5">주소</label>
+                            </div>
+                             <div class="col-lg-9 me-1">
+                                <input class="form-control" type="text" id="basic_address" name="basic_address" placeholder="기본 주소" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="col-lg-10">
+                                <input class="form-control" type="text" id="detail_address" name="detail_address" placeholder="상세 주소" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-5">
+                        <p class="font-size-17"><b>대표자 정보</b></p>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="col-lg-3">
+                                <label for="name" class="col-form-label me-5">대표자명 <span class="red_font">*</span></label>
+                            </div>
+                            <div class="col-lg-8">
+                                <input class="form-control" type="text" id="owner_name" name="owner_name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mt-4 d-flex">
+                                <h5 class="font-size-14 mb-4 me-5">외국인 여부 <span class="red_font">*</span></h5>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="nationality" id="local_people" value="1" checked>
+                                    <label class="form-check-label" for="local_people">
+                                        내국인
+                                    </label>
+                                </div>
+                                <div class="form-check ms-4">
+                                    <input class="form-check-input" type="radio" name="nationality" id="foreign_people" value="0">
+                                    <label class="form-check-label" for="foreign_people">
+                                        외국인
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 row">
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="col-lg-3">
+                                <label for="name" class="col-form-label me-5">이메일 <span class="red_font">*</span></label>
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="email_id" name="email_id" required>
+                            </div>
+                            <div class="ms-2 me-2">
+                                <b>@</b>
+                            </div>
+                            <div class="col-sm-5">
+                                <select class="form-control" id="email_domain" name="email_domain" required>
+                                    <option value="" disabled selected>도메인을 선택해주세요.</option>
+                                    <option value="naver.com">naver.com</option>
+                                    <option value="gmail.com">gmail.com</option>
+                                    <option value="daum.net">daum.net</option>
+                                    <option value="nate.com">nate.com</option>
+                                    <option value="">직접 입력</option>
+                                </select>
+                                <input type="text" class="form-control" id="direct_input" name="direct_input" style="display: none;" placeholder="도메인을 입력하세요">
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center">
+                            <label for="corporation_num" class="col-form-label me-5">연락처 <span class="red_font">*</span></label>
+                            <div class="col-lg-2">
+                                <input class="form-control" type="text" id="phone1" name="phone1" required>
+                            </div>
+                            <div class="ms-3 me-3"> - </div>
+                            <div class="col-lg-2">
+                                <input class="form-control" type="text" id="phone2" name="phone2" required>
+                            </div>
+                            <div class="ms-3 me-3"> - </div>
+                            <div class="col-lg-2">
+                                <input class="form-control" type="text" id="phone3" name="phone3" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-5">
+                        <h5 class="font-size-17"><b>추가 정보</b> <span class="ms-3 font-size-12">*JPG, PNG만 등록 가능합니다.</span></h5>
+                    </div>
+                    
+                    <div class="mt-5 mb-3 row justify-content-center">
+                        <div class="col-lg-3 me-5">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="mt-2">회사로고</h5>
+                                <input type="file" id="logo-upload" name="logo-upload" accept="image/*" style="display: none;">
+                                <button type="button" class="btn btn-soft-dark waves-effect waves-light" 
+                                        onclick="document.getElementById('logo-upload').click()">첨부파일 업로드</button>
+                            </div>
+                            <div class="mt-4">
+                                <img src="{% static 'img/no_img.avif' %}" class="object-fit-contain border rounded avatar-xl d-block mx-auto mb-2 w-100" alt="회사 로고" id="img_logo">
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-3 me-5 ms-5">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="mt-2">회사인감</h5>
+                                <input type="file" id="sign-upload" name="sign-upload" accept="image/*" style="display: none;">
+                                <button type="button" class="btn btn-soft-dark waves-effect waves-light" 
+                                        onclick="document.getElementById('sign-upload').click()">첨부파일 업로드</button>
+                            </div>
+                            <div class="mt-4">
+                                <img src="{% static 'img/no_img.avif' %}" class="object-fit-contain border rounded avatar-xl d-block mx-auto mb-2 w-100" alt="회사 인감" id="img_sign">
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-3 me-5 ms-5">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="mt-2">사업자등록증</h5>
+                                <input type="file" id="business-upload" name="business-upload" accept="image/*" style="display: none;">
+                                <button type="button" class="btn btn-soft-dark waves-effect waves-light" 
+                                        onclick="document.getElementById('business-upload').click()">첨부파일 업로드</button>
+                            </div>
+                            <div class="mt-4">
+                                <img src="{% static 'img/no_img.avif' %}" class="object-fit-contain border rounded avatar-xl d-block mx-auto mb-2 w-100" alt="회사 인감" id="img_business">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-end mt-5">
+                        <button type="button" class="btn btn-secondary waves-effect me-3" data-bs-dismiss="modal">닫기</button>
+                        <button type="button" class="btn btn-primary waves-effect waves-light" onclick="add_enterprise()">저장</button>
+                    </div>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    $(function () {
+        $("#open_date").datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true // 선택 후 자동으로 닫히도록 설정
+        });
+    });
+
+    function search_address() {
+        new daum.Postcode({
+            oncomplete: function (data) {
+                $("#postal_code").val(data.zonecode)
+                $("#basic_address").val(data.address + ' ' + data.buildingName)
+            }
+        }).open();
+    }
+
+    function handleImageUpload(inputId, imgId) {
+        document.getElementById(inputId).addEventListener('change', function (event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                document.getElementById(imgId).src = e.target.result;
+            };
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // 회사 로고 업로드
+    handleImageUpload('logo-upload', 'img_logo');
+
+    // 회사 인감 업로드
+    handleImageUpload('sign-upload', 'img_sign');
+
+    // 사업자등록증 업로드
+    handleImageUpload('business-upload', 'img_business');
+
+    $(document).ready(function () {
+        var $domainSelect = $('#email_domain');
+        var $directInput = $('#direct_input');
+
+        $domainSelect.on('change', function () {
+            if ($(this).val() === '') {
+                console.log('here?')
+                $(this).hide();
+                $directInput.show().focus();
+            } else {
+                $directInput.hide();
+            }
+        });
+
+        $directInput.on('blur', function () {
+            if ($(this).val() === '') {
+                $(this).hide();
+                $domainSelect.show().val('');
+            }
+        });
+        
+    
+    });
+
+    function add_enterprise() {
+        var form = document.getElementById('enterprise_form');
+
+        if (form.checkValidity() === false) {
+            form.classList.add('was-validated');
+            return false
+        }
+
+        var formData = new FormData($("#enterprise_form")[0]);
+
+        console.log('formdata', formData)
+        
+        $.ajax({
+            url: "{% url 'EnterpriseCreate' %}",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                console.log(response)
+                SweetAlert_OK().then(() => {
+                    $("#enterprise_add_modal").modal('hide')
+                });
+            }
+        })
+    }
+    
+</script>

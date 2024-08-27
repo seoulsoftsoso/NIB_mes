@@ -1,13 +1,20 @@
+import random
+import string
+import traceback
+from datetime import date
 from django.db import transaction
+from django.http import JsonResponse
+from django.views import View
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 
-from api.models import CodeMaster,EnterpriseMaster, UserMaster
+from api.models import CodeMaster, EnterpriseMaster, UserMaster
 from api.permission import MesPermission
 from api.serializers import CodeMasterSerializer, EnterpriseMasterSerializer
+from msgs import msg_cre_ok
 
 
 class EnterpriseMasterViewSet(viewsets.ModelViewSet):
@@ -106,3 +113,80 @@ class EnterpriseMasterViewSet(viewsets.ModelViewSet):
 
         """
         return super().destroy(request, request, *args, **kwargs)
+
+
+def generate_unique_code():
+    while True:
+        # 알파벳 (대문자) 2개 생성
+        random_letters = ''.join(random.choices(string.ascii_uppercase, k=2))
+        # 오늘 날짜
+        today = date.today().strftime("%Y%m%d")
+        # 임의의 숫자 4자리
+        random_numbers = ''.join(random.choices(string.digits, k=4))
+        # 코드 조합
+        code = f"{random_letters}{today}{random_numbers}"
+
+        # 중복 검사
+        if not EnterpriseMaster.objects.filter(code=code).exists():
+            return code
+
+
+class EnterpriseCreate(View):
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        try:
+            print(request.POST)
+            print(request.FILES.get('logo-upload'))
+            unique_code = generate_unique_code()
+
+            logo_path = request.FILES.get('logo-upload')
+            sign_path = request.FILES.get('sign-upload')
+            certificate_path = request.FILES.get('business-upload')
+
+            # 사업자 유형 확인
+            is_individual = 1 if request.POST.get('business_type') == '1' else 0
+            # 외국인 여부 확인
+            is_local = 1 if request.POST.get('nationality') == '1' else 0
+
+            # 이메일 처리
+            email_id = request.POST.get('email_id')
+            email_domain = request.POST.get('email_domain')
+            direct_input = request.POST.get('direct_input')
+
+            # email_domain이 None or ''이면 direct_input 사용
+            if not email_domain:
+                email_domain = direct_input
+            email = f"{email_id}@{email_domain}" if email_id and email_domain else None
+
+            enterprise = EnterpriseMaster.objects.create(
+                name=request.POST.get('name'),
+                code=unique_code,
+                licensee_number=request.POST.get('business_num'),
+                corporation_number=request.POST.get('corporation_num'),
+                start_up_date=request.POST.get('open_date'),
+                postal_code=request.POST.get('postal_code'),
+                address=request.POST.get('basic_address') + ' ' + request.POST.get('detail_address'),
+                owner_name=request.POST.get('owner_name'),
+                in_or_cor=is_individual,
+                local_or_foreign=is_local,
+                email=email,
+                office_phone=request.POST.get('phone1')+'-'+request.POST.get('phone2')+'-'+request.POST.get('phone3'),
+            )
+
+            if logo_path:
+                enterprise.logo = logo_path
+
+            if sign_path:
+                enterprise.sign = sign_path
+
+            if certificate_path:
+                enterprise.certificate = certificate_path
+            enterprise.save()
+
+            return JsonResponse({'success': True, 'message': msg_cre_ok})
+
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({'error': str(e)}, status=400)
+

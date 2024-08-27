@@ -30,8 +30,7 @@ from api.auto_complete import enterprise_name_ac, client_name_ac
 from api.base.codemaster_views import CodeMasterViewSet, CodeMasterSelectView
 from api.base.customer_views import *
 
-from api.base.enterprise_views import EnterpriseMasterViewSet
-
+from api.base.enterprise_views import EnterpriseMasterViewSet, EnterpriseCreate
 
 from api.base.groupcodemaster_views import GroupCodeMasterViewSet, GenerateCodeMaster
 from api.base.member_views import *
@@ -105,6 +104,7 @@ urlpatterns = [
                 # 설정
                 path('settings/menumaster/', Menumaster),
                 path('settings/member/', UserBasedInfo, name='UserBasedInfo'),
+                path('settings/enterprise_create/', EnterpriseCreate.as_view(), name='EnterpriseCreate'),
 
                 # 기준 정보
                 path('basic_information/codemaster/', codemaster),

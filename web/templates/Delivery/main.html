@@ -28,32 +28,15 @@
                 </div>
                 
                 <button class="btn btn-light waves-effect" onclick="search_btn()">조회</button>
-                
             </div>
         </div>
+        {% include 'Setting/Enterprise/fullscreen_modal.html' %}
     </div> <!-- end col -->
 </div> <!-- end row -->
 {% include 'footer.html' %}
 <script>
     function search_btn() {
-        var data = {
-            "b_no": ["1348819546"] // 사업자번호 "xxxxxxx" 로 조회 시,
-        };
-
-        $.ajax({
-            url: "https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=sXW9hqAzKbCMZpW8qkaaBUVtxI65zx05kbwzonzrZGVYi4cs1mPkZrI5Lcnh4EwuV/2lGKr3nTQk1aOMK5vSRw==",  // serviceKey 값을 xxxxxx에 입력
-            type: "POST",
-            data: JSON.stringify(data), // json 을 string으로 변환하여 전송
-            dataType: "JSON",
-            contentType: "application/json",
-            accept: "application/json",
-            success: function (result) {
-                console.log('business', result);
-            },
-            error: function (result) {
-                console.log(result.responseText); //responseText의 에러메세지 확인
-            }
-        });
+        $("#enterprise_add_modal").modal('show')
     }
 </script>
 </body>

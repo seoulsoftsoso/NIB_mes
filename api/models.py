@@ -18,6 +18,10 @@ def logo_upload_path(instance, filename):
     return os.path.join('logo', filename)
 
 
+def business_certificate_upload_path(instance, filename):
+    return os.path.join('certificate', filename)
+
+
 def item_master_img_upload_path(instance, filename):  # 품목기준정보 이미지 경로
     return os.path.join('item_master_img', filename)
 
@@ -34,22 +38,28 @@ class EnterpriseMaster(models.Model):
     class Meta:
         unique_together = ('code', 'name')
 
-    code = models.CharField(max_length=4, unique=True, verbose_name='업체코드')
+    code = models.CharField(max_length=128, unique=True, verbose_name='업체코드')
     name = models.CharField(max_length=20, unique=True, verbose_name='업체명')
     manage = models.CharField(max_length=20, null=True, verbose_name='관리명')
 
     # permissions = models.BigIntegerField(verbose_name='권한')
     permissions = models.CharField(max_length=100, null=True, verbose_name='권한')
     licensee_number = models.CharField(max_length=50, null=False, verbose_name='사업자 번호')
+    corporation_number = models.CharField(max_length=50, null=True, verbose_name='법인 등록 번호')
     owner_name = models.CharField(max_length=20, null=True, verbose_name='대표자')
     business_conditions = models.CharField(max_length=50, null=True, verbose_name='업종')
     business_event = models.CharField(max_length=20, null=True, verbose_name='업태')
+    postal_code = models.CharField(max_length=128, null=True, verbose_name='우편번호')
     address = models.CharField(max_length=128, null=True, verbose_name='주소')
     email = models.CharField(max_length=36, null=True, verbose_name='이메일')
     office_phone = models.CharField(max_length=36, null=True, verbose_name='대표 전화')
     office_fax = models.CharField(max_length=36, null=True, verbose_name='팩스')
     sign = models.FileField(upload_to=sign_upload_path, default=None, null=True, verbose_name='날인')
     logo = models.FileField(upload_to=logo_upload_path, default=None, null=True, verbose_name='로고')
+    certificate = models.FileField(upload_to=business_certificate_upload_path, default=None, null=True, verbose_name='사업자등록증')
+    in_or_cor = models.CharField(max_length=1, default=1, null=False, verbose_name='개인사업자 혹은 법인사업자')
+    local_or_foreign = models.CharField(max_length=1, default=1, null=False, verbose_name='내국인 혹은 외국인')
+    start_up_date = models.DateField(null=True, verbose_name='창립일')
     delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N: 삭제안함, Y: 삭제
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')  # 최초작성일
     updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')  # 최종작성일
