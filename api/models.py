@@ -198,7 +198,7 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='user_created_by',
                                    verbose_name='최초작성자')  # 최초작성자
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')  # 최초작성일
-    enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, default=1, related_name='user_master_enterprise',
+    enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, default=100, related_name='user_master_enterprise',
                                    verbose_name='업체', null=False)
     auth = models.CharField(max_length=10, null=False, default="Viewer", choices=USER_TYPE_CHOICES, verbose_name="권한")
     del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')

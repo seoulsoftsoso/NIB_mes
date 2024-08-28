@@ -461,7 +461,7 @@
 
         console.log('formdata', formData)
 
-        /*
+        
         $.ajax({
             url: "{% url 'UserCreate' %}",
             type: 'POST',
@@ -473,10 +473,11 @@
                 alert('오류가 발생했습니다: ' + error);
             }
         });
-        */
+        
     }
     
     function enterprise_add_btn() {
+        $("#enterprise_form").trigger("reset")
         $("#enterprise_add_modal").modal('show')
     }
 </script>

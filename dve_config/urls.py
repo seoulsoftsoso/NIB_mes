@@ -95,6 +95,7 @@ urlpatterns = [
                 path('login/', login_page),
                 path('logout/', auth_views.LogoutView.as_view(), name='logout'),
                 path('sign-up/', sign_up_page, name='sign_up_page'),
+                path('sign-up/add_info', sign_up_add_info_page, name='sign_up_add_info_page'),
                 path('user-create/', UserCreate.as_view(), name='UserCreate'),
                 path('users/login/', custom_obtain_auth_token),
                 re_path(r'^data/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, }),

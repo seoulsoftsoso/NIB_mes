@@ -26,5 +26,9 @@ class LoginRequiredMiddleware:
             if not request.user.auth == 'Admin':
                 return redirect('/error/404')
 
+        if request.user.is_authenticated and request.path == '/':
+            if request.user.enterprise_id == 100:
+                return redirect('/sign-up/add_info')
+
         response = self.get_response(request)
         return response

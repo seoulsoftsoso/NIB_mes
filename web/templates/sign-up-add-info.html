@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+    <style>
+        #container {
+            max-width: 550px;
+        }
+
+        #multi-step-form {
+            overflow-x: hidden;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.step-1 {
+            display: block;
+        }
+        
+        .padding-top-25 {
+            padding-top: 25%;
+        }
+    </style>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Sign Up | Seoulsoft WMS Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Seoulsoft WMS Admin & Dashboard Template" name="description"/>
+    <meta content="Themesbrand" name="author"/>
+    {% load static %}
+    <!-- owl.carousel css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    {% include 'header.html' %}
+</head>
+<body class="bg-white d-flex align-items-center justify-content-center min-vh-100">
+<div class="content w-100">
+
+    <div id="container" class="container">
+        <div class="d-flex justify-content-center mb-5">
+            <img src="{% static 'img/seoul_logo.png' %}" style="width: 30%">
+        </div>
+
+        <div class="">
+            <div class="row mb-5">
+                <div class="col-12 text-start">
+                    <span class="text-black font-size-18"><b>서울소프트 WMS에 오신 것을 환영합니다.</b></span><br/>
+                    <span class="text-black font-size-18"><b>불필요한 단계는 X를 누르면 시작하기가 완료됩니다.</b></span>
+                </div>
+            </div>
+            <div class="col-lg-12 pt-5">
+                <div class="">
+                    <div class="card-body">
+                        <ul class="verti-timeline list-unstyled pt-3">
+                            <li class="event-list">
+                                <div class="event-timeline-dot mt-4">
+                                    <i class="bx bx-right-arrow-circle font-size-24"></i>
+                                </div>
+                                <div class="d-flex">
+                                    <button type="button" class="flex-grow-1 btn btn-outline-dark waves-effect waves-light" onclick="enterprise_add_btn()">
+                                        <div class="mt-2">
+                                            <span class="font-size-22 mb-1 font-weight-bold">회사 정보 등록</span>
+                                            <p style="color: red">* 회사 정보 등록은 필수 등록사항입니다.</p>
+                                        </div>
+                                    </button>
+                                </div>
+                            </li>
+                            <li class="event-list">
+                                <div class="event-timeline-dot mt-4">
+                                    <i class="bx bx-right-arrow-circle font-size-24"></i>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="flex-grow-1 btn btn-outline-dark waves-effect waves-light">
+                                        <div class="mt-2">
+                                            <span class="font-size-22 mb-1 font-weight-bold">메뉴 설정</span>
+                                            <p>사용하실 메뉴를 직접 설정해보세요.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="event-list">
+                                <div class="event-timeline-dot mt-4">
+                                    <i class="bx bx-right-arrow-circle font-size-24"></i>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="flex-grow-1 btn btn-outline-dark waves-effect waves-light">
+                                        <div class="mt-2">
+                                            <span class="font-size-22 mb-1 font-weight-bold">멤버 설정</span>
+                                            <p>함께 사용할 멤버를 설정해주세요.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include 'Setting/Enterprise/fullscreen_modal.html' %}
+        
+    </div>
+</div>
+
+{% include 'footer.html' %}
+<script>
+    function enterprise_add_btn() {
+        $("#enterprise_form").trigger("reset")
+        $("#enterprise_add_modal").modal('show')
+    }
+</script>
+</body>
+</html>

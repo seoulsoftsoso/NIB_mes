@@ -53,44 +53,24 @@ class UserCreate(View):
                 auth='Admin'
             )
 
-            Menu_Auth.objects.create(
-                alias='설정',
-                order=1000,
-                menu_id=125,
-                created_by_id=usermaster.id,
-                updated_by_id=usermaster.id,
-                user_id=usermaster.id,
-            )
+            menu_data = [
+                {'alias': '설정', 'order': 1000, 'menu_id': 125, 'parent_id': None},
+                {'alias': '회사 설정', 'order': 1010, 'menu_id': 126, 'parent_id': 125},
+                {'alias': '멤버 설정', 'order': 1020, 'menu_id': 106, 'parent_id': 125},
+                {'alias': '메뉴 설정', 'order': 1030, 'menu_id': 111, 'parent_id': 125},
+            ]
 
-            Menu_Auth.objects.create(
-                alias='회사 설정',
-                order=1010,
-                menu_id=126,
-                parent_id=125,
-                created_by_id=usermaster.id,
-                updated_by_id=usermaster.id,
-                user_id=usermaster.id,
-            )
-
-            Menu_Auth.objects.create(
-                alias='멤버 설정',
-                order=1020,
-                menu_id=106,
-                parent_id=125,
-                created_by_id=usermaster.id,
-                updated_by_id=usermaster.id,
-                user_id=usermaster.id,
-            )
-
-            Menu_Auth.objects.create(
-                alias='메뉴 설정',
-                order=1030,
-                menu_id=111,
-                parent_id=125,
-                created_by_id=usermaster.id,
-                updated_by_id=usermaster.id,
-                user_id=usermaster.id,
-            )
+            Menu_Auth.objects.bulk_create([
+                Menu_Auth(
+                    alias=item['alias'],
+                    order=item['order'],
+                    menu_id=item['menu_id'],
+                    parent_id=item['parent_id'],
+                    created_by_id=usermaster.id,
+                    updated_by_id=usermaster.id,
+                    user_id=usermaster.id,
+                ) for item in menu_data
+            ])
 
             return JsonResponse({'success': True, 'message': msg_cre_ok})
 
@@ -98,3 +78,4 @@ class UserCreate(View):
             print(f"Error: {str(e)}")
             print(traceback.format_exc())
             return JsonResponse({'error': str(e)}, status=400)
+

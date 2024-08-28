@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch, Sum
 from django.db.models.functions import Coalesce
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from api.Delivery.delivery_api import *
 from api.Item.common import get_item_data
@@ -12,6 +12,9 @@ from dve_config import settings
 
 @login_required
 def index(request):
+    if request.user.enterprise_id == 100:
+        return redirect('/sign-up/add_info')
+
     return render(request, 'index.html', {})
 
 
@@ -21,6 +24,10 @@ def login_page(request):
 
 def sign_up_page(request):
     return render(request, 'sign-up.html', {})
+
+
+def sign_up_add_info_page(request):
+    return render(request, 'sign-up-add-info.html', {})
 
 
 def register_page(request):
