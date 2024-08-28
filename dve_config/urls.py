@@ -40,7 +40,7 @@ from api.base.menu_config import MenuHandler, getLmenuList, setMenuByUser
 
 from api.base.user_views import UserMasterViewSet, UserMasterSelectViewSet
 
-from api.user.views import CustomObtainAuthToken, UserCreate
+from api.user.views import CustomObtainAuthToken, UserCreate, check_duplicate_id
 
 from web.views import *
 
@@ -97,15 +97,16 @@ urlpatterns = [
                 path('sign-up/', sign_up_page, name='sign_up_page'),
                 path('sign-up/add_info', sign_up_add_info_page, name='sign_up_add_info_page'),
                 path('user-create/', UserCreate.as_view(), name='UserCreate'),
+                path('check_duplicat_id/', check_duplicate_id, name='check_duplicate_id'),
                 path('users/login/', custom_obtain_auth_token),
                 re_path(r'^data/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, }),
 
                 path('dashboard/', dashboard_page, name="dashboard_page"),
 
                 # 설정
-                path('settings/menumaster/', Menumaster),
+                path('settings/menumaster/', Menumaster, name="MenuMaster"),
                 path('settings/member/', UserBasedInfo, name='UserBasedInfo'),
-                path('settings/enterprise_create/', EnterpriseCreate.as_view(), name='EnterpriseCreate'),
+                path('enterprise_create/', EnterpriseCreate.as_view(), name='EnterpriseCreate'),
 
                 # 기준 정보
                 path('basic_information/codemaster/', codemaster),

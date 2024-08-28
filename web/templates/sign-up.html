@@ -49,9 +49,9 @@
                 </div>
                 <div class="form-check mb-3 ms-5">
                     <input class="form-check-input" type="checkbox" id="all_agree">
-                    <h5 class="form-check-label text-black">
+                    <label class="form-check-label text-black font-size-17" for="all_agree">
                         <b>모두 동의하기</b>
-                    </h5>
+                    </label>
                 </div>
                 <div class="d-flex justify-content-center">
                     <hr style="border: 1px solid lightgray; width: 80%; transform: scaleY(0.5);">
@@ -60,30 +60,30 @@
                 {# 체크박스 #}
                 <div class="form-check mb-3 ms-5 mt-5">
                     <input class="form-check-input" type="checkbox" id="14over_agree">
-                    <h5 class="form-check-label text-black">
+                    <label class="form-check-label text-black font-size-17" for="14over_agree">
                         [필수] 만 14세 이상입니다.
-                    </h5>
+                    </label>
                 </div>
 
                 <div class="form-check mb-3 ms-5 mt-4">
                     <input class="form-check-input" type="checkbox" id="individual_agree">
-                    <h5 class="form-check-label text-black">
+                    <label class="form-check-label text-black font-size-17" for="individual_agree">
                         [필수] 개인정보처리방침
-                    </h5>
+                    </label>
                 </div>
 
                 <div class="form-check mb-3 ms-5 mt-4">
                     <input class="form-check-input" type="checkbox" id="service_agree">
-                    <h5 class="form-check-label text-black">
+                    <label class="form-check-label text-black font-size-17" for="service_agree">
                         [필수] 서비스 이용 약관
-                    </h5>
+                    </label>
                 </div>
 
                 <div class="form-check mb-3 ms-5 mt-4">
                     <input class="form-check-input" type="checkbox" id="event_agree">
-                    <h5 class="form-check-label text-black">
+                    <label class="form-check-label text-black font-size-17" for="event_agree">
                         이벤트 및 할인 혜택 안내 동의
-                    </h5>
+                    </label>
                 </div>
 
                 <div class="d-flex justify-content-center mt-5 pt-5">
@@ -107,9 +107,10 @@
                     <input type="email" class="form-control-plaintext border-bottom" id="add_user_id" name="add_user_id"
                            placeholder="example@example.com" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
                            title="올바른 이메일 형식을 입력해주세요" required>
+                    <p id="duplicate_id_ptag" class="red_font" style="display: none">중복된 아이디(이메일)입니다.</p>
                 </div>
                 <div class="d-flex justify-content-center padding-top-25">
-                    <button type="button" class="btn btn-light waves-effect next-step w-75" id="next_step2_btn" disabled>다음</button>
+                    <button type="button" class="btn btn-light waves-effect next-step w-75" id="next_step2_btn" onclick="check_duplicate_id()" disabled>다음</button>
                 </div>
             </div>
 
@@ -175,66 +176,12 @@
                 </div>
                 
                 <div class="d-flex justify-content-center padding-top-25">
-                    <button type="button" class="btn btn-info waves-effect waves-light next-step w-75" id="next_step6_btn">시작하기</button>
+                    <button type="button" class="btn btn-info waves-effect waves-light next-step w-75" id="next_step6_btn" onclick="go_tutorial()">
+                        시작하기
+                    </button>
                 </div>
             </div>
         </form>
-
-        <div class="step step-7">
-            <div class="row mb-5">
-                <div class="col-12 text-start">
-                    <span class="text-black font-size-18"><b>서울소프트 WMS에 오신 것을 환영합니다.</b></span><br/>
-                    <span class="text-black font-size-18"><b>불필요한 단계는 X를 누르면 시작하기가 완료됩니다.</b></span>
-                </div>
-            </div>
-            <div class="col-lg-12 pt-5">
-                <div class="">
-                    <div class="card-body">
-                        <ul class="verti-timeline list-unstyled pt-3">
-                            <li class="event-list">
-                                <div class="event-timeline-dot mt-4">
-                                    <i class="bx bx-right-arrow-circle font-size-24"></i>
-                                </div>
-                                <div class="d-flex">
-                                    <button type="button" class="flex-grow-1 btn btn-outline-dark waves-effect waves-light" onclick="enterprise_add_btn()">
-                                        <div class="mt-2">
-                                            <span class="font-size-22 mb-1 font-weight-bold">회사 정보 등록</span>
-                                            <p style="color: red">* 회사 정보 등록은 필수 등록사항입니다.</p>
-                                        </div>
-                                    </button>
-                                </div>
-                            </li>
-                            <li class="event-list">
-                                <div class="event-timeline-dot mt-4">
-                                    <i class="bx bx-right-arrow-circle font-size-24"></i>
-                                </div>
-                                <div class="d-flex">
-                                    <div class="flex-grow-1 btn btn-outline-dark waves-effect waves-light">
-                                        <div class="mt-2">
-                                            <span class="font-size-22 mb-1 font-weight-bold">메뉴 설정</span>
-                                            <p>사용하실 메뉴를 직접 설정해보세요.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="event-list">
-                                <div class="event-timeline-dot mt-4">
-                                    <i class="bx bx-right-arrow-circle font-size-24"></i>
-                                </div>
-                                <div class="d-flex">
-                                    <div class="flex-grow-1 btn btn-outline-dark waves-effect waves-light">
-                                        <div class="mt-2">
-                                            <span class="font-size-22 mb-1 font-weight-bold">멤버 설정</span>
-                                            <p>함께 사용할 멤버를 설정해주세요.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
         {% include 'Setting/Enterprise/fullscreen_modal.html' %}
         
     </div>
@@ -245,7 +192,7 @@
     var currentStep = 1;
     let firstPassword = '';
     let message_username = '';
-
+    
     $(document).ready(function () {
 
         const allAgreeCheckbox = $('#all_agree');
@@ -299,7 +246,7 @@
 
         // 다음 버튼
         $(".next-step").click(function () {
-            if (currentStep < 7) {
+            if (currentStep < 6) {
                 $(".step-" + currentStep).addClass("animate__animated animate__fadeOutLeft");
                 currentStep++;
                 setTimeout(function () {
@@ -353,6 +300,8 @@
         // 실시간 이메일 유효성 검사
         $('#add_user_id').on('input', function () {
             validateEmailField($(this));
+            check_duplicate_id()
+            console.log('쓰는중')
         });
 
         // 비밀번호 유효성 검사 함수
@@ -476,9 +425,47 @@
         
     }
     
+    function check_duplicate_id() {
+        user_id = $("#add_user_id").val()
+        $.ajax({
+            url: "{% url 'check_duplicate_id' %}",
+            method: "GET",
+            data: {"user_id": user_id},
+            success: function (res) {
+                console.log(res)
+                if (res.id_check >= 1) {
+                    $("#duplicate_id_ptag").show()
+                    $("#next_step2_btn").prop('disabled', true)
+                    SweetAlert_Error(res.message)
+                } else {
+                    $("#duplicate_id_ptag").hide()
+                    $("#next_step2_btn").prop('disabled', false)
+                }
+            }
+        })
+    }
+    
     function enterprise_add_btn() {
         $("#enterprise_form").trigger("reset")
         $("#enterprise_add_modal").modal('show')
+    }
+
+    function go_tutorial() {
+        var user_id = $("#add_user_id").val()
+        var password = $("#user_pwd").val()
+        $.ajax({
+            url: "/users/login/",
+            data: {username: user_id, password: password},
+            type: "POST",
+            dataType: "json",
+            success: function () {
+                window.location.href = "/sign-up/add_info";
+            },
+            error: function (xhr, status, error) {
+                alert('오류가 발생했습니다: ' + error);
+            }
+        })
+
     }
 </script>
 </body>

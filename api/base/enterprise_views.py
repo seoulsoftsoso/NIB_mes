@@ -135,8 +135,6 @@ class EnterpriseCreate(View):
     @transaction.atomic
     def post(self, request, *args, **kwargs):
         try:
-            print(request.POST)
-            print(request.FILES.get('logo-upload'))
             unique_code = generate_unique_code()
 
             logo_path = request.FILES.get('logo-upload')
@@ -173,6 +171,10 @@ class EnterpriseCreate(View):
                 office_phone=request.POST.get('phone1')+'-'+request.POST.get('phone2')+'-'+request.POST.get('phone3'),
             )
 
+            user = UserMaster.objects.get(id=request.user.id)
+            user.enterprise_id = enterprise.id
+            user.save()
+
             if logo_path:
                 enterprise.logo = logo_path
 
@@ -183,7 +185,7 @@ class EnterpriseCreate(View):
                 enterprise.certificate = certificate_path
             enterprise.save()
 
-            return JsonResponse({'success': True, 'message': msg_cre_ok})
+            return JsonResponse({'success': True, 'message': msg_cre_ok, 'new_enterprise_id': enterprise.id})
 
         except Exception as e:
             print(f"Error: {str(e)}")

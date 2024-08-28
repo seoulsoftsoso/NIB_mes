@@ -270,7 +270,6 @@
 
         $domainSelect.on('change', function () {
             if ($(this).val() === '') {
-                console.log('here?')
                 $(this).hide();
                 $directInput.show().focus();
             } else {
@@ -299,18 +298,27 @@
         var formData = new FormData($("#enterprise_form")[0]);
 
         console.log('formdata', formData)
-        
+
         $.ajax({
             url: "{% url 'EnterpriseCreate' %}",
             type: "POST",
             data: formData,
             processData: false,
             contentType: false,
-            success: function (response) {
-                console.log(response)
-                SweetAlert_OK().then(() => {
-                    $("#enterprise_add_modal").modal('hide')
-                });
+             success: function (response) {
+                if (response.success) {
+                    // 새로운 enterprise_id로 업데이트
+                    request_enterprise_id = response.new_enterprise_id;
+                    sign_up_update_btn();
+                    SweetAlert_OK().then(() => {
+                        $("#enterprise_add_modal").modal('hide');
+                    });
+                } else {
+                    SweetAlert_Error(response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert('오류가 발생했습니다: ' + error);
             }
         })
     }

@@ -79,3 +79,14 @@ class UserCreate(View):
             print(traceback.format_exc())
             return JsonResponse({'error': str(e)}, status=400)
 
+
+def check_duplicate_id(request):
+    if request.method == "GET":
+        user_id = request.GET.get("user_id")
+        id_check = UserMaster.objects.filter(user_id=user_id).count()
+
+        if id_check == 0:
+            return JsonResponse({'success': True, 'message': "사용 가능한 이메일(아이디)입니다."})
+        else:
+            return JsonResponse({'id_check': id_check, "message": "중복된 ID 입니다."})
+
