@@ -44,3 +44,11 @@ function SweetAlert_OK() {
         icon: "success"
     });
 }
+
+function SweetAlert_Error(message) {
+    return Swal.fire({
+        title: "Error",
+        text: message,
+        icon: "error"
+    });
+}
