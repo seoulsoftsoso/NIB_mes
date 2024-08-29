@@ -397,7 +397,8 @@ class enterprise_name_ac(autocomplete.Select2QuerySetView):
         if is_super == 'true':
             qs = EnterpriseMaster.objects.all()
         else:
-            qs = EnterpriseMaster.objects.filter(id=self.request.COOKIES.get('enterprise_id'))
+            # qs = EnterpriseMaster.objects.filter(id=self.request.COOKIES.get('enterprise_id'))
+            qs = EnterpriseMaster.objects.filter(id=self.request.user.enterprise_id)
 
         if self.q:
             qs = qs.filter(name__contains=self.q)

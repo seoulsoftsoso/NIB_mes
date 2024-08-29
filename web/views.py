@@ -54,7 +54,8 @@ def new_enterprise(request):
 
 def Menumaster(request):
     context = {}
-    enter = enterprise_fm(request.GET, request.COOKIES['enterprise_name'])
+    enter = enterprise_fm(request.GET, request.user.enterprise.name)
+    # enter = enterprise_fm(request.GET, request.COOKIES['enterprise_name'])
     context['ep'] = enter
     return render(request, 'Setting/Menu/menumaster.html', context)
 
@@ -192,3 +193,9 @@ def delivery_page(request):
         'result': result
     }
     return render(request, 'Delivery/main.html', context)
+
+
+def test_page(request):
+    context = {}
+    return render(request, 'Delivery/test.html', context)
+

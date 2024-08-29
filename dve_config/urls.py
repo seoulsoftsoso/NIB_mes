@@ -173,6 +173,8 @@ urlpatterns = [
                 # 출하 관리
                 path('ordering_ex/ordering_export_status/', delivery_page, name='delivery_page'),
 
+                # Test
+                path('test/html/', test_page, name='test_page'),
 
                 # 에러
                 path('error/404', error_page, name="error_page"),

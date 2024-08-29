@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Configuration</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+        body {
+            display: flex;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        #menu-list {
+            width: 30%;
+            margin-right: 20px;
+            background: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+            height: 400px;
+            overflow-y: auto;
+        }
+
+        #menu-tree {
+            width: 70%;
+            background: #f1f1f1;
+            padding: 20px;
+            border: 1px solid #ddd;
+            height: 400px;
+            overflow-y: auto;
+        }
+
+        .menu-item {
+            background-color: #fff;
+            padding: 8px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        .tree-node {
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .tree-node ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="menu-list">
+        <h4>Available Menus</h4>
+        <div class="menu-item">Menu 1</div>
+        <div class="menu-item">Menu 2</div>
+        <div class="menu-item">Menu 3</div>
+        <div class="menu-item">Menu 4</div>
+    </div>
+
+    <div id="menu-tree">
+        <h4>Menu Structure</h4>
+        <div id="root" class="tree-node">
+            <span>Main Menu</span>
+            <ul></ul>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        $(function() {
+            // Make menu items draggable
+            $(".menu-item").draggable({
+                helper: "clone"
+            });
+
+            // Make tree nodes droppable
+            $(".tree-node").droppable({
+                accept: ".menu-item",
+                drop: function(event, ui) {
+                    console.log('event', event)
+                    console.log('ui', ui)
+                    var newItem = $("<li class='tree-node'></li>").text(ui.helper.text());
+                    $(this).children("ul").append(newItem);
+                    makeNodeDroppable(newItem);
+                }
+            });
+
+            function makeNodeDroppable(node) {
+                node.droppable({
+                    accept: ".menu-item",
+                    drop: function(event, ui) {
+                        var newItem = $("<li class='tree-node'></li>").text(ui.helper.text());
+                        $(this).children("ul").append(newItem);
+                        makeNodeDroppable(newItem);
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
