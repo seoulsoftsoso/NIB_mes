@@ -1,0 +1,24 @@
+<!--  Extra Large modal example -->
+{% load static %}
+<div class="modal fade bs-example-modal-xl member_guide_modal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-black" id="myExtraLargeModalLabel"><b>멤버 설정 가이드</b></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img src="{% static 'img/member_guide.gif' %}" style="width: 100%">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-soft-dark waves-effect waves-light" onclick="go_sub_menu()">이동하기</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script>
+    function go_sub_menu() {
+        window.location.href = "/"
+    }
+</script>
