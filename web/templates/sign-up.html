@@ -38,7 +38,7 @@
 
     <div id="container" class="container">
         <div class="d-flex justify-content-center mb-5">
-            <img src="{% static 'img/seoul_logo.png' %}" style="width: 30%">
+            <a href="/" class="d-flex justify-content-center"><img src="{% static 'img/seoul_logo.png' %}" style="width: 50%"></a>
         </div>
 
         <form id="multi-step-form">
@@ -252,11 +252,16 @@
                 setTimeout(function () {
                     $(".step").removeClass("animate__animated animate__fadeOutLeft").hide();
                     $(".step-" + currentStep).show().addClass("animate__animated animate__fadeInRight");
+                    // input 포커스
+                    setTimeout(function () {
+                        $(".step-" + currentStep).find('input:visible:first').focus();
+                    }, 1000)
                 }, 500);
             }
         });
 
         // 이전 버튼
+        /*
         $(".prev-step").click(function () {
             if (currentStep > 1) {
                 $(".step-" + currentStep).addClass("animate__animated animate__fadeOutRight");
@@ -267,6 +272,7 @@
                 }, 500);
             }
         });
+         */
 
         // 이메일 유효성 검사 함수
         function isValidEmail(email) {
