@@ -52,3 +52,15 @@ function SweetAlert_Error(message) {
         icon: "error"
     });
 }
+
+// 튜토리얼 메뉴 설정, 멤버 설정 리다이렉트 이벤트 변수
+function initTutorialSettings() { // 초기화 함수
+    if (localStorage.getItem('tutorial_menu_settings') === null) {
+        localStorage.setItem('tutorial_menu_settings', 'false');
+    }
+    if (localStorage.getItem('tutorial_member_settings') === null) {
+        localStorage.setItem('tutorial_member_settings', 'false');
+    }
+}
+
+initTutorialSettings();

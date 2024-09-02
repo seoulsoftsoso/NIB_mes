@@ -186,7 +186,12 @@
                     data: formData,
                     success: function (res) {
                         alert(res.message);
-                        location.reload()
+                        if (localStorage.getItem('tutorial_member_settings') === 'true') {
+                            localStorage.setItem('tutorial_member_settings', 'false');
+                            window.top.location.href = "/sign-up/add_info";
+                        } else {
+                            location.reload()
+                        }
                     },
                     error: function (xhr, status, error) {
                         alert('오류가 발생했습니다: ' + error);

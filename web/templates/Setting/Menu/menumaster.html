@@ -463,7 +463,12 @@
             data: allData,
             success : function (res) {
                 alert("저장 완료")
-                window.top.location.reload(true);
+                if (localStorage.getItem('tutorial_menu_settings') === 'true') {
+                    localStorage.setItem('tutorial_menu_settings', 'false');
+                    window.top.location.href = "/sign-up/add_info";
+                } else {
+                    window.top.location.reload();
+                }
             }
         })
 

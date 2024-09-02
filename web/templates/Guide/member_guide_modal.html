@@ -12,13 +12,14 @@
                 <img src="{% static 'img/member_guide.gif' %}" style="width: 100%">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-soft-dark waves-effect waves-light" onclick="go_sub_menu()">이동하기</button>
+                <button type="button" class="btn btn-soft-dark waves-effect waves-light" onclick="go_sub_member()">이동하기</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <script>
-    function go_sub_menu() {
+    function go_sub_member() {
+        localStorage.setItem('tutorial_member_settings', 'true');
         window.location.href = "/"
     }
 </script>
