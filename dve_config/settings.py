@@ -242,8 +242,9 @@ CELERY_ENABLE_UTC = False
 # url
 # MEDIA_URL = 'http://175.212.116.77:8238/data/'  # For debug
 # MEDIA_URL = 'http://mes.seoulsoft.kr/data/'  # For debug
-# MEDIA_URL = 'http://127.0.0.1:8000/data/'  # For debug
-MEDIA_URL = 'http://118.44.218.236:8001/data/'  # For debug
+MEDIA_URL = 'http://127.0.0.1:8000/data/'  # For debug
+# MEDIA_URL = 'http://192.168.0.122:8270/data/'  # For debug
+# MEDIA_URL = 'http://118.44.218.236:8001/data/'  # For debug
 MEDIA_ROOT = os.path.join(BASE_DIR, 'data')
 
 
@@ -259,3 +260,6 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:8000',
 ]
 
+# QR CODE 스캔 시 출력되는 url
+BASE_URL = 'http://127.0.0.1:8000'
+# BASE_URL = 'http://192.168.0.122:8270'

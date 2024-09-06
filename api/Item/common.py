@@ -1,6 +1,10 @@
 import traceback
+import qrcode
+import io
+import uuid
 
-from django.contrib.messages import success
+from django.core.files.base import ContentFile
+from django.db import transaction
 from django.db.models import Prefetch, F, Max, Q
 from django.db.models.functions import TruncDate
 from django.forms.models import model_to_dict
@@ -9,6 +13,7 @@ from django.shortcuts import get_object_or_404
 from django.views import View
 from django.db import models
 from api.models import ItemMaster, UnitPrice, StockStatus
+from dve_config import settings
 
 
 def get_item_data(item_id=None, enterprise_id=None):
@@ -171,6 +176,21 @@ class GetStock(View):
 
 class ItemAdd(View):
 
+    def generate_qr_code(self, item_id):
+        qr = qrcode.QRCode(version=1, box_size=10, border=5)
+        url = f"{settings.BASE_URL}/qr_code/item_detail/{item_id}/"
+        qr.add_data(url)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white")
+
+        buffer = io.BytesIO()
+        img.save(buffer, format='PNG')
+
+        file_name = f'{uuid.uuid4()}.png'
+        file_content = ContentFile(buffer.getvalue(), name=file_name)
+
+        return file_content
+
     def post(self, request, *args, **kwargs):
         formdata = request.POST
         file_path = request.FILES.get('item_image')
@@ -178,9 +198,9 @@ class ItemAdd(View):
 
         try:
             if action == 'create':
+
                 item = ItemMaster(
                     item_name=formdata.get('item_name'),
-                    qr_code=formdata.get('item_barcode', ''),
                     item_code=formdata.get('item_code'),
                     item_type=formdata.get('item_type'),
                     item_category=formdata.get('item_category'),
@@ -192,12 +212,17 @@ class ItemAdd(View):
                 )
                 if file_path:
                     item.item_image = file_path
+
                 item.save()
 
                 unit_price = item.unit_prise_item.create(
                     unit_price=formdata.get('item_unit_price'),
                     created_by_id=request.user.id,
                 )
+
+                # QR 코드 이미지 생성 및 저장
+                qr_code_file = self.generate_qr_code(item.id)
+                item.qr_code.save(qr_code_file.name, qr_code_file, save=True)
 
             elif action == 'update':
                 item_id = formdata.get('item_id')
@@ -262,6 +287,7 @@ class ItemAdd(View):
             message = '수정되었습니다.' if action == 'update' else '등록되었습니다.'
             return JsonResponse({
                 'message': message,
+                'qr_code': item.qr_code.url if item.qr_code else None,
                 'item': item_data
             })
 

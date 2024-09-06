@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>품목 상세 정보</title>
+    {% load static %}
+    {% include "header.html" %}
+</head>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-5">품목 상세 정보</h4>
+                <div class="table-responsive" id="item_detail_table">
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <th scope="row">품목명</th>
+                            <td>{{ item.item_name }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">품목코드</th>
+                            <td>{{ item.item_code }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">규격</th>
+                            <td>{{ item.standard }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">모델</th>
+                            <td>{{ item.model }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">품목유형</th>
+                            <td>{{ item.get_item_type_display }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">카테고리</th>
+                            <td>{{ item.item_category }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">현재수량</th>
+                            <td>{{ item.current_quan }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">안전재고</th>
+                            <td>{{ item.safe_quan }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">이미지</th>
+                            <td>
+                                <img src="{{ MEDIA_URL }}{{ item.item_image }}" alt="품목 이미지">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+{% include 'footer.html' %}
+<script>
+    
+</script>
+</body>
+</html>

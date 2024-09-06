@@ -173,6 +173,9 @@ urlpatterns = [
                 # 출하 관리
                 path('ordering_ex/ordering_export_status/', delivery_page, name='delivery_page'),
 
+                # QRCode_In
+                path('qr_code/item_detail/<int:item_id>/', qr_in_item_detail, name='qr_in_item_detail'),
+
                 # Test
                 path('test/html/', test_page, name='test_page'),
 

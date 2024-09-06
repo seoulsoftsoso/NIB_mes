@@ -34,6 +34,10 @@ def item_out_img_upload_path(instance, filename):  # 출고 관리 이미지 경
     return os.path.join('item_out_img', filename)
 
 
+def item_add_qrcode_upload_path(instance, filename):
+    return os.path.join('item_add_qrcode', filename)
+
+
 class EnterpriseMaster(models.Model):
     class Meta:
         unique_together = ('code', 'name')
@@ -290,7 +294,7 @@ class ItemMaster(models.Model):
     item_category = models.CharField(max_length=255, null=True, verbose_name='카테고리')
     current_quan = models.FloatField(null=True, default=0, verbose_name='현 재고')
     safe_quan = models.FloatField(null=True, verbose_name='안전 재고')
-    qr_code = models.CharField(max_length=255, null=True, verbose_name='QR 코드')
+    qr_code = models.FileField(upload_to=item_add_qrcode_upload_path, default=None, null=True, verbose_name='QR 코드')
     item_image = models.FileField(upload_to=item_master_img_upload_path, default=None, null=True, verbose_name='품목 이미지')
     enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, default=1, related_name='item_master_enterprise',
                                    verbose_name='업체', null=False)

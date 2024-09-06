@@ -50,7 +50,7 @@
                                 <tr style="cursor: pointer" data-item-id="{{ obj.id }}" onclick="read_full_modal(
                                     '{{ obj.id }}', '{{ obj.item_code }}', '{{ obj.item_name }}', '{{ obj.standard }}', '{{ obj.model }}',
                                     '{{ obj.get_item_type_display }}', '{{ obj.item_category }}', '{{ obj.current_quan }}', '{{ obj.safe_quan }}',
-                                        '{{ obj.qr_code }}', '{{ MEDIA_URL }}{{ obj.item_image }}')">
+                                        '{{ MEDIA_URL }}{{ obj.qr_code }}', '{{ MEDIA_URL }}{{ obj.item_image }}')">
                                     <td>{{ forloop.counter }}</td>
                                     <td>{{ obj.item_code }}</td>
                                     <td>{{ obj.item_name }}</td>
@@ -160,7 +160,7 @@
 
     });
 
-    function read_full_modal(id, item_code, item_name, standard, model, item_type, item_category, current_quan, safe_quan, qr_code, item_image) {
+    function read_full_modal(id, item_code, item_name, standard, model, item_type, item_category, current_quan, safe_quan, qr_code, item_image, media_url) {
         $("#detail_dropdown").show()
         select_item = id
 
@@ -202,7 +202,7 @@
                 </tr>
                 <tr>
                     <th scope="row">QR 코드</th>
-                    <td>${qr_code}</td>
+                    <td><img src="${qr_code || defaultImageUrl}" alt="QR코드" style="max-width: 120px;" onerror="this.src='${defaultImageUrl}';"></td>
                 </tr>
                 <tr>
                     <th scope="row">이미지</th>

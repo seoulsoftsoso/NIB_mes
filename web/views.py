@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch, Sum
 from django.db.models.functions import Coalesce
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from api.Delivery.delivery_api import *
 from api.Item.common import get_item_data
@@ -193,6 +193,15 @@ def delivery_page(request):
         'result': result
     }
     return render(request, 'Delivery/main.html', context)
+
+
+def qr_in_item_detail(request, item_id):
+    item = get_object_or_404(ItemMaster, id=item_id)
+    context = {
+        'item': item,
+        'MEDIA_URL': settings.MEDIA_URL,
+    }
+    return render(request, 'QRCode_In/item_detail.html', context)
 
 
 def test_page(request):
