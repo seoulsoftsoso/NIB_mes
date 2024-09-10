@@ -1,0 +1,103 @@
+{% load static %}
+<!-- sample modal content -->
+<div id="edit_modal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalFullscreenLabel">로봇 수정</h5>
+            </div>
+
+            <form id="edit_form" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <input type="hidden" id="robot_id" name="robot_id">
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-xxl-12">
+                                <label class="form-label">로봇명 <span class="red_font">*</span></label>
+                                <input class="form-control" type="text" id="edit_name" name="edit_name" placeholder="이름을 입력해주세요" required/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-xxl-6">
+                                <label class="form-label">로봇코드 <span class="red_font">*</span></label>
+                                <input class="form-control" type="text" id="edit_code" name="edit_code" placeholder="코드를 입력해주세요" required/>
+                            </div>
+                            
+                            <div class="col-xxl-6">
+                                <label class="form-label">모델</label>
+                                <input class="form-control" type="text" id="edit_model" name="edit_model" placeholder="모델을 입력해주세요"/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-xxl-6">
+                                <label class="form-label">제조사</label>
+                                <input class="form-control" type="text" id="edit_make_co" name="edit_make_co" placeholder="제조사를 입력해주세요"/>
+                            </div>
+                            
+                            <div class="col-xxl-6">
+                                <label class="form-label">작업 위치</label>
+                                <select class="form-control" id="edit_work_loc" name="edit_work_loc" required>
+                                    <option value="" selected disabled>로봇이 설치된 위치를 선택해주세요.</option>
+                                    {% for obj in warehouse %}
+                                        <option value="{{ obj.id }}">{{ obj.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="col-xxl-12">
+                            <label class="form-label">메모</label>
+                            <textarea class="form-control" type="text" id="edit_memo" name="edit_memo" placeholder="메모를 입력해주세요"></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-soft-primary waves-effect waves-light">저장</button>
+                    <button type="button" class="btn btn-soft-secondary waves-effect waves-light" data-bs-dismiss="modal">취소</button>
+                </div>
+            </form>
+            
+        </div><!-- /.modal-content -->
+    </div>
+</div>
+
+<script>
+    $('#edit_form').on('submit', function (event) {
+        event.preventDefault()
+
+        var form = document.getElementById('edit_form');
+
+        if (form.checkValidity() === false) {
+            form.classList.add('was-validated');
+            return false
+        }
+        
+        let formData = $("#edit_form").serializeArray();
+        formData.push({name: 'type', value: 'E'});
+
+        $.ajax({
+            url: "{% url 'UpdateRobot' %}",
+            type: 'POST',
+            data: formData,
+            success: function () {
+                SweetAlert_OK().then(() => {
+                    location.reload()
+                })
+            },
+            error: function (xhr, status, error) {
+                SweetAlert_Error(error)
+            }
+        })
+    })
+</script>

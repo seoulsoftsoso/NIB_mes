@@ -541,3 +541,24 @@ class StockAdjustment(models.Model):
                                    related_name='adjust_updated_by')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
+
+
+class RobotMaster(models.Model):
+    name = models.CharField(max_length=128, null=True, verbose_name='로봇 이름')
+    code = models.CharField(max_length=128, null=True, verbose_name='로봇 코드')
+    model = models.CharField(max_length=128, null=True, verbose_name='로봇 모델')
+    make_co = models.CharField(max_length=128, null=True, verbose_name='제조사')
+    work_loc = models.ForeignKey('Warehouse', on_delete=models.DO_NOTHING, null=False, related_name='robot_warehouse',
+                                 verbose_name='로봇 장소')
+    memo = models.CharField(max_length=255, null=True, verbose_name='기타 메모')
+    del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
+    enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, default=1, related_name='robot_enterprise',
+                                   verbose_name='업체', null=False)
+    created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='최초작성자',
+                                   related_name='robot_created_by')
+    updated_by = models.ForeignKey('UserMaster', on_delete=models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='robot_updated_by')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
+
+

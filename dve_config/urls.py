@@ -26,6 +26,7 @@ from api.Item.common import *
 from api.Item.item_adjustment import *
 from api.Item.item_input import *
 from api.Item.item_output import *
+from api.Robot.views import *
 from api.auto_complete import enterprise_name_ac, client_name_ac
 from api.base.codemaster_views import CodeMasterViewSet, CodeMasterSelectView
 from api.base.customer_views import *
@@ -172,6 +173,12 @@ urlpatterns = [
 
                 # 출하 관리
                 path('ordering_ex/ordering_export_status/', delivery_page, name='delivery_page'),
+
+                # 로봇 관리
+                path('robot/mgmt/', robot_mgmt, name='robot_mgmt'),
+                path('robot/history/', robot_history, name='robot_history'),
+                path('robot/create/', CreateRobot.as_view(), name='CreateRobot'),
+                path('robot/update/', UpdateRobot.as_view(), name='UpdateRobot'),
 
                 # QRCode_In
                 path('qr_code/item_detail/<int:item_id>/', qr_in_item_detail, name='qr_in_item_detail'),

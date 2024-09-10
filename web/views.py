@@ -6,7 +6,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from api.Delivery.delivery_api import *
 from api.Item.common import get_item_data
 from api.base.base_form import enterprise_fm
-from api.models import MenuMaster, ItemMaster, UnitPrice, ItemIn, Warehouse, ItemOut, CustomerMaster, UserMaster
+from api.models import MenuMaster, ItemMaster, UnitPrice, ItemIn, Warehouse, ItemOut, CustomerMaster, UserMaster, \
+    RobotMaster
 from dve_config import settings
 
 
@@ -202,6 +203,24 @@ def qr_in_item_detail(request, item_id):
         'MEDIA_URL': settings.MEDIA_URL,
     }
     return render(request, 'QRCode_In/item_detail.html', context)
+
+
+def robot_mgmt(request):
+    enterprise = request.user.enterprise_id
+
+    warehouse = Warehouse.objects.filter(enterprise_id=enterprise, del_flag='N')
+    robot = RobotMaster.objects.filter(enterprise_id=enterprise, del_flag='N')
+
+    context = {
+        'warehouse': warehouse,
+        'result': robot,
+    }
+    return render(request, 'Robot/Mgmt/robot_mgmt.html', context)
+
+
+def robot_history(request):
+    context = {}
+    return render(request, 'Robot/History/history.html', context)
 
 
 def test_page(request):
