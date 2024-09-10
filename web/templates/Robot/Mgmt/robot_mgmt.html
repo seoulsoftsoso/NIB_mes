@@ -60,15 +60,17 @@
                         <td>{{ obj.work_loc.name }}</td>
                         <td>{{ obj.created_at|date:"Y-m-d" }}</td>
                         <td>
-                            <button type="button" class="btn btn-soft-primary waves-effect waves-light"
-                                    onclick="edit_btn('{{ obj.id }}', '{{ obj.name }}', '{{ obj.code }}', '{{ obj.model }}', '{{ obj.make_co }}',
-                                            '{{ obj.work_loc.id }}', '{{ obj.memo }}')">
-                                <i class="bx bx-pencil"></i>
-                            </button>
-                            <button type="button" class="btn btn-soft-danger waves-effect waves-light"
-                                    onclick="delete_btn('{{ obj.id }}')">
-                                <i class="bx bxs-trash"></i>
-                            </button>
+                            {% if user_permissions == "Admin" or user_permissions == "Member" %}
+                                <button type="button" class="btn btn-soft-primary waves-effect waves-light"
+                                        onclick="edit_btn('{{ obj.id }}', '{{ obj.name }}', '{{ obj.code }}', '{{ obj.model }}', '{{ obj.make_co }}',
+                                                '{{ obj.work_loc.id }}', '{{ obj.memo }}')">
+                                    <i class="bx bx-pencil"></i>
+                                </button>
+                                <button type="button" class="btn btn-soft-danger waves-effect waves-light"
+                                        onclick="delete_btn('{{ obj.id }}')">
+                                    <i class="bx bxs-trash"></i>
+                                </button>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

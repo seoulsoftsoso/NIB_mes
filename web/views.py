@@ -184,7 +184,7 @@ def warehouse_info(request):
 
 def error_page(request):
     context = {}
-    return render(request, 'error_404.html', context)
+    return render(request, 'error_403.html', context)
 
 
 def delivery_page(request):
