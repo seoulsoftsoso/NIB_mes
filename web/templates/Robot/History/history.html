@@ -3,8 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    {% load static %}
+    {% include "header.html" %}
+
 </head>
+<style>
+    #history_datatable {
+        text-align: center;
+        vertical-align: middle;
+    }
+    
+    
+    .sorting {
+        text-align: center !important;
+    }
+    
+    .dataTables_filter {
+        text-align: start !important;
+    }
+    
+    .dataTables_filter {
+        text-align: start !important;
+    }
+    
+</style>
 <body>
 
+<div class="layout-wrapper layout-content-navbar">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title mb-5">히스토리</h4>
+
+                {% csrf_token %}
+                <table id="history_datatable" class="table table-bordered dt-responsive  nowrap w-100 mt-5">
+                    <thead>
+                    <tr>
+                        <th>로봇코드</th>
+                        <th>로봇명</th>
+                        <th>모델</th>
+                        <th>작업시작</th>
+                        <th>작업종료</th>
+                        <th>유형</th>
+                    </tr>
+                    </thead>
+                    
+                    <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+{% include 'footer.html' %}
+<script>
+    let user_table = null;
+
+    $(document).ready(function () {
+        user_table = $('#history_datatable').DataTable({
+            lengthChange: false,
+            searching: true,
+            dom: '<"row"<"col-sm-12 col-md-6"f><"col-sm-12 col-md-6 text-end"B>>' + // 'f'를 추가하여 검색란 표시
+                '<"row"<"col-sm-12"tr>>' +
+                '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            buttons: [
+                {
+                    extend: 'excel',
+                    text: '엑셀 내보내기',
+                    className: 'btn btn-success me-3',
+                },
+                {
+                    text: '+ 로봇 추가',
+                    className: 'btn btn-info waves-effect waves-light',
+                    attr: {
+                        'data-bs-toggle': 'modal',
+                        'data-bs-target': '#create_modal'
+                    },
+                    action: function (e, dt, node, config) {
+                        $('#create_modal').modal('show');
+                    }
+                }
+            ],
+            // rowId: select_item,
+            language: {
+                search: "_INPUT_",  // search 문구를 입력 필드로 대체
+                searchPlaceholder: "검색어를 입력해주세요", // placeholder 추가
+                emptyTable: "등록된 데이터가 없습니다."
+            },
+            initComplete: function (settings, json) {
+                $('.dataTables_filter input').removeClass('form-control-sm');
+                $('.dataTables_filter label').addClass('col-lg-6');
+                $('.dataTables_filter input').css('width', '100%');
+            }
+        });
+    });
+    
+    
+</script>
 </body>
 </html>

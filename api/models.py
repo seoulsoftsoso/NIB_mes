@@ -427,10 +427,10 @@ class ItemOut(models.Model):
     ]
 
     OUT_STATUS_CHOICES = [
-        ('F', '입고 완료'),
-        ('P', '부분 입고'),
-        ('W', '입고 대기'),
-        ('C', '입고 취소'),
+        ('F', '출고 완료'),
+        ('P', '부분 출고'),
+        ('W', '출고 대기'),
+        ('C', '출고 취소'),
     ]
 
     out_no = models.CharField(max_length=64, null=True, verbose_name='출고 번호')
@@ -561,4 +561,41 @@ class RobotMaster(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
 
+
+class RobotStatus(models.Model):
+    work_start = models.DateTimeField(default=timezone.now, null=False, verbose_name='작업 시작일')
+    work_end = models.DateTimeField(default=timezone.now, null=False, verbose_name='작업 종료일')
+    work_status = models.CharField(max_length=1, default='P', null=False, verbose_name='로봇 상태')  # P: 정지, I: 가동 중, E: 에러
+    err_msg = models.CharField(max_length=255, null=True, verbose_name='에러 메세지')
+    robot = models.ForeignKey('RobotMaster', on_delete=models.DO_NOTHING, null=False, related_name='robot_master')
+    del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
+    created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='최초작성자',
+                                   related_name='robot_status_created_by')
+    updated_by = models.ForeignKey('UserMaster', on_delete=models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='robot_status_updated_by')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
+
+
+class DeliveryMaster(models.Model):
+    STATUS_CHOICES = [
+        ('F', '출하 완료'),
+        ('P', '부분 출하'),
+        ('W', '출하 대기'),
+    ]
+
+    status = models.CharField(max_length=1, default='W', null=False, choices=STATUS_CHOICES, verbose_name='출하 상태')
+    due_date = models.DateField(default=timezone.now, null=False, verbose_name='출하 예정일')
+    no = models.CharField(max_length=128, null=True, verbose_name='출하 번호')
+    customer = models.ForeignKey('CustomerMaster', on_delete=models.DO_NOTHING, default=1, null=False, verbose_name='입고처 정보',
+                                   related_name='del_custom')
+    item = models.ForeignKey('ItemMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='품목 정보',
+                                related_name='del_item')
+    del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
+    created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='최초작성자',
+                                   related_name='del_created_by')
+    updated_by = models.ForeignKey('UserMaster', on_delete=models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='del_updated_by')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
 

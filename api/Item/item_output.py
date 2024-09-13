@@ -220,23 +220,23 @@ class ItemOutFilter(View):
     def get(self, request, *args, **kwargs):
         qs = ItemOut.objects.filter(created_by__enterprise_id=request.user.enterprise_id, del_flag="N")
 
-        # 입고 상태 필터
+        # 출고 상태 필터
         item_out_filter = request.GET.get('item_out_filter')
         if item_out_filter:
             statuses = item_out_filter.split(',')
-            qs = qs.filter(in_status__in=statuses)
+            qs = qs.filter(out_status__in=statuses)
 
         # 아이템 유형 필터
         item_type_filter = request.GET.get('item_type_filter')
         if item_type_filter:
             types = item_type_filter.split(',')
-            qs = qs.filter(in_item__item_type__in=types)
+            qs = qs.filter(out_item__item_type__in=types)
 
         # 위치(창고) 필터
         warehouse_filter = request.GET.get('warehouse_filter')
         if warehouse_filter:
             warehouses = warehouse_filter.split(',')
-            qs = qs.filter(wh_id__in=warehouses)
+            qs = qs.filter(out_wh_id__in=warehouses)
 
         # 날짜 범위 필터
         start_date = request.GET.get('start_date')

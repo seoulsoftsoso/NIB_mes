@@ -7,7 +7,7 @@ from api.Delivery.delivery_api import *
 from api.Item.common import get_item_data
 from api.base.base_form import enterprise_fm
 from api.models import MenuMaster, ItemMaster, UnitPrice, ItemIn, Warehouse, ItemOut, CustomerMaster, UserMaster, \
-    RobotMaster
+    RobotMaster, DeliveryMaster
 from dve_config import settings
 
 
@@ -123,7 +123,7 @@ def Material_output(request):
     context = {
         'result': item_out,
         'wh_filter': wh_filter,
-        'item_out_filter': ItemIn.IN_STATUS_CHOICES,
+        'item_out_filter': ItemOut.OUT_STATUS_CHOICES,
         'item_type_choices': ItemMaster.ITEM_TYPE_CHOICES
     }
     return render(request, 'Material/out_mgmt/material_output.html', context)
@@ -187,11 +187,26 @@ def error_page(request):
     return render(request, 'error_403.html', context)
 
 
+# def delivery_page(request):
+#     result = DeliveryList()
+#     DeliveryTrack()
+#     context = {
+#         'result': result
+#     }
+#     return render(request, 'Delivery/main_test.html', context)
+
+
 def delivery_page(request):
-    result = DeliveryList()
-    DeliveryTrack()
+    enterprise = request.user.enterprise_id
+    # 필터용
+    wh_filter = Warehouse.objects.filter(created_by__enterprise_id=enterprise, del_flag='N')
+    # 제품과 반제품만 필터링
+    filtered_item_types = [choice for choice in ItemMaster.ITEM_TYPE_CHOICES if choice[0] in ['P', 'S']]
+
     context = {
-        'result': result
+        'wh_filter': wh_filter,
+        'item_out_filter': DeliveryMaster.STATUS_CHOICES,
+        'item_type_choices': filtered_item_types
     }
     return render(request, 'Delivery/main.html', context)
 
