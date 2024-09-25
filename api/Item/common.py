@@ -206,7 +206,7 @@ class ItemAdd(View):
                     item_category=formdata.get('item_category'),
                     model=formdata.get('item_model'),
                     standard=formdata.get('item_standard'),
-                    current_quan=formdata.get('quan') or None,
+                    current_quan=0,
                     safe_quan=formdata.get('safe_quan') or None,
                     created_by_id=request.user.id,
                 )

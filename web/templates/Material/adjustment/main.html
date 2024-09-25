@@ -189,7 +189,7 @@
                 </tr>
                 <tr>
                     <th scope="row">모델</th>
-                    <td>${data.current_quan}</td>
+                    <td>${data.model}</td>
                 </tr>
                 <tr>
                     <th scope="row">카테고리</th>
@@ -215,7 +215,7 @@
     // 조정 버튼
     function edit_item() {
         $("#adjust_modal").modal('show')
-        $("#current_quan").val(detail_item_data.current_quan)
+        $("#current_quan").val(detail_item_data.quantity)
         $("#hidden_item_id").val(detail_item_data.item_id)
     }
     
