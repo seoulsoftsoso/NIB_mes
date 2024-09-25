@@ -138,9 +138,9 @@ WSGI_APPLICATION = 'dve_config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'wms',
-        'USER': 'groupmaster',
-        'PASSWORD': 'qing1105!@',
+        'NAME': 'cube',
+        'USER': 'root',
+        'PASSWORD': 'hong11',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }

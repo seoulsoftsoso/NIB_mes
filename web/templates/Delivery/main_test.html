@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    {% include "header.html" %}
+
+</head>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title mb-5">출하 관리</h4>
+                {% csrf_token %}
+                
+                <div class="col-lg-6">
+                    <div class="row">
+                        <select class="form-control">
+                            {% for obj in result %}
+                                <option value="{{ obj.node.id }}">{{ obj.node.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="btn btn-light waves-effect" onclick="search_btn()">조회</button>
+            </div>
+        </div>
+        {% include 'Setting/Enterprise/fullscreen_modal.html' %}
+    </div> <!-- end col -->
+</div> <!-- end row -->
+{% include 'footer.html' %}
+<script>
+    function search_btn() {
+        $("#enterprise_add_modal").modal('show')
+    }
+</script>
+</body>
+</html>
