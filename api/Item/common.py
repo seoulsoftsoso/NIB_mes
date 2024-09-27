@@ -303,7 +303,7 @@ class Update_Item(View):
 
     def post(self, request, *args, **kwargs):
         type = request.POST.get('type')
-        print('type', type)
+        print('FILES', request.FILES)
         if type == 'E':
             try:
                 item = get_object_or_404(ItemMaster, id=request.POST.get('item_id'))
@@ -316,7 +316,10 @@ class Update_Item(View):
                 item.item_category = request.POST.get('카테고리', item.item_category)
                 item.current_quan = request.POST.get('현재수량', item.current_quan)
                 item.safe_quan = request.POST.get('안전재고', item.safe_quan)
-                item.qr_code = request.POST.get('QR 코드', item.qr_code)
+
+                # QR 코드 필드 처리
+                if 'QR 코드' in request.POST:
+                    item.qr_code = request.POST.get('QR 코드')
 
                 # 이미지 업데이트
                 if 'item_image' in request.FILES:
@@ -337,7 +340,7 @@ class Update_Item(View):
                     'item_category': item.item_category,
                     'current_quan': item.current_quan,
                     'safe_quan': item.safe_quan,
-                    'qr_code': item.qr_code,
+                    'qr_code': item.qr_code.url if item.qr_code else None,  # URL로 변환
                     'unitname': item.unitname,
                     'item_image': item.item_image.url if item.item_image else None,
                     'unit_type_displays': unit_type_displays

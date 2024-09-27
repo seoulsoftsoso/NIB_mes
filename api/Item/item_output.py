@@ -65,8 +65,8 @@ class OutputCreate(View):
                         item_out = ItemOut.objects.create(
                             out_type=row['out_type'],
                             out_status=row['status'],
-                            out_date=out_date,  # 입고 예정일
-                            out_at=out_date,  # 입고일
+                            out_date=out_date,  # 출고 예정일
+                            out_at=out_date,  # 출고일
                             out_quan=out_quan,
                             out_note=row['memo'],
                             out_item=item,
@@ -77,39 +77,13 @@ class OutputCreate(View):
                             created_by_id=request.user.id,
                         )
 
-                        # 재고 현황 모델 update
-                        # StockStatus.objects.create(
-                        #     item=item,
-                        #     wh=warehouse,
-                        #     wr=wr_rack,
-                        #     enterprise_id=request.user.enterprise_id,
-                        #     output=item_out,
-                        #     quantity=out_quan,
-                        #     io_status='O',
-                        #     created_by_id=request.user.id,
-                        # )
-
-                        # ItemMaster의 current_quan 업데이트
                         item.current_quan -= out_quan
                         item.save()
 
-                        # StockStatus(재고 현황)에 데이터 저장 또는 업데이트
-                        stock_status, created = StockStatus.objects.get_or_create(
-                            item=item,
-                            wh=warehouse,
-                            wr=wr_rack,
-                            enterprise_id=request.user.enterprise_id,
-                            defaults={
-                                'quantity': out_quan,
-                                'io_status': 'O',
-                                'created_by_id': request.user.id,
-                                'output': item_out
-                            }
-                        )
-
-                        if not created:
-                            stock_status.quantity -= out_quan
-                            stock_status.save()
+                        stock_id = row['stock_id']
+                        stock_status = StockStatus.objects.get(id=stock_id)
+                        stock_status.quantity -= out_quan
+                        stock_status.save()
 
                         # 파일 처리
                         if f'file_{table_data.index(row)}' in files:

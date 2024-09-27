@@ -163,6 +163,7 @@
     function read_full_modal(id, item_code, item_name, standard, model, item_type, item_category, current_quan, safe_quan, qr_code, item_image, media_url) {
         $("#detail_dropdown").show()
         select_item = id
+        console.log('qr', qr_code)
 
         const detailHtml = `
     <div class="table-responsive" id="item_detail_table">
