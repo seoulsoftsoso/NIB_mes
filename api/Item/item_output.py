@@ -78,16 +78,16 @@ class OutputCreate(View):
                         )
 
                         # 재고 현황 모델 update
-                        StockStatus.objects.create(
-                            item=item,
-                            wh=warehouse,
-                            wr=wr_rack,
-                            enterprise_id=request.user.enterprise_id,
-                            output=item_out,
-                            quantity=out_quan,
-                            io_status='O',
-                            created_by_id=request.user.id,
-                        )
+                        # StockStatus.objects.create(
+                        #     item=item,
+                        #     wh=warehouse,
+                        #     wr=wr_rack,
+                        #     enterprise_id=request.user.enterprise_id,
+                        #     output=item_out,
+                        #     quantity=out_quan,
+                        #     io_status='O',
+                        #     created_by_id=request.user.id,
+                        # )
 
                         # ItemMaster의 current_quan 업데이트
                         item.current_quan -= out_quan
@@ -101,9 +101,9 @@ class OutputCreate(View):
                             enterprise_id=request.user.enterprise_id,
                             defaults={
                                 'quantity': out_quan,
-                                'io_status': 'I',
+                                'io_status': 'O',
                                 'created_by_id': request.user.id,
-                                'output': out_quan
+                                'output': item_out
                             }
                         )
 
