@@ -22,6 +22,7 @@ from drf_yasg import openapi
 from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 
+from api.Delivery.views import *
 from api.Item.common import *
 from api.Item.item_adjustment import *
 from api.Item.item_input import *
@@ -173,6 +174,13 @@ urlpatterns = [
 
                 # 출하 관리
                 path('ordering_ex/ordering_export_status/', delivery_page, name='delivery_page'),
+                path('delivery/check-list/', DeliveryList, name='DeliveryList'),
+                path('delivery/check-track/', DeliveryTrack, name='DeliveryTrack'),
+                path('delivery/company/get/', DeliveryCompanyGet.as_view(), name='DeliveryCompanyGet'),
+                path('delivery/get/', DeliveryGet.as_view(), name='DeliveryGet'),
+                path('delivery/create/', DeliveryCreate.as_view(), name='DeliveryCreate'),
+                path('delivery/delete/', UpdateDelivery.as_view(), name='UpdateDelivery'),
+                path('invoice/get/', InvoiceGet.as_view(), name='InvoiceGet'),
 
                 # 로봇 관리
                 path('robot/mgmt/', robot_mgmt, name='robot_mgmt'),

@@ -1,0 +1,438 @@
+{% load static %}
+<style>
+    
+    #item_table th, tbody {
+        text-align: center;
+        vertical-align: middle !important;
+    }
+
+    #item_table th {
+        background-color: #eeeeee;
+    }
+    
+    .modal_checkbox {
+        transform: scale(1.5);
+    }
+    
+    .hidden-column {
+        display: none;
+    }
+</style>
+<!-- sample modal content -->
+<div id="delivery_full_modal" class="modal fade" tabindex="-1" aria-labelledby="#exampleModalFullscreenLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalFullscreenLabel">출하서</h5>
+                <div>
+                    <button class="btn btn-light waves-effect" onclick="reset_form()">초기화</button>
+                    <button type="button" class="btn-close ms-5" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <form id="delivery_form" class="needs-validation" novalidate>
+                {% csrf_token %}
+                    <div class="row justify-content-center">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group row align-items-center">
+                                    <label for="init_place_select" class="col-sm-2 col-form-label">출하처 <span class="red_font">*</span></label>
+                                    <div class="col-sm-6">
+                                        <select class="form-control" name="init_place_select" id="init_place_select" required>
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="col-lg-6">
+                                <div class="form-group row align-items-center">
+                                    <label for="fixed_date" class="col-sm-2 col-form-label">작성일</label>
+                                    <div class="col-sm-6">
+                                        <div class="input-group" id="modal_datepicker1">
+                                            <input type="text" class="form-control" id="fixed_date" name="fixed_date" placeholder="today" readonly>
+                                        </div><!-- input-group -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="row mt-5">
+                            <div class="col-lg-6">
+                                <div class="form-group row align-items-center">
+                                    <label for="out_date" class="col-sm-2 col-form-label">출하(예정)일 <span
+                                            class="red_font">*</span></label>
+                                    <div class="col-sm-6">
+                                        <div class="input-group" id="modal_datepicker2">
+                                            <input type="text" class="form-control" placeholder="출하(예정)일" data-auto
+                                                   data-date-format="yyyy-mm-dd" data-date-container='#modal_datepicker2'
+                                                   data-provide="datepicker" id="out_date" name="out_date" required/>
+    
+                                            <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="col-xxl-11 mt-5">
+                            <div class="row justify-content-between">
+                                <div class="col-lg-4 d-flex justify-content-start">
+                                    <h4>품목정보</h4>
+                                </div>
+                                <div class="col-lg-4 d-flex justify-content-end">
+                                    <button type="button" class="btn btn-outline-dark waves-effect waves-light w-50">바코드 스캔
+                                    </button>
+                                </div>
+                            </div>
+    
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-nowrap align-middle" id="item_table">
+                                                <thead>
+                                                <tr>
+                                                    <th style="width: 20%">출고 목록 <span class="red_font">*</span></th>
+                                                    <th style="width: 10%">위치</th>
+                                                    <th style="width: 10%">출고 수량</th>
+                                                    <th style="width: 10%">원(단)가</th>
+                                                    <th style="width: 10%">판매단가</th>
+                                                    <th style="width: 5%">속성</th>
+                                                    <th style="width: 12%">택배사</th>
+                                                    <th style="width: 15%">송장번호</th>
+                                                    <th class="hidden-column"></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="tableBody">
+                                                <tr data-id="1">
+                                                    <td>
+                                                        <select class="form-control item_select" name="item_select" id="item_select" required>
+                                                            
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="out_location" id="out_location" readonly 
+                                                             data-toggle="tooltip" data-placement="top" title="출고 위치는 '출고서'에서 수정이 가능합니다.">
+                                                    </td>
+                                                    <td>
+                                                      <input type="text" class="form-control" name="current_quan" id="current_quan" readonly 
+                                                             data-toggle="tooltip" data-placement="top" title="출고 재고는 '출고서'에서 수정이 가능합니다.">
+                                                    </td>
+                                                    <td><input type="number" class="form-control" name="unit_price" id="unit_price" readonly required></td>
+                                                    <td><input type="number" class="form-control" name="del_price" id="del_price" required></td>
+                                                    <td>
+                                                        생산
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control del_com_select" name="del_com_select" id="del_com_select" required>
+                                                            
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" class="form-control" name="invoice_num" id="invoice_num" required></td>
+                                                    <td class="hidden-column"><input class="form-control" id="stock_id" name="stock_id"></td>
+                                                </tr>
+                                                
+                                                </tbody>
+                                            </table>
+                                            <div class="d-flex justify-content-end">
+                                                <button class="btn btn-soft-dark waves-effect waves-light" id="addRowBtn"><i class="bx bx-plus-circle"></i> 행 추가</button>
+                                            </div>
+    
+                                            <template id="newRowTemplate">
+                                                <tr data-id="1">
+                                                    <td>
+                                                        <select class="form-control item_select" name="item_select" id="item_select" required>
+                                                            
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="out_location" id="out_location" readonly 
+                                                             data-toggle="tooltip" data-placement="top" title="출고 위치는 '출고서'에서 수정이 가능합니다.">
+                                                    </td>
+                                                    <td>
+                                                      <input type="text" class="form-control" name="current_quan" id="current_quan" readonly 
+                                                             data-toggle="tooltip" data-placement="top" title="출고 재고는 '출고서'에서 수정이 가능합니다.">
+                                                    </td>
+                                                    <td><input type="number" class="form-control" name="unit_price" id="unit_price" readonly required></td>
+                                                    <td><input type="number" class="form-control" name="del_price" id="del_price" required></td>
+                                                    <td>
+                                                        생산
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control del_com_select" name="del_com_select" id="del_com_select" required>
+                                                            
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" class="form-control" name="invoice_num" id="invoice_num" required></td>
+                                                    <td class="hidden-column"><input class="form-control" id="stock_id" name="stock_id"></td>
+                                                </tr>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div> <!-- container-fluid -->
+                            </div>
+                            <!-- End Page-content -->
+                        </div>
+                        
+                        <div class="col-xxl-11">
+                            <input type="hidden" id="delivery_hidden_id" name="delivery_hidden_id">
+                            <div>
+                                <input class="modal_checkbox me-3" type="checkbox" id="immediately_check" name="immediately_check"/>
+                                <span>출고 내역을 저장하고 즉시 입고 처리합니다.</span>
+                            </div>
+                        </div>
+                        
+                        <div class="col-xxl-11 mt-5">
+                            <div>
+                                <button type="button" class="btn btn-primary waves-effect waves-light" id="create_btn" onclick="add_init()">저장</button>
+{#                                <button type="button" class="btn btn-primary waves-effect waves-light" id="update_btn" onclick="edit_init()">저장</button>#}
+                                <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">돌아가기</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            {% include 'Material/init_mgmt/plus_customer_modal.html' %}
+            
+        </div><!-- /.modal-content -->
+    </div>
+</div>
+<script src="{% static 'js/common.js' %}"></script>
+<script>
+    function getTodayDate() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = ('0' + (today.getMonth() + 1)).slice(-2);
+        const day = ('0' + today.getDate()).slice(-2);
+        return year + '-' + month + '-' + day;
+    }
+    
+    $(document).ready(function () {
+        $('#fixed_date').val(getTodayDate());
+        
+        // itemData ajax 요청
+        function fetchItemData() {
+            return $.ajax({
+                url: "{% url 'OutputGet' %}",
+                type: "GET",
+                headers: {
+                    "X-CSRFToken": $('input[name=csrfmiddlewaretoken]').val()
+                }
+            });
+        }
+        
+        // 택배사 목록을 가져오는 함수
+        function fetchDeliveryCompanies() {
+            return $.ajax({
+                url: "{% url 'DeliveryCompanyGet' %}",
+                dataType: 'json'
+            });
+        }
+        
+        // 택배사 선택 요소 초기화 함수
+        function initDeliverySelect(element) {
+            fetchDeliveryCompanies().done(function (data) {
+                var $select = $(element);
+                $select.empty();
+                $select.append('<option value="" disabled selected hidden>택배사를 선택해주세요</option>');
+                
+                // '직접 수령' 옵션 추가
+                $select.append(new Option('직접 수령', 'direct'));
+    
+                data.result.forEach(function (company) {
+                    $select.append(new Option(company.com_name, company.id));
+                });
+                $select.append(new Option('직접 수령', 'self'));
+            }).fail(function (xhr, status, error) {
+                console.error("택배사 데이터를 가져오는 중 오류가 발생했습니다: ", error);
+            });
+        }
+        
+        // 택배사 선택 변경 이벤트 처리
+        $(document).on('change', '.del_com_select', function() {
+            var $row = $(this).closest('tr');
+            var $invoiceInput = $row.find('input[name="invoice_num"]');
+            
+            if ($(this).val() === 'direct') {
+                $invoiceInput.prop('disabled', true).val('');
+            } else {
+                $invoiceInput.prop('disabled', false);
+            }
+        });
+        
+        function itemOutSelect(element) {
+            fetchItemData().done(function (data) {
+                var $select = $(element);
+                $select.empty();
+    
+                var $defaultOption = new Option("품목을 선택해주세요", "", true, true);
+                $defaultOption.disabled = true;
+                $select.append($defaultOption);
+    
+                // 받은 데이터로 옵션 추가
+                $.each(data.result, function (index, item) {
+                    var optionText = item.out_no;
+                    var option = new Option(item.out_item__item_name + ' ( 출고번호 : ' + optionText + ' )', item.id, false, false);
+                    $(option).data('item', item);
+                    $select.append(option);
+                });
+            }).fail(function (xhr, status, error) {
+                console.error("데이터를 가져오는 중 오류가 발생했습니다: ", error);
+            });
+        }
+
+        // 행 추가 클릭 시 테이블 행 추가
+        $('#addRowBtn').click(function (e) {
+            e.preventDefault()
+            var template = $('#newRowTemplate').html();
+            var $newRow = $(template);
+
+            $('#tableBody').append($newRow);
+
+            // 추가된 행의 select 초기화 및 데이터 로드
+            var $newSelect = $newRow.find('.item_select');
+            itemOutSelect($newSelect)
+            
+            // 추가된 행의 택배사 선택 요소 초기화
+            var $newDeliverySelect = $newRow.find('.del_com_select');
+            initDeliverySelect($newDeliverySelect);
+        });
+        
+        
+        // item_select 선택 이벤트 처리
+        $(document).on('change', '.item_select', function (e) {
+            var $row = $(this).closest('tr');
+            var item = $(this).find('option:selected').data('item');
+            if (item) {
+                $row.find('[name="out_location"]').val(item.out_wh__name);
+                $row.find('[name="current_quan"]').val(item.out_quan);
+                $row.find('[name="unit_price"]').val(item.out_uprice__unit_price);
+                $row.find('[name="stock_id"]').val(item.id);
+            }
+        });
+
+
+        // 페이지 로드 시 존재하는 출고목록 선택 요소들 초기화
+        $('.item_select').each(function () {
+            //initSelect2(this);
+            //loadAndUpdateSelect2(this);
+            itemOutSelect(this);
+        });
+        
+        // 페이지 로드 시 존재하는 택배사 선택 요소들 초기화
+        $('.del_com_select').each(function () {
+            initDeliverySelect(this);
+        });
+        
+        // 입고처 select
+        $.ajax({
+            url: "{% url 'GetCustomer' %}",
+            dataType: 'json',
+            success: function (data) {
+                var $CustomerSelect = $('#init_place_select');
+                $CustomerSelect.empty();
+                $CustomerSelect.append('<option value="" disabled selected hidden>출하처를 선택해주세요</option>');
+
+                // 옵션 생성
+                data.result.forEach(function (customer) {
+                    $CustomerSelect.append(new Option(customer.c_name, customer.id));
+                });
+
+                var $boundaryGroup = $('<optgroup label="----------------"></optgroup>');
+                $CustomerSelect.append($boundaryGroup);
+
+                // 추가 옵션
+                $CustomerSelect.append(new Option('+ 거래처 추가', 'add_customer'));
+            },
+            error: function (xhr, status, error) {
+                console.error("데이터를 가져오는 중 오류가 발생했습니다: ", error);
+            }
+        });
+    })
+
+    // select option '거래처 추가' 클릭 시 모달창 팝업
+    $('#init_place_select').change(function () {
+        if ($(this).val() === 'add_customer') {
+            $('#customer_modal').modal('show')
+            $(this).val('Select');
+        }
+    });
+
+
+     function add_init() {
+         var form = document.getElementById('delivery_form');
+         
+         if (form.checkValidity() === false) {
+             form.classList.add('was-validated');
+             return false
+         }
+         
+        var tableData = [];
+        var formData = new FormData();
+        var item_id = $("#delivery_hidden_id").val()
+
+        // 테이블 데이터 수집
+        $('#tableBody tr').each(function (index) {
+            var row = $(this);
+            var rowData = {
+                item: row.find('.item_select').val(),
+                out_location: row.find('[name="out_location"]').val(),
+                current_quan: row.find('[name="current_quan"]').val(),
+                unit_price: row.find('[name="unit_price"]').val(),
+                del_price: row.find('[name="del_price"]').val(),
+                del_com_select: row.find('[name="del_com_select"]').val(),
+                invoice_num: row.find('[name="invoice_num"]').val(),
+                stock_id: row.find('[name="stock_id"]').val(),
+            };
+
+            tableData.push(rowData);
+        });
+
+        // 테이블 데이터를 JSON 문자열로 변환하여 FormData에 추가
+        formData.append('tableData', JSON.stringify(tableData));
+        
+        if (item_id) {
+            formData.append('delivery_hidden_id', item_id);    
+        }
+
+        // 다른 input 요소 데이터 수집 (예시)
+        formData.append('fixed_date', $('#fixed_date').val());
+        formData.append('init_place_select', $('#init_place_select').val());
+        formData.append('out_date', $('#out_date').val());
+        formData.append('immediately_check', $('#immediately_check').val());
+        formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
+        console.log('del_form', formData)
+        
+        
+        $.ajax({
+            url: "{% url 'DeliveryCreate' %}",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                alert(res.message)
+                location.reload()
+            },
+            error: function (xhr, status, error) {
+                alert("오류가 발생했습니다: " + xhr.responseJSON.error);
+            }
+        })
+        
+    }
+
+    function reset_form() {
+        var form = document.getElementById('delivery_form');
+        form.reset();
+
+        // 동적으로 추가된 행 제거
+        $('#tableBody').find('tr').not(':first').remove(); // 첫 번째 행을 제외한 나머지 행 제거
+        
+        $('#fixed_date').val(getTodayDate());
+    }
+    
+</script>

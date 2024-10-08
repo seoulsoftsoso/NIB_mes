@@ -16,9 +16,18 @@ class OutputGet(View):
         enterprise = request.user.enterprise_id
         item_id = request.GET.get('item_id')
 
-        item_out = ItemOut.objects.filter(id=item_id, created_by__enterprise_id=enterprise, del_flag='N').select_related(
+        # 기본 쿼리셋
+        queryset = ItemOut.objects.filter(created_by__enterprise_id=enterprise, del_flag='N').select_related(
             'out_custom', 'out_item', 'out_uprice', 'out_wh', 'out_wr'
-        ).values('id', 'out_no', 'out_type', 'out_status', 'out_date', 'out_at', 'out_quan', 'out_note', 'out_image', 'created_by',
+        )
+
+        # item_id가 있으면 해당 item_id로 추가 필터링
+        if item_id:
+            queryset = queryset.filter(id=item_id)
+
+        # 필요한 필드 지정
+        result = queryset.values(
+            'id', 'out_no', 'out_type', 'out_status', 'out_date', 'out_at', 'out_quan', 'out_note', 'out_image', 'created_by',
             'out_item__item_name', 'out_item__item_code', 'out_item__item_detail', 'out_item__standard', 'out_item__model',
             'out_item__unitname', 'out_item__mass', 'out_item__item_type', 'out_item__item_category', 'out_item__current_quan',
             'out_item__safe_quan', 'out_item__qr_code', 'out_item__item_image', 'out_custom__c_name', 'out_uprice__unit_price',
@@ -26,10 +35,8 @@ class OutputGet(View):
             'out_wr__rack_row', 'out_wr__rack_line', 'out_custom_id', 'out_item_id'
         )
 
-        result = list(item_out)
-
         return JsonResponse({
-            'result': result
+            'result': list(result)
         })
 
 

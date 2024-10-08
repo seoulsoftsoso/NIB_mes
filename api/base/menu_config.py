@@ -90,9 +90,6 @@ def getLmenuList(request):
 
     qs_used_json = list(qs_used)
 
-    print('list', list(unique_qs))
-    print('used', qs_used_json)
-
     context = {}
     context['useablemenu'] = list(unique_qs)
     context['usedmenu'] = qs_used_json

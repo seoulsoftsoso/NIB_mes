@@ -60,7 +60,8 @@ class EnterpriseMaster(models.Model):
     office_fax = models.CharField(max_length=36, null=True, verbose_name='팩스')
     sign = models.FileField(upload_to=sign_upload_path, default=None, null=True, verbose_name='날인')
     logo = models.FileField(upload_to=logo_upload_path, default=None, null=True, verbose_name='로고')
-    certificate = models.FileField(upload_to=business_certificate_upload_path, default=None, null=True, verbose_name='사업자등록증')
+    certificate = models.FileField(upload_to=business_certificate_upload_path, default=None, null=True,
+                                   verbose_name='사업자등록증')
     in_or_cor = models.CharField(max_length=1, default=1, null=False, verbose_name='개인사업자 혹은 법인사업자')
     local_or_foreign = models.CharField(max_length=1, default=1, null=False, verbose_name='내국인 혹은 외국인')
     start_up_date = models.DateField(null=True, verbose_name='창립일')
@@ -202,7 +203,8 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='user_created_by',
                                    verbose_name='최초작성자')  # 최초작성자
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')  # 최초작성일
-    enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, default=100, related_name='user_master_enterprise',
+    enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, default=100,
+                                   related_name='user_master_enterprise',
                                    verbose_name='업체', null=False)
     auth = models.CharField(max_length=10, null=False, default="Viewer", choices=USER_TYPE_CHOICES, verbose_name="권한")
     del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
@@ -290,7 +292,8 @@ class ItemMaster(models.Model):
     unitname = models.CharField(max_length=255, null=True, verbose_name='단위')
     mass = models.CharField(max_length=255, null=True, verbose_name='무게_질량')
     color = models.CharField(max_length=255, null=True, verbose_name='색상')
-    item_type = models.CharField(max_length=1, null=True, choices=ITEM_TYPE_CHOICES, verbose_name='품목 유형')  # ITEM_TYPE_CHOICES
+    item_type = models.CharField(max_length=1, null=True, choices=ITEM_TYPE_CHOICES,
+                                 verbose_name='품목 유형')  # ITEM_TYPE_CHOICES
     item_category = models.CharField(max_length=255, null=True, verbose_name='카테고리')
     current_quan = models.FloatField(null=True, default=0, verbose_name='현 재고')
     safe_quan = models.FloatField(null=True, verbose_name='안전 재고')
@@ -347,7 +350,8 @@ class UnitPrice(models.Model):
     ]
 
     unit_price = models.IntegerField(null=True, verbose_name='단가')
-    unit_type = models.CharField(max_length=1, null=True, choices=UNIT_TYPE_CHOICES, verbose_name='구분')  # UNIT_TYPE_CHOICES
+    unit_type = models.CharField(max_length=1, null=True, choices=UNIT_TYPE_CHOICES,
+                                 verbose_name='구분')  # UNIT_TYPE_CHOICES
     fee_rate = models.IntegerField(null=True, verbose_name='수수료')
     u_item = models.ForeignKey('ItemMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='품목정보',
                                related_name='unit_prise_item', )
@@ -379,7 +383,8 @@ class ItemIn(models.Model):
 
     in_no = models.CharField(max_length=64, null=True, verbose_name='입고 번호')
     in_type = models.CharField(max_length=1, null=True, choices=IN_TYPE_CHOICES, verbose_name='구분')  # IN_TYPE_CHOICES
-    in_status = models.CharField(max_length=1, null=True, choices=IN_STATUS_CHOICES, verbose_name='상태')  # IN_STATUS_CHOICES
+    in_status = models.CharField(max_length=1, null=True, choices=IN_STATUS_CHOICES,
+                                 verbose_name='상태')  # IN_STATUS_CHOICES
     due_date = models.DateTimeField(null=True, verbose_name='입고 예정일')
     in_at = models.DateTimeField(null=True, verbose_name='입고일')
     in_quan = models.FloatField(null=True, verbose_name='수량')
@@ -388,13 +393,14 @@ class ItemIn(models.Model):
     in_item = models.ForeignKey('ItemMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='품목 정보',
                                 related_name='item_in_item')
     wh = models.ForeignKey('Warehouse', on_delete=models.DO_NOTHING, null=False, verbose_name='창고 정보',
-                                related_name='item_in_warehouse')
+                           related_name='item_in_warehouse')
     wr = models.ForeignKey('WarehouseRack', on_delete=models.DO_NOTHING, null=False, verbose_name='위치 정보',
-                                related_name='item_in_rack')
+                           related_name='item_in_rack')
     uprice = models.ForeignKey('UnitPrice', on_delete=models.DO_NOTHING, null=False, verbose_name='단가 정보',
-                                related_name='item_in_price')
-    in_custom = models.ForeignKey('CustomerMaster', on_delete=models.DO_NOTHING, default=1, null=False, verbose_name='입고처 정보',
-                                   related_name='item_in_custom')  # 구매처(공급사), 판매처(고객사)
+                               related_name='item_in_price')
+    in_custom = models.ForeignKey('CustomerMaster', on_delete=models.DO_NOTHING, default=1, null=False,
+                                  verbose_name='입고처 정보',
+                                  related_name='item_in_custom')  # 구매처(공급사), 판매처(고객사)
     del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
     created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='최초작성자',
                                    related_name='item_in_created_by')
@@ -434,22 +440,25 @@ class ItemOut(models.Model):
     ]
 
     out_no = models.CharField(max_length=64, null=True, verbose_name='출고 번호')
-    out_type = models.CharField(max_length=1, null=True, choices=OUT_TYPE_CHOICES, verbose_name='속성')  # OUT_TYPE_CHOICES
-    out_status = models.CharField(max_length=1, null=True, choices=OUT_STATUS_CHOICES, verbose_name='상태')  # OUT_STATUS_CHOICES
+    out_type = models.CharField(max_length=1, null=True, choices=OUT_TYPE_CHOICES,
+                                verbose_name='속성')  # OUT_TYPE_CHOICES
+    out_status = models.CharField(max_length=1, null=True, choices=OUT_STATUS_CHOICES,
+                                  verbose_name='상태')  # OUT_STATUS_CHOICES
     out_date = models.DateTimeField(null=True, verbose_name='출고 예정일')
     out_at = models.DateTimeField(null=True, verbose_name='출고일')
     out_quan = models.FloatField(null=True, verbose_name='수량')
     out_note = models.CharField(max_length=255, null=True, verbose_name='메모')
     out_image = models.FileField(upload_to=item_out_img_upload_path, default=None, null=True, verbose_name='품목 이미지')
     out_item = models.ForeignKey('ItemMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='품목 정보',
-                                related_name='item_out_item')
+                                 related_name='item_out_item')
     out_wh = models.ForeignKey('Warehouse', on_delete=models.DO_NOTHING, null=False, verbose_name='창고 정보',
-                           related_name='item_out_warehouse')
+                               related_name='item_out_warehouse')
     out_wr = models.ForeignKey('WarehouseRack', on_delete=models.DO_NOTHING, null=False, verbose_name='위치 정보',
-                           related_name='item_out_rack')
+                               related_name='item_out_rack')
     out_uprice = models.ForeignKey('UnitPrice', on_delete=models.DO_NOTHING, null=False, verbose_name='단가 정보',
-                               related_name='item_out_price')
-    out_custom = models.ForeignKey('CustomerMaster', on_delete=models.DO_NOTHING, default=1, null=False, verbose_name='입고처 정보',
+                                   related_name='item_out_price')
+    out_custom = models.ForeignKey('CustomerMaster', on_delete=models.DO_NOTHING, default=1, null=False,
+                                   verbose_name='입고처 정보',
                                    related_name='out_price_custom')  # 구매처(공급사), 판매처(고객사)
     del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
     created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='최초작성자',
@@ -465,7 +474,7 @@ class ItemOutSub(models.Model):  # 부분 입고 시 사용
     out_quan_sub = models.FloatField(null=True, verbose_name='출고 수량')
     out_etc_sub = models.CharField(max_length=255, null=True, verbose_name='특이 사항')
     out_item = models.ForeignKey('ItemOut', on_delete=models.DO_NOTHING, null=False, verbose_name='입고 관리 정보',
-                                related_name='sub_item_out')
+                                 related_name='sub_item_out')
     del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
     created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='최초작성자',
                                    related_name='out_sub_created_by')
@@ -505,14 +514,14 @@ class CustomerMaster(models.Model):
 
 class StockStatus(models.Model):
     item = models.ForeignKey('ItemMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='품목 정보',
-                                related_name='stock_item')
+                             related_name='stock_item')
     io_status = models.CharField(max_length=1, null=False, default='N', verbose_name='입출고 구분')  # I: 입고 O: 출고 N: 오류
     wh = models.ForeignKey('Warehouse', on_delete=models.DO_NOTHING, null=False, verbose_name='창고 정보',
-                                related_name='stock_warehouse')
+                           related_name='stock_warehouse')
     wr = models.ForeignKey('WarehouseRack', on_delete=models.DO_NOTHING, null=False, verbose_name='위치 정보',
-                               related_name='stock_rack')
+                           related_name='stock_rack')
     input = models.ForeignKey('ItemIn', on_delete=models.DO_NOTHING, null=True, verbose_name='입고서 정보',
-                               related_name='stock_in')
+                              related_name='stock_in')
     output = models.ForeignKey('ItemOut', on_delete=models.DO_NOTHING, null=True, verbose_name='출고서 정보',
                                related_name='stock_out')
     quantity = models.FloatField(null=True, verbose_name='수량')
@@ -531,7 +540,7 @@ class StockAdjustment(models.Model):
     adjustment_quan = models.FloatField(null=False, default=0, verbose_name="조정 수량")
     adjustment_memo = models.CharField(max_length=255, null=False, verbose_name="조정 사유")
     item = models.ForeignKey('ItemMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='품목 정보',
-                                related_name='adjust_item')
+                             related_name='adjust_item')
     del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
     enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, default=1, related_name='adjust_enterprise',
                                    verbose_name='업체', null=False)
@@ -581,16 +590,20 @@ class DeliveryMaster(models.Model):
     STATUS_CHOICES = [
         ('F', '출하 완료'),
         ('P', '부분 출하'),
-        ('W', '출하 대기'),
+        ('W', '출하 대기')
     ]
 
     status = models.CharField(max_length=1, default='W', null=False, choices=STATUS_CHOICES, verbose_name='출하 상태')
     due_date = models.DateField(default=timezone.now, null=False, verbose_name='출하 예정일')
     no = models.CharField(max_length=128, null=True, verbose_name='출하 번호')
-    customer = models.ForeignKey('CustomerMaster', on_delete=models.DO_NOTHING, default=1, null=False, verbose_name='입고처 정보',
-                                   related_name='del_custom')
-    item = models.ForeignKey('ItemMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='품목 정보',
-                                related_name='del_item')
+    del_price = models.IntegerField(null=True, verbose_name='판매가')
+    invoice_num = models.CharField(max_length=255, null=True, verbose_name='송장 번호')
+    del_company = models.ForeignKey('DeliveryCompany', on_delete=models.DO_NOTHING, null=True, verbose_name='택배사 정보',
+                      related_name='del_deliveryCompany')
+    customer = models.ForeignKey('CustomerMaster', on_delete=models.DO_NOTHING, default=1, null=False, verbose_name='출하처 정보',
+                                 related_name='del_customer')
+    item_out = models.ForeignKey('ItemOut', on_delete=models.DO_NOTHING, null=True, verbose_name='출고서 정보',
+                                 related_name='del_out')
     del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
     created_by = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, null=False, verbose_name='최초작성자',
                                    related_name='del_created_by')
@@ -599,3 +612,10 @@ class DeliveryMaster(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
 
+
+class DeliveryCompany(models.Model):
+    com_id = models.CharField(max_length=128, null=True, unique=True, verbose_name='택배사 아이디')
+    com_name = models.CharField(max_length=128, null=True, unique=True, verbose_name='택배사 이름')
+
+    def __str__(self):
+        return self.com_name
