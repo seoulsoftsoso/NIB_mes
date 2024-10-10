@@ -7,7 +7,7 @@ from api.Delivery.delivery_api import *
 from api.Item.common import get_item_data
 from api.base.base_form import enterprise_fm
 from api.models import MenuMaster, ItemMaster, UnitPrice, ItemIn, Warehouse, ItemOut, CustomerMaster, UserMaster, \
-    RobotMaster, DeliveryMaster
+    RobotMaster, DeliveryMaster, EnterpriseMaster
 from dve_config import settings
 
 
@@ -241,4 +241,20 @@ def robot_history(request):
 def test_page(request):
     context = {}
     return render(request, 'Delivery/test.html', context)
+
+
+def enterprise_page(request):
+    enterprise_id = request.user.enterprise_id
+    result = EnterpriseMaster.objects.get(delete_flag='N', id=enterprise_id)
+
+    email_parts = result.email.split('@') if result and result.email else ['', '']
+    email_id = email_parts[0]
+    email_domain = email_parts[1]
+
+    context = {
+        'result': result,
+        'email_id': email_id,
+        'email_domain': email_domain,
+    }
+    return render(request, 'Setting/Enterprise/main.html', context)
 

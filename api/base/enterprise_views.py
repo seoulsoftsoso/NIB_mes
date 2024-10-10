@@ -135,57 +135,103 @@ class EnterpriseCreate(View):
     @transaction.atomic
     def post(self, request, *args, **kwargs):
         try:
-            unique_code = generate_unique_code()
+            enter_id = request.POST.get('enterprise_id')
+            if enter_id is None:
+                unique_code = generate_unique_code()
 
-            logo_path = request.FILES.get('logo-upload')
-            sign_path = request.FILES.get('sign-upload')
-            certificate_path = request.FILES.get('business-upload')
+                logo_path = request.FILES.get('logo-upload')
+                sign_path = request.FILES.get('sign-upload')
+                certificate_path = request.FILES.get('business-upload')
 
-            # 사업자 유형 확인
-            is_individual = 1 if request.POST.get('business_type') == '1' else 0
-            # 외국인 여부 확인
-            is_local = 1 if request.POST.get('nationality') == '1' else 0
+                # 사업자 유형 확인
+                is_individual = 1 if request.POST.get('business_type') == '1' else 0
+                # 외국인 여부 확인
+                is_local = 1 if request.POST.get('nationality') == '1' else 0
 
-            # 이메일 처리
-            email_id = request.POST.get('email_id')
-            email_domain = request.POST.get('email_domain')
-            direct_input = request.POST.get('direct_input')
+                # 이메일 처리
+                email_id = request.POST.get('email_id')
+                email_domain = request.POST.get('email_domain')
+                direct_input = request.POST.get('direct_input')
 
-            # email_domain이 None or ''이면 direct_input 사용
-            if not email_domain:
-                email_domain = direct_input
-            email = f"{email_id}@{email_domain}" if email_id and email_domain else None
+                # email_domain이 None or ''이면 direct_input 사용
+                if not email_domain:
+                    email_domain = direct_input
+                email = f"{email_id}@{email_domain}" if email_id and email_domain else None
 
-            enterprise = EnterpriseMaster.objects.create(
-                name=request.POST.get('name'),
-                code=unique_code,
-                licensee_number=request.POST.get('business_num'),
-                corporation_number=request.POST.get('corporation_num'),
-                start_up_date=request.POST.get('open_date'),
-                postal_code=request.POST.get('postal_code'),
-                address=request.POST.get('basic_address') + ' ' + request.POST.get('detail_address'),
-                owner_name=request.POST.get('owner_name'),
-                in_or_cor=is_individual,
-                local_or_foreign=is_local,
-                email=email,
-                office_phone=request.POST.get('phone1')+'-'+request.POST.get('phone2')+'-'+request.POST.get('phone3'),
-            )
+                enterprise = EnterpriseMaster.objects.create(
+                    name=request.POST.get('name'),
+                    code=unique_code,
+                    licensee_number=request.POST.get('business_num'),
+                    corporation_number=request.POST.get('corporation_num'),
+                    start_up_date=request.POST.get('open_date'),
+                    postal_code=request.POST.get('postal_code'),
+                    address=request.POST.get('basic_address') + ' ' + request.POST.get('detail_address'),
+                    owner_name=request.POST.get('owner_name'),
+                    in_or_cor=is_individual,
+                    local_or_foreign=is_local,
+                    email=email,
+                    # office_phone=request.POST.get('phone1')+'-'+request.POST.get('phone2')+'-'+request.POST.get('phone3'),
+                    owner_tel_1=request.POST.get('phone1'),
+                    owner_tel_2=request.POST.get('phone2'),
+                    owner_tel_3=request.POST.get('phone3'),
+                )
 
-            user = UserMaster.objects.get(id=request.user.id)
-            user.enterprise_id = enterprise.id
-            user.save()
+                user = UserMaster.objects.get(id=request.user.id)
+                user.enterprise_id = enterprise.id
+                user.save()
 
-            if logo_path:
-                enterprise.logo = logo_path
+                if logo_path:
+                    enterprise.logo = logo_path
 
-            if sign_path:
-                enterprise.sign = sign_path
+                if sign_path:
+                    enterprise.sign = sign_path
 
-            if certificate_path:
-                enterprise.certificate = certificate_path
-            enterprise.save()
+                if certificate_path:
+                    enterprise.certificate = certificate_path
+                enterprise.save()
 
-            return JsonResponse({'success': True, 'message': msg_cre_ok, 'new_enterprise_id': enterprise.id})
+                return JsonResponse({'success': True, 'message': msg_cre_ok, 'new_enterprise_id': enterprise.id})
+
+            else:
+                print('Enterprise Update')
+
+                # 사업자 유형 확인
+                is_individual = 1 if request.POST.get('business_type') == '1' else 0
+                # 외국인 여부 확인
+                is_local = 1 if request.POST.get('nationality') == '1' else 0
+
+                logo_path = request.FILES.get('logo-upload')
+                sign_path = request.FILES.get('sign-upload')
+                certificate_path = request.FILES.get('business-upload')
+
+                enterprise = EnterpriseMaster.objects.get(id=enter_id)
+                enterprise.name = request.POST.get('name')
+                enterprise.in_or_cor = is_individual
+                enterprise.licensee_number = request.POST.get('business_num')
+                enterprise.corporation_number = request.POST.get('corporation_num')
+                enterprise.start_up_date = request.POST.get('open_date')
+                enterprise.postal_code = request.POST.get('postal_code')
+                enterprise.address = request.POST.get('basic_address')
+                enterprise.address_detail = request.POST.get('detail_address')
+                enterprise.owner_name = request.POST.get('owner_name')
+                enterprise.local_or_foreign = is_local
+                enterprise.email = request.POST.get('email_id') + '@' + request.POST.get('email_domain')
+                enterprise.owner_tel_1 = request.POST.get('phone1')
+                enterprise.owner_tel_2 = request.POST.get('phone2')
+                enterprise.owner_tel_3 = request.POST.get('phone3')
+
+                if logo_path:
+                    enterprise.logo = logo_path
+
+                if sign_path:
+                    enterprise.sign = sign_path
+
+                if certificate_path:
+                    enterprise.certificate = certificate_path
+
+                enterprise.save()
+
+                return JsonResponse({'success': True, 'message': msg_cre_ok})
 
         except Exception as e:
             print(f"Error: {str(e)}")

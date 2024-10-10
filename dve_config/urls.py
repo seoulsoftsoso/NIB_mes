@@ -108,6 +108,7 @@ urlpatterns = [
                 # 설정
                 path('settings/menumaster/', Menumaster, name="MenuMaster"),
                 path('settings/member/', UserBasedInfo, name='UserBasedInfo'),
+                path('settings/enterprise-mgmt/', enterprise_page, name='enterprise_page'),
                 path('enterprise_create/', EnterpriseCreate.as_view(), name='EnterpriseCreate'),
 
                 # 기준 정보
