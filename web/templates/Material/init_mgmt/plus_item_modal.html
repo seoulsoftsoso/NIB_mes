@@ -189,7 +189,22 @@
             `;
                 $('#item_modal').modal('hide');
                 $('#tableBody').append(rowHtml);
-
+                
+                // item_select 요소가 존재할 경우 새로운 옵션 추가
+                var $existingSelect = $('#item_select');
+                if ($existingSelect.length) {
+                    var newOption = new Option(item.item_name + ' (' + item.item_code + ')', item.id, false, false);
+                    
+                    // "품목 추가" 옵션 찾기
+                    var $addItemOption = $existingSelect.find('option[value="add_item"]');
+                    // "품목 추가" 옵션 그룹을 찾기
+                    var $optgroup = $existingSelect.find('optgroup[label="-------------------------"]');
+                
+                    if ($addItemOption.length) {
+                        $optgroup.before(newOption);
+                    }
+                }
+ 
                 alert(response.message);
             },
             error: function (xhr, status, error) {

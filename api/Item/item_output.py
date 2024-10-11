@@ -1,6 +1,7 @@
 import traceback
 import json
-
+import random
+import string
 from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
@@ -9,6 +10,14 @@ from django.db import transaction
 from api.models import Warehouse, ItemInSub, ItemMaster, WarehouseRack, UnitPrice, ItemIn, CustomerMaster, ItemOut, \
     StockStatus
 from datetime import datetime
+
+
+def generate_unique_out_no():
+    while True:
+        out_no = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
+
+        if not ItemOut.objects.filter(out_no=out_no).exists():
+            return out_no
 
 
 class OutputGet(View):
@@ -70,6 +79,7 @@ class OutputCreate(View):
                         out_quan = float(row['out_quan'])
 
                         item_out = ItemOut.objects.create(
+                            out_no=generate_unique_out_no(),
                             out_type=row['out_type'],
                             out_status=row['status'],
                             out_date=out_date,  # 출고 예정일

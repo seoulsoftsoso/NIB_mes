@@ -1,6 +1,7 @@
 import traceback
 import json
-
+import random
+import string
 from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
@@ -8,6 +9,14 @@ from django.views import View
 from django.db import transaction
 from api.models import Warehouse, ItemInSub, ItemMaster, WarehouseRack, UnitPrice, ItemIn, CustomerMaster, StockStatus
 from datetime import datetime
+
+
+def generate_unique_in_no():
+    while True:
+        in_no = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
+
+        if not ItemIn.objects.filter(in_no=in_no).exists():
+            return in_no
 
 
 class InputGet(View):
@@ -62,6 +71,7 @@ class InputCreate(View):
                         in_quan = float(row['in_quan'])
 
                         item_in = ItemIn.objects.create(
+                            in_no=generate_unique_in_no(),
                             in_type=row['in_type'],
                             in_status=row['status'],
                             due_date=due_date,  # 입고 예정일

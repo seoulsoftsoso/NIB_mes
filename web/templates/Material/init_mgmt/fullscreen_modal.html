@@ -128,7 +128,7 @@
                                                     <th>첨부파일</th>
                                                 </tr>
                                                 </thead>
-                                                <tbody id="tableBody">
+                                                <tbody id="tableBody_">
                                                 <tr data-id="1">
                                                     <td>
                                                         <select class="form-control item_select" name="item_select" id="item_select" required>
@@ -305,13 +305,13 @@
         }
 
         // 모달이 열릴 때마다 검색 입력란에 포커스 설정
-        $('#exampleModalFullscreen').on('shown.bs.modal', function () {
-            $('.select2-search__field').focus();
-        });
+        //$('#exampleModalFullscreen').on('shown.bs.modal', function () {
+        //    $('.select2-search__field').focus();
+        //});
 
         
         // 첨부파일
-        $('#tableBody').on('change', '.file-upload', function (event) {
+        $('#tableBody_').on('change', '.file-upload', function (event) {
             const fileInput = $(this);
             const fileNameSpan = fileInput.siblings('.file-name');
             const fileIcon = fileInput.siblings('.bx-upload-label').find('i');
@@ -351,7 +351,7 @@
             $newRow.find('.file-upload').attr('id', uniqueId);
             $newRow.find('.bx-upload-label').attr('for', uniqueId);
 
-            $('#tableBody').append($newRow);
+            $('#tableBody_').append($newRow);
 
             // 추가된 행의 select 초기화 및 데이터 로드
             var $newSelect = $newRow.find('.item_select');
@@ -571,7 +571,7 @@
         console.log('item_idid', item_id)
 
         // 테이블 데이터 수집
-        $('#tableBody tr').each(function (index) {
+        $('#tableBody_ tr').each(function (index) {
             var row = $(this);
             var rowData = {
                 item: row.find('.item_select').val(),
@@ -633,7 +633,7 @@
         form.reset();
 
         // 동적으로 추가된 행 제거
-        $('#tableBody').find('tr').not(':first').remove(); // 첫 번째 행을 제외한 나머지 행 제거
+        $('#tableBody_').find('tr').not(':first').remove(); // 첫 번째 행을 제외한 나머지 행 제거
 
         // 업로드 초기화
         $('.file-upload').each(function () {
