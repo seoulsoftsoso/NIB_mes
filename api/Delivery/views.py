@@ -184,6 +184,7 @@ class InvoiceGet(View):
                 'item_name': item.item_out.out_item.item_name,
                 'out_quan': item.item_out.out_quan,
                 'unit_price': item.item_out.out_uprice.unit_price,
+                'out_no': item.item_out.out_no,
                 'del_price': item.del_price,
                 'customer': item.customer_id,
                 'due_date': item.due_date,
