@@ -344,7 +344,7 @@
             
             // 새 팝업 창 열기
             var newWindow = window.open('', '배송 조회', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
-            newWindow.document.write('<h1>Loading...</h1>');
+            newWindow.document.write('<h3>Loading...</h3>');
             
             $.ajax({
                 url: "{% url 'DeliveryTrack' %}",
