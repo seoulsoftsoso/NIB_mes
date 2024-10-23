@@ -8,9 +8,19 @@
 
 </head>
 <style>
+    th:first-child .sorting,
+    th:first-child .sorting_asc,
+    th:first-child .sorting_desc {
+        display: none !important;
+    }
+    
     #user_datatable {
         text-align: center;
         vertical-align: middle;
+    }
+    
+    #user_datatable th {
+        background-color: #FDFDFD;
     }
     
     .sorting {
@@ -24,6 +34,8 @@
     .dataTables_filter {
         text-align: start !important;
     }
+    
+    
 </style>
 <body>
 
@@ -38,37 +50,41 @@
                 <table id="user_datatable" class="table table-bordered dt-responsive  nowrap w-100 mt-5">
                     <thead>
                     <tr>
+                        <th style="width: 1%"><input type="checkbox" id="select_all"></th>
                         <th>이름</th>
                         <th>소속</th>
                         <th>이메일</th>
                         <th>전화번호</th>
                         <th>권한</th>
                         <th>생성일</th>
-                        <th>비고</th>
+                        <th>ID</th>
+{#                        <th>비고</th>#}
                     </tr>
                     </thead>
                     
                     <tbody>
                     {% for obj in result %}
                     <tr>
+                        <td></td>
                         <td>{{ obj.username }}</td>
                         <td>{{ obj.department_position }}</td>
                         <td>{{ obj.email }}</td>
                         <td>{{ obj.tel }}</td>
                         <td>{{ obj.auth }}</td>
                         <td>{{ obj.employment_date }}</td>
-                        <td>
-                            <button type="button" class="btn btn-soft-primary waves-effect waves-light"
-                                    onclick="edit_btn('{{ obj.id }}', '{{ obj.username }}', '{{ obj.department_position_id }}',
-                                        '{{ obj.auth }}', '{{ obj.email }}', '{{ obj.tel }}', '{{ obj.etc }}'
-                                    )">
-                                <i class="bx bx-pencil"></i>
-                            </button>
-                            <button type="button" class="btn btn-soft-danger waves-effect waves-light"
-                                    onclick="delete_btn('{{ obj.id }}')">
-                                <i class="bx bxs-trash"></i>
-                            </button>
-                        </td>
+                        <td>{{ obj.id }}</td>
+{#                        <td>#}
+{#                            <button type="button" class="btn btn-soft-primary waves-effect waves-light"#}
+{#                                    onclick="edit_btn('{{ obj.id }}', '{{ obj.username }}', '{{ obj.department_position_id }}',#}
+{#                                        '{{ obj.auth }}', '{{ obj.email }}', '{{ obj.tel }}', '{{ obj.etc }}'#}
+{#                                    )">#}
+{#                                <i class="bx bx-pencil"></i>#}
+{#                            </button>#}
+{#                            <button type="button" class="btn btn-soft-danger waves-effect waves-light"#}
+{#                                    onclick="delete_btn('{{ obj.id }}')">#}
+{#                                <i class="bx bxs-trash"></i>#}
+{#                            </button>#}
+{#                        </td>#}
                     </tr>
                     {% endfor %}
                     </tbody>
@@ -87,18 +103,109 @@
         user_table = $('#user_datatable').DataTable({
             lengthChange: false,
             searching: true,
+            columnDefs: [
+                {
+                    targets: 0,
+                    orderable: false,
+                    className: 'table-active dt-body-center',
+                    render: function (data, type, full, meta) {
+                        return '<input type="checkbox" name="id[]" value="' + full[7] + '">';
+                    }
+                },
+                {
+                    targets: 7,
+                    visible: false,
+                    searchable: false
+                }
+            ],
             dom: '<"row"<"col-sm-12 col-md-6"f><"col-sm-12 col-md-6 text-end"B>>' + // 'f'를 추가하여 검색란 표시
                 '<"row"<"col-sm-12"tr>>' +
                 '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
             buttons: [
                 {
                     extend: 'excel',
-                    text: '엑셀 내보내기',
-                    className: 'btn btn-success me-3',
+                    text: '<i class="fas fa-file-excel text-black"></i>',
+                    className: 'btn btn-soft-info waves-effect waves-light me-2',
                 },
                 {
-                    text: '+ 멤버 추가',
-                    className: 'btn btn-info waves-effect waves-light',
+                    text: '<i class="mdi mdi-lead-pencil text-black icon-1rem"></i>',
+                    className: 'btn btn-soft-info waves-effect waves-light me-2',
+                    action: function (e, dt, node, config) {
+                        let selectedData = [];
+
+                        dt.rows().every(function (rowIdx) {
+                            var $row = $(this.node());
+                            var $checkbox = $row.find('input[type="checkbox"]');
+                            if ($checkbox.prop('checked')) {
+                                selectedData.push(this.data());
+                            }
+                        });
+
+                        if (selectedData.length === 0) {
+                            Swal.fire({
+                                title: "Error",
+                                text: '수정할 멤버의 체크박스를 선택 후 수정버튼을 눌러주세요',
+                                icon: "error"
+                            });
+                            return false;
+                        } else {
+                            $.ajax({
+                                url: "{% url 'GetMembers' %}",
+                                type: "GET",
+                                data: {
+                                    "user_id": selectedData[0][7]
+                                },
+                                success: function (res) {
+                                    var form = $("#user_form");
+                                    var select = form.find("#department_position");
+                                    make_select_department(select, res.result.department_position_id);
+
+                                    form.find("#user_id").val(res.result.id);
+                                    form.find("#username").val(res.result.username);
+                                    form.find("#auth").val(res.result.auth);
+                                    form.find("#email").val(res.result.email);
+                                    form.find("#tel").val(res.result.tel);
+                                    form.find("#memo").val(res.result.etc);
+                                    $("#edit_modal").modal('show');
+                                }
+                            })
+                        }
+                    }
+                },
+                {
+                    text: '<i class="mdi mdi-trash-can-outline text-black icon-1rem"></i>',
+                    className: 'btn btn-soft-info waves-effect waves-light me-2',
+                    action: function (e, dt, node, config) {
+                        let selectedData = [];
+
+                        dt.rows().every(function (rowIdx) {
+                            var $row = $(this.node());
+                            var $checkbox = $row.find('input[type="checkbox"]');
+                            if ($checkbox.prop('checked')) {
+                                selectedData.push(this.data());
+                            }
+                        });
+                        
+                        if (selectedData.length === 0) {
+                            Swal.fire({
+                                title: "Error",
+                                text: '삭제할 멤버의 체크박스를 선택 후 삭제버튼을 눌러주세요',
+                                icon: "error"
+                            });
+                            return false;
+                        } else {
+                            const formData = new FormData();
+                            formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
+                            formData.append('type', 'D');
+                            formData.append('user_id', selectedData[0][7]);
+                            
+                            SweetConfirmDelete("{% url 'MemberUpdate' %}", "POST", formData)
+                        }
+                    }
+                },
+                {
+                    text: '<i class="bx bx-plus text-black icon-1rem"></i>',
+                    className: 'btn btn-soft-info waves-effect waves-light',
                     attr: {
                         'data-bs-toggle': 'modal',
                         'data-bs-target': '#create_modal'
@@ -115,12 +222,17 @@
                 searchPlaceholder: "검색어를 입력해주세요", // placeholder 추가
                 emptyTable: "등록된 데이터가 없습니다."
             },
+            drawCallback: function () {
+                $('#user_datatable th:first-child').removeClass('sorting sorting_asc sorting_desc');
+            },
             initComplete: function (settings, json) {
                 $('.dataTables_filter input').removeClass('form-control-sm');
-                $('.dataTables_filter label').addClass('col-lg-6');;
+                $('.dataTables_filter label').addClass('col-lg-6');
+                ;
                 $('.dataTables_filter input').css('width', '100%');
             }
         });
+        
     });
 
     function make_select_department(selectElement, selectedId) {
@@ -201,6 +313,8 @@
         make_job_position_select(job_select)
         $("#create_modal").modal('show')
     }
+    
+    
 </script>
 </body>
 </html>

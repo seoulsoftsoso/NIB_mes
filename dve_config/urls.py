@@ -124,6 +124,7 @@ urlpatterns = [
                 # 멤버
                 path('member/create/', MemberCreate.as_view(), name='MemberCreate'),
                 path('member/update/', MemberUpdate.as_view(), name='MemberUpdate'),
+                path('member/get/', GetMembers.as_view(), name='GetMembers'),
                 path('get_department', GetDepartments.as_view(), name='GetDepartments'),
                 path('get_job_position', GetJobPositions.as_view(), name='GetJobPositions'),
 

@@ -1,4 +1,6 @@
 import traceback
+
+from django.forms import model_to_dict
 from django.utils import timezone
 
 from django.contrib.auth.hashers import make_password
@@ -91,6 +93,22 @@ class MemberUpdate(View):
 
             else:
                 return JsonResponse({'error': 'Invalid type provided.'}, status=400)
+
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({'error': str(e)}, status=400)
+
+
+class GetMembers(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            user_id = request.GET.get('user_id')
+
+            usermaster = UserMaster.objects.get(id=user_id)
+            result = model_to_dict(usermaster)
+
+            return JsonResponse({'result': result})
 
         except Exception as e:
             print(f"Error: {str(e)}")

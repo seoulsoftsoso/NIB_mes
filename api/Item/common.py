@@ -210,6 +210,7 @@ class ItemAdd(View):
                     current_quan=0,
                     safe_quan=formdata.get('safe_quan') or None,
                     created_by_id=request.user.id,
+                    enterprise_id=request.user.enterprise_id,
                 )
                 if file_path:
                     item.item_image = file_path
