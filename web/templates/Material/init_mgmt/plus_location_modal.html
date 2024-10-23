@@ -87,7 +87,7 @@
             success: function (res) {
                 console.log(res);
                 var $select = $("#location_select");
-                if (res.success && res.id && res.name) {
+                if (res.id && res.name) {
                     // 새 옵션 생성
                     var newOption = new Option(res.name, res.id);
 
