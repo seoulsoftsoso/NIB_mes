@@ -59,7 +59,12 @@ class CustomerCreate(View):
 
             customer.save()
 
-            return JsonResponse({'success': True, 'message': msg_cre_ok})
+            return JsonResponse({
+                'success': True,
+                'message': msg_cre_ok,
+                'id': customer.id,
+                'name': customer.c_name
+            })
 
         except Exception as e:
             print(f"Error: {str(e)}")

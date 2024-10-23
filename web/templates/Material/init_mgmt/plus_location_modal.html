@@ -87,12 +87,29 @@
             success: function (res) {
                 console.log(res);
                 var $select = $("#location_select");
-                if (res.id && res.name) {
-                    var newOption = new Option(res.name, res.id, true, true);
+                if (res.success && res.id && res.name) {
+                    // 새 옵션 생성
+                    var newOption = new Option(res.name, res.id);
+
+                    // 기존의 optgroup과 "위치 추가" 옵션 제거
+                    $select.find('optgroup').remove();
+                    $select.find('option[value="add_location"]').remove();
+
+                    // 옵션 추가
                     $select.append(newOption);
+
+                    // optgroup과 "위치 추가" 옵션 다시 추가
+                    $select.append('<optgroup label="----------------"></optgroup>');
+                    $select.append(new Option('+ 위치 추가', 'add_location'));
+
+                    // 새로 추가된 옵션 선택
+                    $select.val(res.id);
+
+                    alert('등록 되었습니다.');
+                    $("#location_modal").modal('hide');
+                } else {
+                    alert('등록에 실패했습니다: ' + (res.message || '알 수 없는 오류'));
                 }
-                alert('등록 되었습니다.')
-                $("#location_modal").modal('hide');
             },
             error: function (xhr, status, error) {
                 alert("오류가 발생했습니다: " + xhr.responseJSON.error);

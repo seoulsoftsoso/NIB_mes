@@ -62,7 +62,12 @@ class WarehouseCreate(View):
 
             rack.save()
 
-            return JsonResponse({'success': True, 'message': msg_cre_ok})
+            return JsonResponse({
+                'success': True,
+                'message': msg_cre_ok,
+                'id': warehouse.id,
+                'name': warehouse.name
+            })
 
         except Exception as e:
             print(f"Error: {str(e)}")
