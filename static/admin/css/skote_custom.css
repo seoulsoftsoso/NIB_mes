@@ -31,3 +31,15 @@ button {
 .swal2-modal {
     grid-row: 1 !important;
 }
+
+.navbar-brand-box, .vertical-menu {
+    background-color: #151445 !important;
+}
+
+.navy-font {
+    color: #151445;
+}
+
+.icon-1rem {
+    font-size: 1.0rem;
+}
