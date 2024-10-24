@@ -166,12 +166,12 @@
     function edit_btn(id, name, region, rack_name, row, col, memo) {
         var location_form = $("#location_form");
         location_form.find("#wh_id").val(id);
-        location_form.find("#name").val(name);
-        location_form.find("#region").val(region);
-        location_form.find("#rack_name").val(rack_name);
-        location_form.find("#row").val(row);
-        location_form.find("#col").val(col);
-        location_form.find("#memo").val(memo);
+        location_form.find("#edit_name").val(name);
+        location_form.find("#edit_region").val(region);
+        location_form.find("#edit_rack_name").val(rack_name);
+        location_form.find("#edit_row").val(row);
+        location_form.find("#edit_col").val(col);
+        location_form.find("#edit_memo").val(memo);
         
         $("#edit_modal").modal('show')
     }

@@ -219,6 +219,7 @@ class ItemAdd(View):
 
                 unit_price = item.unit_prise_item.create(
                     unit_price=formdata.get('item_unit_price'),
+                    unit_type=formdata.get('unit_type'),
                     created_by_id=request.user.id,
                 )
 

@@ -80,18 +80,19 @@ class WarehouseUpdate(View):
         type = request.POST.get('type')
         try:
             if type == 'E':
+                print('?????????????????????????')
                 formdata = request.POST
 
                 wh = Warehouse.objects.get(id=formdata.get('wh_id'))
-                wh.name = formdata.get('name')
-                wh.region = formdata.get('region')
+                wh.name = formdata.get('edit_name')
+                wh.region = formdata.get('edit_region')
                 wh.save()
 
                 wr = WarehouseRack.objects.get(warehouse_id=formdata.get('wh_id'))
-                wr.rack_name = formdata.get('rack_name')
-                wr.rack_row = formdata.get('row')
-                wr.rack_line = formdata.get('col')
-                wr.wr_etc = formdata.get('memo')
+                wr.rack_name = formdata.get('edit_rack_name')
+                wr.rack_row = formdata.get('edit_row')
+                wr.rack_line = formdata.get('edit_col')
+                wr.wr_etc = formdata.get('edit_memo')
                 wr.save()
 
                 return JsonResponse({'success': True, 'message': msg_edit_ok})
