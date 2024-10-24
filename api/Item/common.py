@@ -4,7 +4,7 @@ import io
 import uuid
 
 from django.core.files.base import ContentFile
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.db.models import Prefetch, F, Max, Q
 from django.db.models.functions import TruncDate
 from django.forms.models import model_to_dict
@@ -230,6 +230,7 @@ class ItemAdd(View):
             elif action == 'update':
                 item_id = formdata.get('item_id')
                 item = ItemMaster.objects.get(id=item_id)
+
                 item.item_name = formdata.get('item_name')
                 item.qr_code = formdata.get('item_barcode', '')
                 item.item_code = formdata.get('item_code')
@@ -294,6 +295,9 @@ class ItemAdd(View):
                 'qr_code': item.qr_code.url if item.qr_code else None,
                 'item': item_data
             })
+
+        except IntegrityError:
+            return JsonResponse({'error': '동일한 업체 내에 이미 존재하는 품번입니다.'}, status=400)
 
         except Exception as e:
             print(f"Error: {str(e)}")

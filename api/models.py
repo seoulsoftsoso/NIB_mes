@@ -288,7 +288,7 @@ class ItemMaster(models.Model):
         ('O', '기타'),
     ]
 
-    item_code = models.CharField(max_length=255, unique=True, null=True, verbose_name='품번')
+    item_code = models.CharField(max_length=255, null=True, verbose_name='품번')
     item_name = models.CharField(max_length=255, null=True, verbose_name='품명')
     item_detail = models.CharField(max_length=255, null=True, verbose_name='품명상세')
     standard = models.CharField(max_length=255, null=True, verbose_name='규격')
@@ -312,6 +312,9 @@ class ItemMaster(models.Model):
                                    related_name='item_updated_by')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')
+
+    class Meta:
+        unique_together = ('item_code', 'enterprise')
 
 
 class Warehouse(models.Model):
