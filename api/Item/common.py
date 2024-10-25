@@ -322,6 +322,12 @@ class Update_Item(View):
                 item.item_category = request.POST.get('카테고리', item.item_category)
                 item.current_quan = request.POST.get('현재수량', item.current_quan)
                 item.safe_quan = request.POST.get('안전재고', item.safe_quan)
+                item.unitname = request.POST.get('단위', item.unitname)
+
+                unit = UnitPrice.objects.get(u_item=item)
+                unit.unit_price = request.POST.get('단가')
+                unit.unit_type = request.POST.get('속성')
+                unit.save()
 
                 # QR 코드 필드 처리
                 if 'QR 코드' in request.POST:
