@@ -67,12 +67,13 @@
                                         <!--end col-->
                                         <div class="col-xxl-2 col-lg-6">
                                             <div class="position-relative">
-                                                <div id="datepicker1">
+                                                <div id="datepicker1" class="input-group">
                                                     <input type="text" class="form-control" placeholder="기간 선택"
                                                            data-date-format="yyyy-mm-dd" autocomplete="off"
                                                            data-date-container='#datepicker1' data-date-autoclose="true"
                                                            id="daterange">
-                                                </div><!-- input-group -->
+                                                    <button class="btn btn-outline-secondary" type="button" id="clearDate">초기화</button>
+                                                </div>
                                             </div>
                                         </div>
                                         <!--end col-->
@@ -222,6 +223,20 @@
             }, function (start, end, label) {
                 $('#daterange').val(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
                 send_filter(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+            });
+            
+             $('#daterange').on('apply.daterangepicker', function(ev, picker) {
+                if (picker.startDate.format('YYYY-MM-DD') === picker.endDate.format('YYYY-MM-DD')) {
+                    $(this).val(picker.startDate.format('YYYY-MM-DD'));
+                } else {
+                    $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+                }
+                send_filter(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD'));
+            });
+            
+            $('#clearDate').click(function() {
+                $('#daterange').val('');
+                send_filter('', '');
             });
         });
 

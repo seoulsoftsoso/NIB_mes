@@ -214,6 +214,11 @@
                                                         </label>
                                                         <span class="file-name"></span>
                                                     </td>
+                                                    <td>
+                                                        <button class="btn btn-danger btn-sm deleteRowBtn">
+                                                            <i class="bx bx-trash"></i>
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             </template>
                                         </div>
@@ -359,7 +364,13 @@
             initSelect2($newSelect);
             loadAndUpdateSelect2($newSelect);
         });
-
+        
+        // 행 삭제 기능
+        $(document).on('click', '.deleteRowBtn', function(e) {
+            e.preventDefault();
+            var $row = $(this).closest('tr');
+            $row.remove();
+        });
 
         // select2 데이터 업데이트 함수
         function updateSelectWithData(element, data) {
