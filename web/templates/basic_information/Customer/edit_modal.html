@@ -14,7 +14,7 @@
                     <div class="card">
                         <div class="col-xxl-12">
                             <label class="form-label">거래처명 <span class="red_font">*</span></label>
-                            <input class="form-control" type="text" id="c_name" name="c_name" placeholder="거래처 이름을 입력해주세요" required/>
+                            <input class="form-control" type="text" id="edit_c_name" name="edit_c_name" placeholder="거래처 이름을 입력해주세요" required/>
                         </div>
                     </div>
                     
@@ -22,17 +22,17 @@
                         <div class="row">
                             <div class="col-xxl-6">
                                 <label class="form-label">사업자 번호 <span class="red_font">*</span></label>
-                                <input class="form-control" type="text" id="business_num" name="business_num" placeholder="사업자 번호를 입력해주세요" required/>
+                                <input class="form-control" type="text" id="edit_business_num" name="edit_business_num" placeholder="사업자 번호를 입력해주세요" required/>
                             </div>
                             
                             <div class="col-xxl-3">
                                 <label class="form-label">업태</label>
-                                <input class="form-control" type="text" id="business_type" name="business_type" placeholder="업태" required/>
+                                <input class="form-control" type="text" id="edit_business_type" name="edit_business_type" placeholder="업태" required/>
                             </div>
                             
                             <div class="col-xxl-3">
                                 <label class="form-label">종목</label>
-                                <input class="form-control" type="text" id="business_sort" name="business_sort" placeholder="종목" required/>
+                                <input class="form-control" type="text" id="edit_business_sort" name="edit_business_sort" placeholder="종목" required/>
                             </div>
                         </div>
                     </div>
@@ -41,12 +41,12 @@
                         <div class="row">
                             <div class="col-xxl-6">
                                 <label class="form-label">주소</label>
-                                <input class="form-control" type="text" id="address" name="address" placeholder="주소를 입력해주세요" required/>
+                                <input class="form-control" type="text" id="edit_address" name="edit_address" placeholder="주소를 입력해주세요" required/>
                             </div>
                             
                             <div class="col-xxl-6">
                                 <label class="form-label">대표자명 <span class="red_font">*</span></label>
-                                <input class="form-control" type="text" id="owner_name" name="owner_name" placeholder="대표자 이름을 입력해주세요" required/>
+                                <input class="form-control" type="text" id="edit_owner_name" name="edit_owner_name" placeholder="대표자 이름을 입력해주세요" required/>
                             </div>
                         </div>
                     </div>
@@ -55,12 +55,12 @@
                         <div class="row">
                             <div class="col-xxl-6">
                                 <label class="form-label">대표 전화번호</label>
-                                <input class="form-control" type="text" id="official_tel" name="official_tel" placeholder="번호를 입력해주세요" required/>
+                                <input class="form-control" type="text" id="edit_official_tel" name="edit_official_tel" placeholder="번호를 입력해주세요" required/>
                             </div>
                             
                             <div class="col-xxl-6">
                                 <label class="form-label">대표 이메일</label>
-                                <input class="form-control" type="text" id="official_email" name="official_email" placeholder="이메일을 입력해주세요" required/>
+                                <input class="form-control" type="text" id="edit_official_email" name="edit_official_email" placeholder="이메일을 입력해주세요" required/>
                             </div>
                         </div>
                     </div>
@@ -69,12 +69,12 @@
                         <div class="row">
                             <div class="col-xxl-6">
                                 <label class="form-label">담당자 전화번호</label>
-                                <input class="form-control" type="text" id="manager_tel" name="manager_tel" placeholder="번호를 입력해주세요" required/>
+                                <input class="form-control" type="text" id="edit_manager_tel" name="edit_manager_tel" placeholder="번호를 입력해주세요" required/>
                             </div>
                             
                             <div class="col-xxl-6">
                                 <label class="form-label">담당자 이메일</label>
-                                <input class="form-control" type="text" id="manager_email" name="manager_email" placeholder="이메일을 입력해주세요" required/>
+                                <input class="form-control" type="text" id="edit_manager_email" name="edit_manager_email" placeholder="이메일을 입력해주세요" required/>
                             </div>
                         </div>
                     </div>
@@ -82,7 +82,7 @@
                     <div class="card">
                         <div class="col-xxl-12">
                             <label class="form-label">메모</label>
-                            <textarea class="form-control" type="text" id="memo" name="memo" placeholder="메모를 입력해주세요"></textarea>
+                            <textarea class="form-control" type="text" id="edit_memo" name="edit_memo" placeholder="메모를 입력해주세요"></textarea>
                         </div>
                     </div>
                 </div>
@@ -103,9 +103,9 @@
 
             // 유효성 검사
             let isValid = true;
-            $(this).find('.form-control').each(function () {
-                if ($(this).val() === '') {
-                    $(this).addClass('is-invalid'); // invalid-feedback 적용
+            $(this).find(':input[required]').each(function () {
+                if ($(this).val().trim() === '') {
+                    $(this).addClass('is-invalid');
                     isValid = false;
                 } else {
                     $(this).removeClass('is-invalid').addClass('is-valid'); // valid-feedback 적용

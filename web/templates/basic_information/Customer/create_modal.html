@@ -102,10 +102,10 @@
             event.preventDefault();
 
             // 유효성 검사
-            let isValid = true;
-             $(this).find('.form-control').each(function () {
-                if ($(this).val() === '') {
-                    $(this).addClass('is-invalid'); // invalid-feedback 적용
+           let isValid = true;
+            $(this).find(':input[required]').each(function () {
+                if ($(this).val().trim() === '') {
+                    $(this).addClass('is-invalid');
                     isValid = false;
                 } else {
                     $(this).removeClass('is-invalid').addClass('is-valid'); // valid-feedback 적용

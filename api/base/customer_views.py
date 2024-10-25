@@ -80,16 +80,16 @@ class CustomerUpdate(View):
         try:
             if type == "E":
 
-                customer.c_name = formdata.get('c_name')
-                customer.business_num = formdata.get('business_num')
-                customer.business_type = formdata.get('business_type')
-                customer.business_sort = formdata.get('business_sort')
-                customer.address = formdata.get('address')
-                customer.owner_name = formdata.get('owner_name')
-                customer.official_tel = formdata.get('official_tel')
-                customer.official_email = formdata.get('official_email')
-                customer.manager_tel = formdata.get('manager_tel')
-                customer.manager_email = formdata.get('manager_email')
+                customer.c_name = formdata.get('edit_c_name')
+                customer.business_num = formdata.get('edit_business_num')
+                customer.business_type = formdata.get('edit_business_type')
+                customer.business_sort = formdata.get('edit_business_sort')
+                customer.address = formdata.get('edit_address')
+                customer.owner_name = formdata.get('edit_owner_name')
+                customer.official_tel = formdata.get('edit_official_tel')
+                customer.official_email = formdata.get('edit_official_email')
+                customer.manager_tel = formdata.get('edit_manager_tel')
+                customer.manager_email = formdata.get('edit_manager_email')
                 customer.save()
 
                 return JsonResponse({'success': True, 'message': msg_edit_ok})
