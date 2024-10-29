@@ -226,11 +226,62 @@
         return "#tab_content-" + tab_now_add;
     }
 
+    /*
     function tab_delete(tab_num) {
         $("#tab_" + tab_num).remove("#tab_header-list .nav-item");
         $("#tab_content-" + tab_num).remove("#tab_content-list .tab-pane");
 
         delete dom_store[tab_num];
+    }
+     */
+
+    function tab_delete(tab_num) {
+        const isActiveTab = $("#tab_header-" + tab_num).hasClass('active');
+
+        // 삭제할 탭
+        const $tabToRemove = $("#tab_" + tab_num);
+        const $contentToRemove = $("#tab_content-" + tab_num);
+
+        // 이전 탭
+        const $prevTab = $tabToRemove.prev('.nav-item');
+        const $prevContent = $contentToRemove.prev('.tab-pane');
+        
+        $tabToRemove.remove();
+        $contentToRemove.remove();
+        
+        delete dom_store[tab_num];
+
+        if (isActiveTab) {
+            if ($prevTab.length) {
+                const prevTabId = $prevTab.find('.nav-link').attr('id').replace('tab_header-', '');
+
+                // 이전 탭 활성화
+                $prevTab.find('.nav-link').addClass('active');
+                $prevContent.addClass('active show');
+
+                // 페이지 타이틀 업데이트
+                const prevTabTitle = $prevTab.find('.nav-link').text().replace('×', '').trim();
+                $('#page_title').text(prevTabTitle);
+            } else {
+                // 이전 탭이 없는 경우 다음 탭 활성화
+                const $nextTab = $(".nav-item").first();
+                if ($nextTab.length) {
+                    const nextTabId = $nextTab.find('.nav-link').attr('id').replace('tab_header-', '');
+                    $nextTab.find('.nav-link').addClass('active');
+                    $("#tab_content-" + nextTabId).addClass('active show');
+
+                    // 페이지 타이틀 업데이트 (옵션)
+                    const nextTabTitle = $nextTab.find('.nav-link').text().replace('×', '').trim();
+                    $('#page_title').text(nextTabTitle);
+                }
+            }
+        }
+
+        // 모든 탭 닫으면 대시보드 출력
+        if ($(".nav-item").length === 0) {
+            $("#dashboard_content").show();
+            $("#tab_container").hide();
+        }
     }
 
     function tab_delete_all() {
