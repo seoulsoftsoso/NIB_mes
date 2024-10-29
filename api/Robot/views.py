@@ -36,7 +36,6 @@ class UpdateRobot(View):
         try:
             type = request.POST.get('type')
             formdata = request.POST
-            print('form', formdata)
             robot = RobotMaster.objects.get(id=formdata.get('robot_id'))
             if type == 'E':
 

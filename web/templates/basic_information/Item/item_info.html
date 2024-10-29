@@ -114,12 +114,16 @@
     let userPermissions = "{{ user_permissions }}";
 
     $(document).ready(function () {
-        
+
         var create_buttons = [
             {
                 extend: 'excel',
                 text: '엑셀 내보내기',
                 className: 'btn btn-success me-3',
+                filename: function () {
+                    return '품목정보_' + new Date().toISOString().slice(0, 10);
+                },
+                title: null
             }
         ];
 
@@ -311,6 +315,9 @@
         const table = $('#item_detail_table table');
         $("#detail_dropdown").hide()
 
+        // 폼 생성
+        table.wrap('<form id="edit-form"></form>');
+
         const fieldHandlers = {
             'QR 코드': (td) => {
                 td.closest('tr').hide(); // QR 코드 행을 숨김
@@ -377,11 +384,17 @@
         if ($('#edit-buttons').length === 0) {
             table.after(`
             <div id="edit-buttons" class="mt-3">
-                <button class="btn btn-primary" onclick="saveChanges(${id})">저장</button>
+                <button class="btn btn-primary" >저장</button>
                 <button class="btn btn-secondary" onclick="cancelEdit()">취소</button>
             </div>
         `);
         }
+
+        // 폼 제출 이벤트 처리
+        $('#edit-form').on('submit', function (e) {
+            e.preventDefault();
+            saveChanges(id);
+        });
     }
 
     
@@ -398,6 +411,12 @@
 
     // Item 업데이트
     function saveChanges() {
+        const form = $('#edit-form')[0];
+        if (form.checkValidity() === false) {
+            form.reportValidity();
+            return;
+        }
+
         const formData = new FormData();
         let $input = null;
 
@@ -419,14 +438,7 @@
                     formData.append(fieldName, $input.val());
                 }
             }
-
-            console.log('$input', $input.val())
         });
-        
-        if ($input.val() === '') {
-            alert('안돼요')
-            return false;
-        }
 
         $.ajax({
             url: "{% url 'update_item' %}",

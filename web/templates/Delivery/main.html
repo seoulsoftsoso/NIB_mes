@@ -228,21 +228,19 @@
                     extend: 'excel',
                     className: "btn btn-secondary buttons-excel buttons-html5 btn-success me-2",
                     text: '엑셀 다운로드',
-                    exportOptions: {
-                        modifier: {
-                            search: 'none'
-                        }
-                    }
+                    filename: function () {
+                        return '출하현황_' + new Date().toISOString().slice(0, 10);
+                    },
+                    title: null
                 },
                 {
                     extend: 'pdf',
                     className: "btn btn-danger waves-effect waves-light",
                     text: 'PDF 다운로드',
-                    exportOptions: {
-                        modifier: {
-                            search: 'none'
-                        }
-                    }
+                    filename: function () {
+                        return '출하현황_' + new Date().toISOString().slice(0, 10);
+                    },
+                    title: null
                 }
             ]
         });

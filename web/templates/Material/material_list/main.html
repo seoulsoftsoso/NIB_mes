@@ -106,6 +106,10 @@
                     extend: 'excel',
                     text: '엑셀 내보내기',
                     className: 'btn btn-success me-3',
+                    filename: function () {
+                        return '재고현황_' + new Date().toISOString().slice(0, 10);
+                    },
+                    title: null
                 },
             ],
             columns: [

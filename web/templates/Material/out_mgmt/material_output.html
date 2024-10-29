@@ -375,6 +375,10 @@
                     extend: 'excel',
                     text: '엑셀 내보내기',
                     className: 'btn btn-success',
+                    filename: function () {
+                        return '출고정보_' + new Date().toISOString().slice(0, 10);
+                    },
+                    title: null
                 }
             ]
         });

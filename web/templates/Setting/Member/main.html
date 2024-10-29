@@ -126,6 +126,10 @@
                     extend: 'excel',
                     text: '<i class="fas fa-file-excel text-black"></i>',
                     className: 'btn btn-soft-info waves-effect waves-light me-2',
+                    filename: function () {
+                        return '계정현황_' + new Date().toISOString().slice(0, 10);
+                    },
+                    title: null
                 },
                 {
                     text: '<i class="mdi mdi-lead-pencil text-black icon-1rem"></i>',
