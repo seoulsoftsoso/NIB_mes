@@ -1,5 +1,6 @@
 import traceback
 
+from django.db import IntegrityError
 from django.forms import model_to_dict
 from django.utils import timezone
 
@@ -60,6 +61,10 @@ class MemberCreate(View):
             )
 
             return JsonResponse({'success': True, 'message': msg_cre_ok})
+
+        except IntegrityError as e:
+            if 'user_id' in str(e):
+                return JsonResponse({'error': '중복된 아이디입니다.'}, status=400)
 
         except Exception as e:
             print(f"Error: {str(e)}")

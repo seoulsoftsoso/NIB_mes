@@ -194,7 +194,7 @@
                         }
                     },
                     error: function (xhr, status, error) {
-                        alert('오류가 발생했습니다: ' + error);
+                        alert('오류가 발생했습니다: ' + xhr.responseJSON.error);
                     }
                 });
                 
