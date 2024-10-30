@@ -319,7 +319,7 @@ class ItemMaster(models.Model):
 
 class Warehouse(models.Model):
     code = models.CharField(max_length=255, null=True, verbose_name='창고 코드')
-    name = models.CharField(max_length=255, null=True, verbose_name='창고 이름')
+    name = models.CharField(max_length=255, null=False, default='', verbose_name='창고 이름')
     region = models.CharField(max_length=64, null=True, verbose_name='창고 지역')
     wish_flag = models.BooleanField(null=False, default=False, verbose_name='즐겨찾기')
     enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, default=1, related_name='warehouse_enterprise',
@@ -336,8 +336,8 @@ class Warehouse(models.Model):
 class WarehouseRack(models.Model):
     rack_code = models.CharField(max_length=128, null=True, verbose_name='랙 코드')
     rack_name = models.CharField(max_length=128, null=True, verbose_name='랙 명')
-    rack_row = models.IntegerField(null=True, verbose_name='행')
-    rack_line = models.IntegerField(null=True, verbose_name='열')
+    rack_row = models.IntegerField(null=True, default=5, verbose_name='행')
+    rack_line = models.IntegerField(null=True, default=5, verbose_name='열')
     wr_etc = models.CharField(max_length=255, null=True, verbose_name='기타 메모')
     warehouse = models.ForeignKey('Warehouse', on_delete=models.DO_NOTHING, null=False, verbose_name='창고',
                                   related_name='warehouse_rack')
@@ -501,9 +501,9 @@ class CustomerMaster(models.Model):
     sign = models.FileField(upload_to=sign_upload_path, default=None, null=True, verbose_name='날인')
     logo = models.FileField(upload_to=logo_upload_path, default=None, null=True, verbose_name='로고')
     owner_name = models.CharField(max_length=64, null=False, verbose_name='대표자명')
-    official_tel = models.CharField(max_length=64, null=False, verbose_name='대표 전화번호')
+    official_tel = models.CharField(max_length=64, null=True, verbose_name='대표 전화번호')
     official_fax = models.CharField(max_length=64, null=True, verbose_name='팩스')
-    official_email = models.CharField(max_length=36, null=False, verbose_name='대표 이메일')
+    official_email = models.CharField(max_length=36, null=True, verbose_name='대표 이메일')
     manager_tel = models.CharField(max_length=64, null=True, verbose_name='담당자 전화번호')
     manager_email = models.CharField(max_length=36, null=True, verbose_name='담당자 이메일')
     memo = models.CharField(max_length=255, null=True, verbose_name='메모')

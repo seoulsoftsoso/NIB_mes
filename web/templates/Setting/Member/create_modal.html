@@ -57,7 +57,7 @@
                             </div>
                             <div class="col-xxl-6">
                                 <label class="form-label">직급</label>
-                                <select class="form-control" id="add_job_position" name="add_job_position" required>
+                                <select class="form-control" id="add_job_position" name="add_job_position">
                                     
                                 </select>
                             </div>
@@ -68,13 +68,13 @@
                         <div class="row">
                             <div class="col-xxl-6">
                                 <label class="form-label">소속</label>
-                                <select class="form-control" id="add_department_position" name="add_department_position" required>
+                                <select class="form-control" id="add_department_position" name="add_department_position">
                                     
                                 </select>
                             </div>
 
                             <div class="col-xxl-6">
-                                <label class="form-label">권한</label>
+                                <label class="form-label">권한 <span class="red_font">*</span></label>
                                 <select class="form-control form-required" id="add_auth" name="add_auth" required>
                                     <option disabled>유저의 권한을 선택해주세요.</option>
                                     <option value="Admin">Admin</option>
@@ -91,12 +91,12 @@
                             <div class="col-xxl-6">
                                 <label class="form-label">이메일</label>
                                 <input class="form-control" type="email" id="add_email" name="add_email" placeholder="이메일을 입력해주세요"
-                                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="올바른 이메일 형식을 입력해주세요" required/>
+                                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="올바른 이메일 형식을 입력해주세요"/>
                             </div>
                             
                             <div class="col-xxl-6">
                                 <label class="form-label">전화번호</label>
-                                <input class="form-control" type="text" id="add_tel" name="add_tel" placeholder="전화번호를 입력해주세요" required/>
+                                <input class="form-control" type="text" id="add_tel" name="add_tel" placeholder="전화번호를 입력해주세요"/>
                             </div>
                         </div>
                     </div>
@@ -156,7 +156,7 @@
 
             // 유효성 검사
             let isValid = true;
-            $(this).find('.form-control').each(function () {
+            $(this).find(':input[required]').each(function () {
                 if ($(this).attr('id') !== 'add_memo') {
                     if ($(this).val() === '') {
                         $(this).addClass('is-invalid');

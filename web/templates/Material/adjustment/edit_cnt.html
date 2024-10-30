@@ -24,7 +24,7 @@
                         <div class="col-lg-6">
                             <div>
                                 <label class="form-label">조정 수량 <span class="red_font">*</span></label>
-                                <input class="form-control" type="number" id="adjust_quan" name="adjust_quan" placeholder="조정수량을 입력해주세요"/>
+                                <input class="form-control" type="number" id="adjust_quan" name="adjust_quan" placeholder="조정수량을 입력해주세요" required/>
                             </div>
                         </div>
                     </div>
@@ -53,20 +53,68 @@
 <script>
     function adjust_btn() {
         var formData = $("#adjust_form").serializeArray()
-        formData.push({name:'row_id', value: detail_item_data.id})
-        
-        $.ajax({
-            url: "{% url 'AdjustCount' %}",
-            type: "POST",
-            data: formData,
-            success: function (res) {
-                alert(res.message)
-                location.reload()
-            },
-            error: function (res) {
-                alert(res.message)
+        formData.push({name: 'row_id', value: detail_item_data.id})
+
+        // 유효성 검사
+        let isValid = true;
+        $('#adjust_form').find(':input[required]').each(function () {
+            if ($(this).val().trim() === '') {
+                $(this).addClass('is-invalid');
+                isValid = false;
+            } else {
+                $(this).removeClass('is-invalid').addClass('is-valid'); // valid-feedback 적용
             }
-        })
+        });
+
+        if (isValid) {
+            $.ajax({
+                url: "{% url 'AdjustCount' %}",
+                type: "POST",
+                data: formData,
+                success: function (res) {
+                    alert(res.message)
+                    location.reload()
+                },
+                error: function (res) {
+                    alert(res.message)
+                }
+            })
+        }
+
     }
+    
+    /*
+    $(document).ready(function () {
+        $('#customer_form').on('submit', function (event) {
+            event.preventDefault();
+
+            // 유효성 검사
+            let isValid = true;
+            $(this).find(':input[required]').each(function () {
+                if ($(this).val().trim() === '') {
+                    $(this).addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $(this).removeClass('is-invalid').addClass('is-valid'); // valid-feedback 적용
+                }
+            });
+
+            if (isValid) {
+                $.ajax({
+                    url: "{% url 'CustomerCreate' %}",
+                    type: "POST",
+                    data: $(this).serialize(),
+                    success: function (res) {
+                        alert(res.message)
+                        location.reload()
+                    },
+                    error: function (xhr, status, error) {
+                        alert("오류가 발생했습니다: " + xhr.responseJSON.error);
+                    }
+                })
+            }
+        });
+    });
+    */
 </script>
 

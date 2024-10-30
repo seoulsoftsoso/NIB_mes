@@ -152,7 +152,7 @@
                                 icon: "error"
                             });
                             return false;
-                        } else if (selectedData.length <= 2) {
+                        } else if (selectedData.length > 1) {
                             Swal.fire({
                                 title: "Error",
                                 text: '수정할 멤버의 데이터는 1개만 선택 해주세요.',

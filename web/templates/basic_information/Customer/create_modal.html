@@ -26,12 +26,12 @@
                             
                             <div class="col-xxl-3">
                                 <label class="form-label">업태</label>
-                                <input class="form-control" type="text" id="business_type" name="business_type" placeholder="업태" required/>
+                                <input class="form-control" type="text" id="business_type" name="business_type" placeholder="업태"/>
                             </div>
                             
                             <div class="col-xxl-3">
                                 <label class="form-label">종목</label>
-                                <input class="form-control" type="text" id="business_sort" name="business_sort" placeholder="종목" required/>
+                                <input class="form-control" type="text" id="business_sort" name="business_sort" placeholder="종목"/>
                             </div>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                         <div class="row">
                             <div class="col-xxl-6">
                                 <label class="form-label">주소</label>
-                                <input class="form-control" type="text" id="address" name="address" placeholder="주소를 입력해주세요" required/>
+                                <input class="form-control" type="text" id="address" name="address" placeholder="주소를 입력해주세요"/>
                             </div>
                             
                             <div class="col-xxl-6">
@@ -54,12 +54,12 @@
                         <div class="row">
                             <div class="col-xxl-6">
                                 <label class="form-label">대표 전화번호</label>
-                                <input class="form-control" type="text" id="official_tel" name="official_tel" placeholder="번호를 입력해주세요" required/>
+                                <input class="form-control" type="text" id="official_tel" name="official_tel" placeholder="번호를 입력해주세요"/>
                             </div>
                             
                             <div class="col-xxl-6">
                                 <label class="form-label">대표 이메일</label>
-                                <input class="form-control" type="text" id="official_email" name="official_email" placeholder="이메일을 입력해주세요" required/>
+                                <input class="form-control" type="text" id="official_email" name="official_email" placeholder="이메일을 입력해주세요"/>
                             </div>
                         </div>
                     </div>
@@ -68,12 +68,12 @@
                         <div class="row">
                             <div class="col-xxl-6">
                                 <label class="form-label">담당자 전화번호</label>
-                                <input class="form-control" type="text" id="manager_tel" name="manager_tel" placeholder="번호를 입력해주세요" required/>
+                                <input class="form-control" type="text" id="manager_tel" name="manager_tel" placeholder="번호를 입력해주세요"/>
                             </div>
                             
                             <div class="col-xxl-6">
                                 <label class="form-label">담당자 이메일</label>
-                                <input class="form-control" type="text" id="manager_email" name="manager_email" placeholder="이메일을 입력해주세요" required/>
+                                <input class="form-control" type="text" id="manager_email" name="manager_email" placeholder="이메일을 입력해주세요"/>
                             </div>
                         </div>
                     </div>
@@ -102,7 +102,7 @@
             event.preventDefault();
 
             // 유효성 검사
-           let isValid = true;
+            let isValid = true;
             $(this).find(':input[required]').each(function () {
                 if ($(this).val().trim() === '') {
                     $(this).addClass('is-invalid');

@@ -54,10 +54,11 @@ class WarehouseCreate(View):
 
             rack = warehouse.warehouse_rack.create(
                 rack_name=formdata.get('rack_name'),
-                rack_row=formdata.get('row'),
-                rack_line=formdata.get('col'),
+                rack_row=formdata.get('row') if formdata.get('row') else 5,
+                rack_line=formdata.get('col') if formdata.get('col') else 5,
                 wr_etc=formdata.get('memo'),
                 created_by_id=request.user.id,
+                warehouse=warehouse
             )
 
             rack.save()
@@ -80,7 +81,6 @@ class WarehouseUpdate(View):
         type = request.POST.get('type')
         try:
             if type == 'E':
-                print('?????????????????????????')
                 formdata = request.POST
 
                 wh = Warehouse.objects.get(id=formdata.get('wh_id'))
@@ -90,8 +90,8 @@ class WarehouseUpdate(View):
 
                 wr = WarehouseRack.objects.get(warehouse_id=formdata.get('wh_id'))
                 wr.rack_name = formdata.get('edit_rack_name')
-                wr.rack_row = formdata.get('edit_row')
-                wr.rack_line = formdata.get('edit_col')
+                wr.rack_row = formdata.get('edit_row') if formdata.get('edit_row') else 5
+                wr.rack_line = formdata.get('edit_col') if formdata.get('edit_col') else 5
                 wr.wr_etc = formdata.get('edit_memo')
                 wr.save()
 
